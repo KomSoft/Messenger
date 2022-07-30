@@ -1,4 +1,4 @@
-package com.itea.messenger.messagesConverter;
+package com.itea.messenger.converter;
 
 import com.itea.messenger.dto.MessagesDto;
 import com.itea.messenger.entity.Messages;
