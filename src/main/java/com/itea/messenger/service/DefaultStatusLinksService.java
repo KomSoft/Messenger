@@ -38,37 +38,6 @@ public class DefaultStatusLinksService implements StatusLinksService{
     }
 
     @Override
-    public List<StatusLinksDto> findByUserId(Long userId) {
-        List<StatusLinks> statusLinksList = statusLinksRepository.findByUserId(userId);
-        if (statusLinksList != null) {
-            List<StatusLinksDto> dtoList = new ArrayList<StatusLinksDto>();
-            for (StatusLinks statusLinks:
-                    statusLinksList) {
-                dtoList.add(statusLinksConverter.dtoFromStatusLinks(statusLinks));
-            }
-            return dtoList;
-        } else {
-            return null;
-        }
-
-    }
-
-    @Override
-    public List<StatusLinksDto> findAll() {
-        List<StatusLinks> statusLinksList = statusLinksRepository.findAll();
-        if (statusLinksList != null) {
-            List<StatusLinksDto> dtoList = new ArrayList<StatusLinksDto>();
-            for (StatusLinks statusLinks:
-                    statusLinksList) {
-                dtoList.add(statusLinksConverter.dtoFromStatusLinks(statusLinks));
-            }
-            return dtoList;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     public StatusLinksDto findById(Long id) throws ValidationException {
         StatusLinks statusLinks = statusLinksRepository.findById(id).orElseThrow(() ->
                 new ValidationException("No status links with this id"));

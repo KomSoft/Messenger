@@ -22,20 +22,8 @@ public class StatusLinksController {
         return statusLinksService.saveStatusLink(statusLinksDto);
     }
 
-    @GetMapping("/user")
-    public List<StatusLinksDto> findByUserId(@RequestParam Long userId) {
-        log.info("Handling find by user id");
-        return  statusLinksService.findByUserId(userId);
-    }
-
-    @GetMapping
-    public List<StatusLinksDto> findAll() {
-        log.info("Handling find all status links");
-        return statusLinksService.findAll();
-    }
-
     @GetMapping("/{id}")
-    public StatusLinksDto finaById(@PathVariable Long id) throws ValidationException {
+    public StatusLinksDto findById(@PathVariable Long id) throws ValidationException {
         log.info("Handling find by id: " + id);
         return statusLinksService.findById(id);
     }
