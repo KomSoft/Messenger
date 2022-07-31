@@ -2,7 +2,7 @@ package com.itea.messenger.service;
 
 import com.itea.messenger.dto.MessagesDto;
 import com.itea.messenger.entity.Messages;
-import com.itea.messenger.messagesConverter.MessagesConverter;
+import com.itea.messenger.converter.MessagesConverter;
 import com.itea.messenger.repository.MessagesRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
