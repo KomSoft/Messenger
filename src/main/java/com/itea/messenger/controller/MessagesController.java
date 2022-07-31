@@ -17,11 +17,13 @@ public class MessagesController {
     private final MessagesService messagesService;
 
 //    @SneakyThrows
+
     @PostMapping(value = "/save")
     public MessagesDto saveMessages(@RequestBody MessagesDto messageDto) {
         log.info("Handling save message: " + messageDto);
         return messagesService.saveMessage(messageDto);
     }
+
 
     @GetMapping("/getById")
     public MessagesDto getMessageById(@RequestParam Long messageId) {
@@ -29,11 +31,13 @@ public class MessagesController {
         return messagesService.getMessageById(messageId);
     }
 
+
     @GetMapping("/getAllByChatId")
     public List<MessagesDto> getAllMessagesByChatId(@RequestParam Long chatId) {
         log.info("Handling get all messages by chat ID: " + chatId);
         return messagesService.getAllMessagesByChatId(chatId);
     }
+
 
     @DeleteMapping("/delete")
     public void deleteMessage(@RequestParam Long messageId) {
