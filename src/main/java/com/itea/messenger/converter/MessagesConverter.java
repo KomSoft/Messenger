@@ -10,6 +10,7 @@ public class MessagesConverter {
         return MessagesDto.builder().id(message.getId()).chatId(message.getChatId()).userId(message.getUserId())
                 .messageText(message.getMessageText()).fileId(message.getFileId())
 //              need to convert date & time ?
+
                 .dateTime(message.getDateTime()).build();
 //                .statusId(message.getStatusId()).build();
     }

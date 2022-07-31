@@ -17,31 +17,29 @@ public class MessagesController {
     private final MessagesService messagesService;
 
 //    @SneakyThrows
-//    @PostMapping(value = "/save")
-    @PostMapping
+
+    @PostMapping(value = "/save")
     public MessagesDto saveMessages(@RequestBody MessagesDto messageDto) {
         log.info("Handling save message: " + messageDto);
         return messagesService.saveMessage(messageDto);
     }
 
-//    @GetMapping("/getById")
-    @GetMapping("{Id}")
-//    @GetMapping("/ById")
+
+    @GetMapping("/getById")
     public MessagesDto getMessageById(@RequestParam Long messageId) {
         log.info("Handling get message by ID: " + messageId);
         return messagesService.getMessageById(messageId);
     }
 
-//    @GetMapping("/getAllByChatId")
-    @GetMapping("/chat")
-//    @GetMapping("/AllByChatId")
+
+    @GetMapping("/getAllByChatId")
     public List<MessagesDto> getAllMessagesByChatId(@RequestParam Long chatId) {
         log.info("Handling get all messages by chat ID: " + chatId);
         return messagesService.getAllMessagesByChatId(chatId);
     }
 
-//    @DeleteMapping("/delete")
-    @DeleteMapping
+
+    @DeleteMapping("/delete")
     public void deleteMessage(@RequestParam Long messageId) {
         log.info("Handling delete message by ID: " + messageId);
         messagesService.deleteMessage(messageId);
