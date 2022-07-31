@@ -5,10 +5,9 @@ import com.itea.messenger.entity.Messages;
 import com.itea.messenger.messagesConverter.MessagesConverter;
 import com.itea.messenger.repository.MessagesRepository;
 import lombok.AllArgsConstructor;
-import org.aspectj.bridge.Message;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,21 +17,23 @@ import java.util.stream.Collectors;
 public class DefaultMessagesService implements MessagesService {
     private final MessagesRepository messagesRepository;
     private final MessagesConverter messagesConverter;
-    private final String DELETED_MESSAGE_TEXT = "Message was deleted";
+    private static final String DELETED_MESSAGE_TEXT = "Message was deleted";
 
     @Override
     public MessagesDto saveMessage(MessagesDto messageDto) {
-        validateMessagesDto(messageDto);
+//        validateMessagesDto(messageDto);
         Messages savedMessage = messagesRepository.save(messagesConverter.messagesFromDto(messageDto));
         return messagesConverter.messagesToDto(savedMessage);
     }
 
+/*
     private void validateMessagesDto(MessagesDto messageDto) {
 //        check if message length <= 255.
         if (messageDto.getMessageText().length() > 255) {
             messageDto.setMessageText(messageDto.getMessageText().substring(0, 254));
         }
     }
+*/
 
     @Override
     public MessagesDto getMessageById(Long messageId) {
@@ -44,6 +45,12 @@ public class DefaultMessagesService implements MessagesService {
     public List<MessagesDto> getAllMessagesByChatId(Long chatId) {
         return messagesRepository.findAllMessagesByChatId(chatId).stream().map(messagesConverter::messagesToDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MessagesDto> getAllMessagesByChatIdByStartDateAfter(Long chatId, LocalDateTime dateTime) {
+        return messagesRepository.getAllMessagesByChatIdByStartDateAfter(chatId, dateTime).stream()
+                .map(messagesConverter::messagesToDto).collect(Collectors.toList());
     }
 
     @Override

@@ -10,8 +10,8 @@ public class MessagesConverter {
         return MessagesDto.builder().id(message.getId()).chatId(message.getChatId()).userId(message.getUserId())
                 .messageText(message.getMessageText()).fileId(message.getFileId())
 //              need to convert date & time ?
-                .dateTime(message.getDateTime())
-                .statusId(message.getStatusId()).build();
+                .dateTime(message.getDateTime()).build();
+//                .statusId(message.getStatusId()).build();
     }
 
     public Messages messagesFromDto(MessagesDto messageDto) {
@@ -28,16 +28,7 @@ public class MessagesConverter {
         message.setMessageText(messageDto.getMessageText());
         message.setFileId(messageDto.getFileId());
         message.setDateTime(messageDto.getDateTime());
-        message.setStatusId(messageDto.getStatusId());
+//        message.setStatusId(messageDto.getStatusId());
         return message;
     }
-/*
-        private Long id;
-        private Long chatId;
-        private Long userId;
-        private String messageText;
-        private Long fileId;
-        private LocalDate dateTime;
-        private Long statusId;
-*/
 }

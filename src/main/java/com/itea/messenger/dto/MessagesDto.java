@@ -3,7 +3,7 @@ package com.itea.messenger.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -13,7 +13,7 @@ public class MessagesDto {
     private Long userId;
     private String messageText;
     private Long fileId;
-    private LocalDate dateTime;
-    private Long statusId;
+    private LocalDateTime dateTime;
+//    private Long statusId;
 
 }
