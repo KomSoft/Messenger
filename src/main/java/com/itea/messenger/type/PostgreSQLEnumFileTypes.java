@@ -1,4 +1,4 @@
-package com.itea.messenger.enums.fileType;
+package com.itea.messenger.type;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;

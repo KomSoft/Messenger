@@ -2,7 +2,6 @@ package com.itea.messenger.service;
 
 import com.itea.messenger.dto.MessagesDto;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,7 +13,7 @@ public interface MessagesService {
 
     List<MessagesDto> getAllMessagesByChatId(Long chatId);
 
+//    List<MessagesDto> getAllMessagesByChatIdByStartDateAfter(Long chatId, LocalDateTime dateTime);
 
-    List<MessagesDto> getAllMessagesByChatIdByStartDateAfter(Long chatId, LocalDateTime dateTime);
     void deleteMessage(Long messageId);
 }

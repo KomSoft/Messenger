@@ -6,6 +6,7 @@ import com.itea.messenger.converter.MessagesConverter;
 import com.itea.messenger.repository.MessagesRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,6 @@ public class DefaultMessagesService implements MessagesService {
         return messagesConverter.messagesToDto(savedMessage);
     }
 
-
 /*
     private void validateMessagesDto(MessagesDto messageDto) {
 //        check if message length <= 255.
@@ -34,6 +34,7 @@ public class DefaultMessagesService implements MessagesService {
         }
     }
 */
+
     @Override
     public MessagesDto getMessageById(Long messageId) {
         Optional<Messages> message = messagesRepository.findById(messageId);
@@ -45,14 +46,16 @@ public class DefaultMessagesService implements MessagesService {
         return messagesRepository.findAllMessagesByChatId(chatId).stream().map(messagesConverter::messagesToDto)
                 .collect(Collectors.toList());
     }
+/*
 
     @Override
     public List<MessagesDto> getAllMessagesByChatIdByStartDateAfter(Long chatId, LocalDateTime dateTime) {
         return messagesRepository.getAllMessagesByChatIdByStartDateAfter(chatId, dateTime).stream()
                 .map(messagesConverter::messagesToDto).collect(Collectors.toList());
     }
+*/
 
-    @Overrid
+    @Override
     public void deleteMessage(Long messageId) {
 //     First time change message text to DELETED_MESSAGE_TEXT = "Message was deleted"
 //     Next time - delete message
