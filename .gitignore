@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Personal Notes ###
+notes
+
 ### STS ###
 .apt_generated
 .classpath
