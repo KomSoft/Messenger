@@ -4,9 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 import java.time.LocalDateTime;
-
 
 @Entity
 @Table(name = "messages_table")
@@ -17,7 +15,6 @@ public class Messages {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @Column(name = "chat_id", nullable = false)
     private Long chatId;
@@ -34,7 +31,6 @@ public class Messages {
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 /*
-
     @Column(name = "status_id")
     private Long statusId;
 */

@@ -1,6 +1,6 @@
 package com.itea.messenger.entity;
 
-import com.itea.messenger.enums.fileType.FileTypes;
+import com.itea.messenger.type.FileTypes;
 import lombok.Data;
 
 import javax.persistence.*;

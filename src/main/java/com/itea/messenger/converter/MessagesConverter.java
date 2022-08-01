@@ -10,18 +10,11 @@ public class MessagesConverter {
         return MessagesDto.builder().id(message.getId()).chatId(message.getChatId()).userId(message.getUserId())
                 .messageText(message.getMessageText()).fileId(message.getFileId())
 //              need to convert date & time ?
-
                 .dateTime(message.getDateTime()).build();
 //                .statusId(message.getStatusId()).build();
     }
 
     public Messages messagesFromDto(MessagesDto messageDto) {
-/*
-        return Messages.builder().id(messageDto.getId()).chatId(messageDto.getChatId()).userId(messageDto.getUserId())
-                .messageText(messageDto.getMessageText()).fileId(messageDto.getFileId())
-                .dateTime(messageDto.getDateTime())
-                .statusId(messageDto.getStatusId()).build();
-*/
         Messages message = new Messages();
         message.setId(messageDto.getId());
         message.setChatId(messageDto.getChatId());
