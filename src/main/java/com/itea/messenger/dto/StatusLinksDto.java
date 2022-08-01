@@ -1,6 +1,6 @@
 package com.itea.messenger.dto;
 
-import com.itea.messenger.enums.messageStatus.MessageStatus;
+import com.itea.messenger.type.MessageStatus;
 import lombok.Data;
 
 @Data
