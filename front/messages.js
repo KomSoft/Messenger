@@ -24,7 +24,7 @@ var table_header = '<tr><th>messageID</th><th>chatID</th><th>userID</th>' +
     debug = debug + '<br>[debug] Response status: ' + xhttp.status;
             if (xhttp.readyState == 4 && xhttp.status == 200) {
                 var message = JSON.parse(xhttp.responseText);  
-    debug = debug + '<br>[debug] Response status: ' + xhttp.responseText;
+    debug = debug + '<br>[debug] Response: ' + xhttp.responseText;
                 console.log(message);
                 var html = table_header + '<tr><td>' + message.id + '</td><td>' + message.chatId + 
 		    '</td><td>' + message.userId + '</td><td>' + message.fileId + 
@@ -46,7 +46,7 @@ var table_header = '<tr><th>messageID</th><th>chatID</th><th>userID</th>' +
         xhttp.onreadystatechange = function () {
     debug = debug + '<br>[debug] Response status: ' + xhttp.status;
             if (xhttp.readyState == 4 && xhttp.status == 200) {
-    debug = debug + '<br>[debug] Response status: ' + xhttp.responseText;
+    debug = debug + '<br>[debug] Response: ' + xhttp.responseText;
                 var messages = JSON.parse(xhttp.responseText);  
                 var html = table_header;
                 for (var i = 0; i < messages.length; i++) {

@@ -22,12 +22,14 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+<!--
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-logging</artifactId>
 				</exclusion>
 			</exclusions>
+-->
 
 		</dependency>
 		<dependency>
@@ -64,6 +66,7 @@
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.6.9</version>
 		</dependency>
+<!--
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
@@ -79,6 +82,7 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j-version}</version>
 		</dependency>
+-->
 	</dependencies>
 	<build>
 		<plugins>

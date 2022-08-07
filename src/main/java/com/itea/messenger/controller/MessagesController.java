@@ -3,8 +3,7 @@ package com.itea.messenger.controller;
 import com.itea.messenger.dto.MessagesDto;
 import com.itea.messenger.service.MessagesService;
 import lombok.AllArgsConstructor;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,8 +12,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/messages")
 @AllArgsConstructor
+@Log
 public class MessagesController {
-    private static final Logger log = LogManager.getLogger(MessagesController.class);
     private final MessagesService messagesService;
 
     @PostMapping
