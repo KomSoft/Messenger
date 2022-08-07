@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/messages")
 @AllArgsConstructor
@@ -23,19 +24,19 @@ public class MessagesController {
     }
 
     @GetMapping("{Id}")
-    public MessagesDto getMessageById(@RequestParam Long messageId) {
+    public MessagesDto getMessageById(@PathVariable("Id") Long messageId) {
         log.info("Handling get message by ID: " + messageId);
         return messagesService.getMessageById(messageId);
     }
 
-    @GetMapping("/chat")
-    public List<MessagesDto> getAllMessagesByChatId(@RequestParam Long chatId) {
+    @GetMapping("{Id}/chat")
+    public List<MessagesDto> getAllMessagesByChatId(@PathVariable("Id") Long chatId) {
         log.info("Handling get all messages by chat ID: " + chatId);
         return messagesService.getAllMessagesByChatId(chatId);
     }
 
-    @DeleteMapping
-    public void deleteMessage(@RequestParam Long messageId) {
+    @DeleteMapping("{Id}")
+    public void deleteMessage(@PathVariable("Id") Long messageId) {
         log.info("Handling delete message by ID: " + messageId);
         messagesService.deleteMessage(messageId);
     }

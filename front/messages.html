@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<title>Messages Tool</TITLE>
+<link rel="stylesheet" href="styles.css">
+<script src="messages.js" async=""></script> 
+</head>
+
+
+<body>
+<h3 align="center">Messages Tool</h3>
+
+<form action="#">
+   <fieldset>
+    <legend>Save (create) new message:</legend>
+    <label for="chat_id" >Chat Id:</label>
+    <input id="chat_id" placeholder="(Long) Chat Id"><br>
+    <label for="user_id" >User Id:</label>
+    <input id="user_id" placeholder="(Long) User Id"><br>
+    <label for="file_id" >File Id:</label>
+    <input id="file_id" placeholder="(Long) File Id"><br>
+    <input id="message_text" size="150" placeholder="Message text (up to 255 chars)"><br>
+    <button onclick="createMessage()">Create</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset>
+    <legend>Find message by Id:</legend>
+    <input id="message_id" placeholder="Message Id">
+    <button onclick="findMessageById()">Find</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset>
+    <legend style="color:red;">Delete message by Id:</legend>
+    <input id="message_del_id" placeholder="Message Id">
+    <button onclick="deleteMessageById()">Delete</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset>
+    <legend>Find all messages by ChatId</legend>
+    <input id="bychat_id" placeholder="Chat Id">
+    <button onclick="findAllMessagesByChatId()">Show</button>                       
+   </fieldset>
+</form>
+
+<br><hr align=left>
+<div id="debug_frame"></div>
+<table id="message_list"></table> 
+
+<script>
+
+   function findMessageById() {
+      var param = document.getElementById("message_id").value;
+      messages_findById(parseInt(param));
+//     document.getElementById("message_list").innerHTML = messages_findById(parseInt(param));
+     }
+
+   function findAllMessagesByChatId() {
+      var param = document.getElementById("bychat_id").value;
+      messages_findAllByChatId(parseInt(param));
+//     document.getElementById("message_list").innerHTML = messages_findById(parseInt(param));
+     }
+
+   function deleteMessageById() {
+      var param = document.getElementById("message_del_id").value;
+      messages_deleteById(parseInt(param));
+//     document.getElementById("message_list").innerHTML = ;
+     }
+
+   function createMessage() {
+      messages_create(parseInt(document.getElementById("chat_id").value), 
+	              parseInt(document.getElementById("user_id").value), 
+                      parseInt(document.getElementById("file_id").value),
+		      document.getElementById("message_text").value); 
+//     document.getElementById("message_list").innerHTML = ;
+     }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>User Administrative Tool</TITLE>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+<script src="https://apis.google.com/_/scs/abc-static/_/js/k=gapi.gapi.en.t9z7VPsEMFg.O/m=gapi_iframes,googleapis_client/rt=j/sv=1/d=1/ed=1/rs=AHpOoo8oD_5FQW3kT3ksWwmXIWvhhqbKdw/cb=gapi.loaded_0" nonce="" async=""></script>
+</head>
+
+
+<body>
+
+<h3 align="center">ITEA-2022 Project Messenger. User Administrative Tool</h3>
+<p align="center" style="color:red;">Under construction</p>
+
+<table id="usersTable">
+</table>
+
+<form action="#">
+   <fieldset>
+    <legend>Create user:</legend>
+    <input id="user_name" placeholder="User name">
+    <input id="user_login" placeholder="User login">
+    <input id="user_password" placeholder="User password">
+    <input id="user_age" placeholder="User age">
+    <input id="user_photo" placeholder="file with photo">
+    <button onclick="createUser()">Create user</button>
+   </fieldset>
+</form>
+<form action="#">
+   <fieldset>
+    <legend>Find user by Id:</legend>
+    <input id="user_id" placeholder="User Id">
+    <button onclick="findUserByid()">Find by Id</button>
+   </fieldset>
+</form>
+<br>
+<hr width=800 align=left>
+<br>
+<form action="#">
+   <fieldset>
+    <legend>List all users</legend>
+    <button onclick="findAllUsers()">Show all users</button>
+   </fieldset>
+</form>
+
+
+
+
+
+
+<input id="search_field">
+<button onclick="searchByLogin()">Search by Login</button>
+<script>
+    function searchByLogin() {
+        var login = document.getElementById("search_field").value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var user = JSON.parse(this.responseText);
+                var html = '<tr>\n' +
+                    '        <th>User id</th>\n' +
+                    '        <th>User name</th>\n' +
+                    '        <th>User login</th>\n' +
+                    '        <th>User email</th>\n' +
+                    '        <th>Delete</th>\n' +
+                    '    </tr>';
+                html = html + '<tr><td>' + user.id + '</td>\n' +
+                    '        <td>' + user.name + '</td>\n' +
+                    '        <td>' + user.login + '</td>\n' +
+                    '        <td>' + user.email + '</td>' +
+                    '        <td><button onclick="deleteUser(' + user.id + ')">Delete</button></td></tr>';
+                document.getElementById("usersList").innerHTML = html;
+            }
+        };
+        xhttp.open("GET", "http://localhost:8080/users/findByLogin?login=" + login, true);
+        xhttp.send();
+    }
+
+    function deleteUser(userId) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("DELETE", "http://localhost:8080/users/delete/" + userId, true);
+        xhttp.send();
+    }
+
+    function createUser() {
+        var userName = document.getElementById("user_name").value;
+        var userLogin = document.getElementById("user_login").value;
+        var userEmail = document.getElementById("user_email").value;
+
+        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+        xmlhttp.open("POST", "http://localhost:8080/users/save");
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.send(JSON.stringify({name: userName, login: userLogin, email: userEmail}));
+
+        loadUsers();
+    }
+
+    function loadUsers() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var users = JSON.parse(this.responseText);
+                var html = '<tr>\n' +
+                    '        <th>User id</th>\n' +
+                    '        <th>User name</th>\n' +
+                    '        <th>User login</th>\n' +
+                    '        <th>User email</th>\n' +
+                    '        <th>Delete</th>\n' +
+                    '    </tr>';
+                for (var i = 0; i < users.length; i++) {
+                    var user = users[i];
+                    console.log(user);
+                    html = html + '<tr><td>' + user.id + '</td>\n' +
+                        '        <td>' + user.name + '</td>\n' +
+                        '        <td>' + user.login + '</td>\n' +
+                        '        <td>' + user.email + '</td>' +
+                        '        <td><button onclick="deleteUser(' + user.id + ')">Delete</button></td></tr>';
+
+                }
+                document.getElementById("usersList").innerHTML = html;
+            }
+        };
+        xhttp.open("GET", "http://localhost:8080/users/findAll", true);
+        xhttp.send();
+    }
+
+    loadUsers();
+</script>
+</body>
+</html>
