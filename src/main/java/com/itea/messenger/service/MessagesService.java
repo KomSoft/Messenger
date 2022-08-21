@@ -1,6 +1,7 @@
 package com.itea.messenger.service;
 
 import com.itea.messenger.dto.MessagesDto;
+import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
 import java.util.List;
