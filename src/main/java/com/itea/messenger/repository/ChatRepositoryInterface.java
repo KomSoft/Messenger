@@ -8,5 +8,4 @@ public interface ChatRepositoryInterface extends JpaRepository<Chat, Long> {
     Chat findByChatId(Long id);
 
     Chat findByName(String name);
-
 }

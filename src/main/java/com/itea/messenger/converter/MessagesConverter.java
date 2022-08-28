@@ -4,8 +4,6 @@ import com.itea.messenger.dto.MessagesDto;
 import com.itea.messenger.entity.Messages;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-
 @Component
 public class MessagesConverter {
     public MessagesDto messagesToDto(Messages message) {
@@ -14,16 +12,6 @@ public class MessagesConverter {
                 .dateTime(message.getDateTime())
                 .messageStatus(message.getMessageStatus()).build();
 //                .statusId(message.getStatusId()).build();
-/*
-        MessagesDto messageDto = new MessagesDto();
-        messageDto.setId(message.getId());
-        messageDto.setChatId(message.getChatId());
-        messageDto.setUserId(message.getUserId());
-        messageDto.setFileId(message.getFileId());
-        messageDto.setMessageText(message.getMessageText());
-        messageDto.setDateTime(message.getDateTime());
-        return messageDto;
-*/
     }
 
     public Messages messagesFromDto(MessagesDto messageDto) {

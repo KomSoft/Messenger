@@ -5,27 +5,10 @@
 <title>Messages Tool</TITLE>
 <link rel="stylesheet" href="styles.css">
 <script src="messages.js" async=""></script> 
-
 </head>
 
-
 <body>
-<h3 >Messages Tool</h3>
-
-<form action="#">
-   <fieldset class="fieldset1">
-    <legend>Save (create) new message:</legend>
-    <label class="label1" for="chat_id" >Chat Id:</label>
-    <input id="chat_id" placeholder="(Long) Chat Id"><br>
-    <label class="label1" for="user_id" >User Id:</label>
-    <input id="user_id" placeholder="(Long) User Id"><br>
-    <label class="label1" for="file_id" >File Id:</label>
-    <input id="file_id" placeholder="(Long) File Id"><br>
-    <label class="label1" for="message_text" >Your message:</label>
-    <input id="message_text" size=65" placeholder="Message text (up to 255 chars)"><br>
-    <button onclick="createMessage()">Create</button>
-   </fieldset>
-</form>
+<h3>Messages Tool</h3>
 
 <form action="#">
    <fieldset class="fieldset1">
@@ -51,37 +34,95 @@
    </fieldset>
 </form>
 
+<form action="#">
+   <fieldset class="fieldset1">
+    <legend>Save (create) new message:</legend>
+    <button onclick="getChatsList()">Get chats list</button>&nbsp;Then select Chat & User<br>
+    <label class="label1" for="chats_list" >Chat:</label>
+    <select name="chats_list" id="chats_list" onchange="getUsersList(this.value)">
+         <!-- getChatsList() puts options with chats here  -->
+    </select><br>
+    <label class="label1" for="users_list" >User:</label>
+    <select name="users_list" id="users_list">
+         <!-- dynamically put users list here when chats_list.onSelect() called  -->
+    </select><br>
+    <label class="label1" for="file_id" >File Id:</label>
+    <input id="file_id" placeholder="(Long) File Id"><br>
+    <label class="label1" for="message_text" >Your message:</label><br>
+    <input id="message_text" size=65 placeholder="Message text (up to 255 chars)"><br>
+    <button onclick="createMessage()">Create</button>
+   </fieldset>
+</form>
+
+<br><hr align=left width=600>
+<div id="message_list"></div> 
 <br><hr align=left width=600>
 <div id="debug_frame"></div>
-<table id="message_list"></table> 
 
 <script>
 
+   function getChatsList() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var list = document.getElementById("chats_list");
+      while (list.childNodes.length > 0) {
+         list.removeChild(list.childNodes[list.childNodes.length-1]);
+      }
+      var data = messages_getChatsList();
+      var option = document.createElement("option");
+      option.value = -1;
+      option.text = ' ';
+      list.add(option);
+      for (i = 0; i < data.length; i++) {
+         option = document.createElement("option");
+         option.value = data[i][0];
+         option.text = data[i][1];
+         list.add(option);
+      }
+      console.log(list);
+   }
+
+   function getUsersList(id) {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var list = document.getElementById("users_list");
+      while (list.childNodes.length > 0) {
+         list.removeChild(list.childNodes[list.childNodes.length-1]);
+      }
+      var data = messages_getUsersList(parseInt(id));
+      for (i = 0; i < data.length; i++) {
+         var option = document.createElement("option");
+         option.value = data[i][0];
+         option.text = data[i][1];
+         list.add(option);
+      }
+      console.log(list);
+   }
+
    function findMessageById() {
+      document.getElementById("debug_frame").innerHTML = ' ';
       var param = document.getElementById("message_id").value;
-      messages_findById(parseInt(param));
-//     document.getElementById("message_list").innerHTML = messages_findById(parseInt(param));
-     }
+      document.getElementById("message_list").innerHTML = messages_findById(parseInt(param));
+   }
 
    function findAllMessagesByChatId() {
+      document.getElementById("debug_frame").innerHTML = ' ';
       var param = document.getElementById("bychat_id").value;
-      messages_findAllByChatId(parseInt(param));
-//     document.getElementById("message_list").innerHTML = messages_findById(parseInt(param));
-     }
+      document.getElementById("message_list").innerHTML = messages_findAllByChatId(parseInt(param));
+   }
 
    function deleteMessageById() {
+      document.getElementById("debug_frame").innerHTML = ' ';
       var param = document.getElementById("message_del_id").value;
-      messages_deleteById(parseInt(param));
-//     document.getElementById("message_list").innerHTML = ;
-     }
+      document.getElementById("message_list").innerHTML = messages_deleteById(parseInt(param));
+   }
 
    function createMessage() {
-      messages_create(parseInt(document.getElementById("chat_id").value), 
-	              parseInt(document.getElementById("user_id").value), 
-                      parseInt(document.getElementById("file_id").value),
-		      document.getElementById("message_text").value); 
-//     document.getElementById("message_list").innerHTML = ;
-     }
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var result = messages_create(parseInt(document.getElementById("chats_list").value), 
+	         parseInt(document.getElementById("users_list").value), 
+            parseInt(document.getElementById("file_id").value),
+            document.getElementById("message_text").value); 
+      document.getElementById("message_list").innerHTML = result;
+   }
 
 </script>
 </body>

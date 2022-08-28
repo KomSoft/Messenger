@@ -8,4 +8,5 @@ public class StatusLinksDto {
     private Long id;
     private MessageStatus status;
     private Long userId;
+    private Long messageId;
 }

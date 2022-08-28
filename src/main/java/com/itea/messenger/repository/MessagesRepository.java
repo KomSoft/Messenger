@@ -11,9 +11,5 @@ import java.util.List;
 public interface MessagesRepository extends JpaRepository<Messages, Long> {
 
     List<Messages> findAllMessagesByChatId(Long chatId);
-
-//    List<Messages> getAllMessagesByChatIdByStartDateAfter(Long chatId, LocalDateTime dateTime);
-
-
-//    no additional functions now
+    List<Messages> findMessagesByChatIdAndDateTimeAfter(Long chatId, LocalDateTime dateTimeFrom);
 }

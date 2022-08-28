@@ -17,7 +17,7 @@ public class FilesController {
     private final FilesService filesService;
 
     @PostMapping
-    public FilesDto saveFile(@RequestBody FilesDto filesDto)throws ValidationException{
+    public FilesDto saveFile(@RequestBody FilesDto filesDto)throws ValidationException {
         log.info("Handling save file: " + filesDto);
         return filesService.saveFile(filesDto);
 
@@ -29,7 +29,7 @@ public class FilesController {
     }
 
     @GetMapping("/{id}")
-    public FilesDto findById(@PathVariable Long id)throws ValidationException{
+    public FilesDto findById(@PathVariable Long id)throws ValidationException {
         log.info("Handling find by id");
         return filesService.findById(id);
     }

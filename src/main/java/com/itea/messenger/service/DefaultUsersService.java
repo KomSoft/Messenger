@@ -18,7 +18,7 @@ public class DefaultUsersService implements UsersService{
     private final UsersRepository usersRepository;
     private final UsersConverter usersConverter;
 
-    private void validateUserDto(UsersDto usersDto) throws ValidationException{
+    private void validateUserDto(UsersDto usersDto) throws ValidationException {
         if (isNull(usersDto)){throw new ValidationException("Object is null");
         }
         if (isNull(usersDto.getLogin()) || usersDto.getLogin().isEmpty()){
@@ -33,20 +33,20 @@ public class DefaultUsersService implements UsersService{
     public UsersDto saveUser(UsersDto usersDto) throws ValidationException {
         validateUserDto(usersDto);
         Users users = usersRepository.save(usersConverter.usersEntityFromDto(usersDto));
-        System.out.println(usersDto.toString());
-        System.out.println(users.toString());
+        System.out.println(usersDto);
+        System.out.println(users);
         return usersConverter.dtoFromUsersEntity(users);
     }
 
     @Override
-    public UsersDto findById(Long id) throws ValidationException{
+    public UsersDto findById(Long id) throws ValidationException {
         Users users = usersRepository.findById(id).orElseThrow(( ) -> new ValidationException("No users with this id"));
         return usersConverter.dtoFromUsersEntity(users);
     }
 
     @Override
     public List<UsersDto> findAll() {
-        List<UsersDto> dtoList = new ArrayList<UsersDto>();
+        List<UsersDto> dtoList = new ArrayList<>();
         List<Users> list = usersRepository.findAll();
         for (Users users: list
         ) {

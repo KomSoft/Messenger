@@ -2,146 +2,109 @@
 <html>
 <head>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<TITLE>User Administrative Tool</TITLE>
-    <style>
-        table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-
-        tr:nth-child(even) {
-            background-color: #dddddd;
-        }
-    </style>
-<script src="https://apis.google.com/_/scs/abc-static/_/js/k=gapi.gapi.en.t9z7VPsEMFg.O/m=gapi_iframes,googleapis_client/rt=j/sv=1/d=1/ed=1/rs=AHpOoo8oD_5FQW3kT3ksWwmXIWvhhqbKdw/cb=gapi.loaded_0" nonce="" async=""></script>
+<TITLE>Users Tool</TITLE>
+<link rel="stylesheet" href="styles.css">
+<script src="users.js" async=""></script> 
 </head>
-
 
 <body>
 
-<h3 align="center">ITEA-2022 Project Messenger. User Administrative Tool</h3>
-<p align="center" style="color:red;">Under construction</p>
-
-<table id="usersTable">
-</table>
+<h3 align=center>Users Tool</h3>
 
 <form action="#">
-   <fieldset>
-    <legend>Create user:</legend>
-    <input id="user_name" placeholder="User name">
-    <input id="user_login" placeholder="User login">
-    <input id="user_password" placeholder="User password">
-    <input id="user_age" placeholder="User age">
-    <input id="user_photo" placeholder="file with photo">
-    <button onclick="createUser()">Create user</button>
-   </fieldset>
-</form>
-<form action="#">
-   <fieldset>
+   <fieldset class="fieldset1">
     <legend>Find user by Id:</legend>
     <input id="user_id" placeholder="User Id">
-    <button onclick="findUserByid()">Find by Id</button>
+    <button onclick="findUserById()">Search</button>
    </fieldset>
 </form>
-<br>
-<hr width=800 align=left>
-<br>
+
 <form action="#">
-   <fieldset>
+   <fieldset class="fieldset1">
+    <legend>Find user by login:</legend>
+    <input id="user_login" placeholder="User login">
+    <button onclick="findUserByLogin()">Search</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset class="fieldset1">
+    <legend>Find user by name:</legend>
+    <input id="user_name" placeholder="User name">
+    <button onclick="findUserByName()">Search</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset class="fieldset1">
     <legend>List all users</legend>
     <button onclick="findAllUsers()">Show all users</button>
    </fieldset>
 </form>
 
+<form action="#">
+   <fieldset>
+    <legend>Create new user:</legend>
+    <label class="label1" for="user_newname" >User name:</label>
+    <label class="label1" for="user_newlogin" >Login:</label>
+    <label class="label1" for="user_newpassword" >Password:</label>
+    <label class="label1" for="user_newage" >Age:</label>
+    <label class="label1" for="user_photo" >File with photo:</label>
+    <br>
+    <input id="user_newname" placeholder="User name">&nbsp;
+    <input id="user_newlogin" placeholder="User login">&nbsp;
+    <input id="user_newpassword" placeholder="User password">&nbsp;
+    <input id="user_newage" placeholder="User age">&nbsp;
+    <input id="user_photo" placeholder="file with photo">&nbsp;
+    <br>
+    <button onclick="createUser()">Create user</button>
+    <font color=#FF0000>&nbsp;&nbsp;&nbsp;&nbsp;Needs to update by clicking "Show all users" button after call</font>
+   </fieldset>
+</form>
 
+<br><hr align=left width=1000>
+<div id="user_list"></div> 
+<br><hr align=left width=1000>
+<div id="debug_frame"></div>
 
-
-
-
-<input id="search_field">
-<button onclick="searchByLogin()">Search by Login</button>
 <script>
-    function searchByLogin() {
-        var login = document.getElementById("search_field").value;
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var user = JSON.parse(this.responseText);
-                var html = '<tr>\n' +
-                    '        <th>User id</th>\n' +
-                    '        <th>User name</th>\n' +
-                    '        <th>User login</th>\n' +
-                    '        <th>User email</th>\n' +
-                    '        <th>Delete</th>\n' +
-                    '    </tr>';
-                html = html + '<tr><td>' + user.id + '</td>\n' +
-                    '        <td>' + user.name + '</td>\n' +
-                    '        <td>' + user.login + '</td>\n' +
-                    '        <td>' + user.email + '</td>' +
-                    '        <td><button onclick="deleteUser(' + user.id + ')">Delete</button></td></tr>';
-                document.getElementById("usersList").innerHTML = html;
-            }
-        };
-        xhttp.open("GET", "http://localhost:8080/users/findByLogin?login=" + login, true);
-        xhttp.send();
-    }
+   function findUserById() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var id = parseInt(document.getElementById("user_id").value);
+      document.getElementById("user_list").innerHTML = users_findById(id);
+   }
 
-    function deleteUser(userId) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("DELETE", "http://localhost:8080/users/delete/" + userId, true);
-        xhttp.send();
-    }
+   function findUserByLogin() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var login = document.getElementById("user_login").value;
+      document.getElementById("user_list").innerHTML = users_findByLogin(login);
+   }
 
-    function createUser() {
-        var userName = document.getElementById("user_name").value;
-        var userLogin = document.getElementById("user_login").value;
-        var userEmail = document.getElementById("user_email").value;
+   function findUserByName() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var name = document.getElementById("user_name").value;
+      document.getElementById("user_list").innerHTML = users_findByName(name);
+   }
 
-        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
-        xmlhttp.open("POST", "http://localhost:8080/users/save");
-        xmlhttp.setRequestHeader("Content-Type", "application/json");
-        xmlhttp.send(JSON.stringify({name: userName, login: userLogin, email: userEmail}));
+   function findAllUsers() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      document.getElementById("user_list").innerHTML = users_getAllUsers();
+   }
 
-        loadUsers();
-    }
-
-    function loadUsers() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var users = JSON.parse(this.responseText);
-                var html = '<tr>\n' +
-                    '        <th>User id</th>\n' +
-                    '        <th>User name</th>\n' +
-                    '        <th>User login</th>\n' +
-                    '        <th>User email</th>\n' +
-                    '        <th>Delete</th>\n' +
-                    '    </tr>';
-                for (var i = 0; i < users.length; i++) {
-                    var user = users[i];
-                    console.log(user);
-                    html = html + '<tr><td>' + user.id + '</td>\n' +
-                        '        <td>' + user.name + '</td>\n' +
-                        '        <td>' + user.login + '</td>\n' +
-                        '        <td>' + user.email + '</td>' +
-                        '        <td><button onclick="deleteUser(' + user.id + ')">Delete</button></td></tr>';
-
-                }
-                document.getElementById("usersList").innerHTML = html;
-            }
-        };
-        xhttp.open("GET", "http://localhost:8080/users/findAll", true);
-        xhttp.send();
-    }
-
-    loadUsers();
+   function createUser() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var name = document.getElementById("user_newname").value;
+      var login = document.getElementById("user_newlogin").value;
+      var password = document.getElementById("user_newpassword").value;
+      var age = parseInt(document.getElementById("user_newage").value);
+//      var photo_file = document.getElementById("user_photo").value;
+//	var photo_result = saveFile(photo_file);
+//	photoId = або photo_result.id  або null;
+      var photoId = null;
+      var result = users_createUser(name, password, photoId, login, age); 
+      document.getElementById("user_list").innerHTML = result;
+   }
 </script>
+
 </body>
 </html>

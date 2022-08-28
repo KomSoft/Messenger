@@ -3,6 +3,7 @@ package com.itea.messenger.controller;
 import com.itea.messenger.dto.MessagesDto;
 import com.itea.messenger.service.MessagesService;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class MessagesController {
     private final MessagesService messagesService;
 
+    @SneakyThrows
     @PostMapping
     public MessagesDto saveMessages(@RequestBody MessagesDto messageDto) {
         log.info("Handling save message: " + messageDto);
@@ -34,10 +36,17 @@ public class MessagesController {
         return messagesService.getAllMessagesByChatId(chatId);
     }
 
+    @GetMapping("{chatId}/chat/{userId}")
+    public List<MessagesDto> getMessagesForUserByChatId(@PathVariable("chatId") Long chatId, @PathVariable("userId") Long userId) {
+        log.info("Handling get messages by chatId: " + chatId + ",   userId: " + userId);
+        return messagesService.getMessagesForUserByChatId(chatId,userId);
+    }
+
+    @SneakyThrows
     @DeleteMapping("{Id}")
     public void deleteMessage(@PathVariable("Id") Long messageId) {
         log.info("Handling delete message by ID: " + messageId);
         messagesService.deleteMessage(messageId);
     }
 
-}
+    }

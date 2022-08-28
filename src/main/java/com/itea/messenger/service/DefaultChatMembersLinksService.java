@@ -22,7 +22,7 @@ public class DefaultChatMembersLinksService implements ChatMembersLinksService {
         if (isNull(chatMembersLinksDto)) {
             throw new ValidationException("Object chat members link is null");
         }
-        if (isNull(chatMembersLinksDto.getChatID()) || isNull(chatMembersLinksDto.getUserID())) {
+        if (isNull(chatMembersLinksDto.getChatId()) || isNull(chatMembersLinksDto.getUserId())) {
             throw new ValidationException("Chat id or user id is null");
         }
     }
@@ -41,7 +41,7 @@ public class DefaultChatMembersLinksService implements ChatMembersLinksService {
 
     @Override
     public List<ChatMembersLinksDto> findAll() {
-        List<ChatMembersLinksDto> listDto = new ArrayList<ChatMembersLinksDto>();
+        List<ChatMembersLinksDto> listDto = new ArrayList<>();
         List<ChatMembersLinks> list = chatMembersLinksRepository.findAll();
         for (ChatMembersLinks entity: list
              ) {

@@ -19,7 +19,7 @@ public class DefaultFilesService implements FilesService {
     private final FilesRepository filesRepository;
     private final FilesConverter filesConverter;
 
-    private void validateFileDto(FilesDto filesDto)throws ValidationException{
+    private void validateFileDto(FilesDto filesDto)throws ValidationException {
         if (isNull(filesDto)){
             throw new ValidationException("Object file is null");
             }
@@ -42,7 +42,7 @@ public class DefaultFilesService implements FilesService {
 
     @Override
     public List<FilesDto> findAll() {
-        List<FilesDto> dtoList = new ArrayList<FilesDto>();
+        List<FilesDto> dtoList = new ArrayList<>();
         List<Files> list = filesRepository.findAll();
         for (Files file: list
              ) {

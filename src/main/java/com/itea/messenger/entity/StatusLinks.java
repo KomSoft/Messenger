@@ -24,9 +24,6 @@ public class StatusLinks {
     @Column(name = "user_id")
     private Long userId;
 
-/*
-//  Column (field) isn't need when use List<StatusLinks> messageStatus and @OneToMany in Messages
     @Column(name = "message_id")
     private Long messageId;
-*/
 }
