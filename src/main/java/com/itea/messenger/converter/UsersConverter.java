@@ -7,23 +7,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class UsersConverter {
     public Users usersEntityFromDto(UsersDto usersDto) {
-        Users users = new Users();
-        users.setId(usersDto.getId());
-        users.setName(usersDto.getName());
-        users.setAge(usersDto.getAge());
-        users.setLogin(usersDto.getLogin());
-        users.setPassword(usersDto.getPassword());
-        users.setPhotoId(usersDto.getPhotoId());
-        return users;
+        Users user = new Users();
+        user.setId(usersDto.getId());
+        user.setName(usersDto.getName());
+        user.setAge(usersDto.getAge());
+        user.setLogin(usersDto.getLogin());
+        user.setPassword(usersDto.getPassword());
+        user.setPhotoId(usersDto.getPhotoId());
+        return user;
     }
-    public UsersDto dtoFromUsersEntity(Users users){
+
+    public UsersDto dtoFromUsersEntity(Users user) {
         UsersDto usersDto = new UsersDto();
-        usersDto.setId(users.getId());
-        usersDto.setAge(users.getAge());
-        usersDto.setName(users.getName());
-        usersDto.setLogin(users.getLogin());
-        usersDto.setPassword(users.getPassword());
-        usersDto.setPhotoId(users.getPhotoId());
+        usersDto.setId(user.getId());
+        usersDto.setAge(user.getAge());
+        usersDto.setName(user.getName());
+        usersDto.setLogin(user.getLogin());
+        usersDto.setPassword(user.getPassword());
+        usersDto.setPhotoId(user.getPhotoId());
         return usersDto;
     }
 }

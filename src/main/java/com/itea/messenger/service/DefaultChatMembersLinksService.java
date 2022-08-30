@@ -2,7 +2,7 @@ package com.itea.messenger.service;
 
 import com.itea.messenger.converter.ChatMembersLinksConverter;
 import com.itea.messenger.dto.ChatMembersLinksDto;
-import com.itea.messenger.entity.ChatMembersLinks;
+import com.itea.messenger.entity.ChatUsersLinks;
 import com.itea.messenger.repository.ChatMembersLinksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,21 +29,21 @@ public class DefaultChatMembersLinksService implements ChatMembersLinksService {
     @Override
     public ChatMembersLinksDto saveChatMembersLink(ChatMembersLinksDto chatMembersLinksDto) throws ValidationException {
         validateChatMembersLinkDto(chatMembersLinksDto);
-        ChatMembersLinks chatMembersLinks = chatMembersLinksRepository.save(chatMembersLinksConverter.chatMembersLinkEntityFromDto(chatMembersLinksDto));
+        ChatUsersLinks chatMembersLinks = chatMembersLinksRepository.save(chatMembersLinksConverter.chatMembersLinkEntityFromDto(chatMembersLinksDto));
         return chatMembersLinksConverter.dtoFromChatMembersLinkEntity(chatMembersLinks);
     }
 
     @Override
     public ChatMembersLinksDto findById(Long id) throws ValidationException {
-        ChatMembersLinks chatMembersLinks = chatMembersLinksRepository.findById(id).orElseThrow(() ->new ValidationException("No object with this id"));
+        ChatUsersLinks chatMembersLinks = chatMembersLinksRepository.findById(id).orElseThrow(() ->new ValidationException("No object with this id"));
         return chatMembersLinksConverter.dtoFromChatMembersLinkEntity(chatMembersLinks);
     }
 
     @Override
     public List<ChatMembersLinksDto> findAll() {
         List<ChatMembersLinksDto> listDto = new ArrayList<>();
-        List<ChatMembersLinks> list = chatMembersLinksRepository.findAll();
-        for (ChatMembersLinks entity: list
+        List<ChatUsersLinks> list = chatMembersLinksRepository.findAll();
+        for (ChatUsersLinks entity: list
              ) {
             listDto.add(chatMembersLinksConverter.dtoFromChatMembersLinkEntity(entity));
 
