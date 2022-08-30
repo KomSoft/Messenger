@@ -6,9 +6,12 @@ import java.util.List;
 
 public interface ChatServiceInterface {
 
-    public void startChat (Chat chat);
+    void startChat (Chat chat);
 
-    public boolean deleteChat (String name);
+    boolean deleteChat (String name);
 
-    public List<Chat> findChatList (String name);
+    List<Chat> findChatList (String name);
+
+    Chat getChatById(Long chatId);
+
 }

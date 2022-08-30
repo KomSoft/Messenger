@@ -11,6 +11,7 @@ public class StatusLinksConverter {
         statusLinks.setId(statusLinksDto.getId());
         statusLinks.setStatus(statusLinksDto.getStatus());
         statusLinks.setUserId(statusLinksDto.getUserId());
+        statusLinks.setMessageId(statusLinksDto.getMessageId());
         return statusLinks;
     }
 
@@ -19,6 +20,7 @@ public class StatusLinksConverter {
         dto.setId(statusLinks.getId());
         dto.setStatus(statusLinks.getStatus());
         dto.setUserId(statusLinks.getUserId());
+        dto.setMessageId(statusLinks.getMessageId());
         return dto;
     }
 }

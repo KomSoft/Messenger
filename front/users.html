@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Users Tool</TITLE>
+<link rel="stylesheet" href="styles.css">
+<script src="users.js" async=""></script> 
+</head>
+
+<body>
+
+<h3 align=center>Users Tool</h3>
+
+<form action="#">
+   <fieldset class="fieldset1">
+    <legend>Find user by Id:</legend>
+    <input id="user_id" placeholder="User Id">
+    <button onclick="findUserById()">Search</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset class="fieldset1">
+    <legend>Find user by login:</legend>
+    <input id="user_login" placeholder="User login">
+    <button onclick="findUserByLogin()">Search</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset class="fieldset1">
+    <legend>Find user by name:</legend>
+    <input id="user_name" placeholder="User name">
+    <button onclick="findUserByName()">Search</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset class="fieldset1">
+    <legend>List all users</legend>
+    <button onclick="findAllUsers()">Show all users</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset>
+    <legend>Create new user:</legend>
+    <label class="label1" for="user_newname" >User name:</label>
+    <label class="label1" for="user_newlogin" >Login:</label>
+    <label class="label1" for="user_newpassword" >Password:</label>
+    <label class="label1" for="user_newage" >Age:</label>
+    <label class="label1" for="user_photo" >File with photo:</label>
+    <br>
+    <input id="user_newname" placeholder="User name">&nbsp;
+    <input id="user_newlogin" placeholder="User login">&nbsp;
+    <input id="user_newpassword" placeholder="User password">&nbsp;
+    <input id="user_newage" placeholder="User age">&nbsp;
+    <input id="user_photo" placeholder="file with photo">&nbsp;
+    <br>
+    <button onclick="createUser()">Create user</button>
+    <font color=#FF0000>&nbsp;&nbsp;&nbsp;&nbsp;Needs to update by clicking "Show all users" button after call</font>
+   </fieldset>
+</form>
+
+<br><hr align=left width=1000>
+<div id="user_list"></div> 
+<br><hr align=left width=1000>
+<div id="debug_frame"></div>
+
+<script>
+   function findUserById() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var id = parseInt(document.getElementById("user_id").value);
+      document.getElementById("user_list").innerHTML = users_findById(id);
+   }
+
+   function findUserByLogin() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var login = document.getElementById("user_login").value;
+      document.getElementById("user_list").innerHTML = users_findByLogin(login);
+   }
+
+   function findUserByName() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var name = document.getElementById("user_name").value;
+      document.getElementById("user_list").innerHTML = users_findByName(name);
+   }
+
+   function findAllUsers() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      document.getElementById("user_list").innerHTML = users_getAllUsers();
+   }
+
+   function createUser() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var name = document.getElementById("user_newname").value;
+      var login = document.getElementById("user_newlogin").value;
+      var password = document.getElementById("user_newpassword").value;
+      var age = parseInt(document.getElementById("user_newage").value);
+//      var photo_file = document.getElementById("user_photo").value;
+//	var photo_result = saveFile(photo_file);
+//	photoId = або photo_result.id  або null;
+      var photoId = null;
+      var result = users_createUser(name, password, photoId, login, age); 
+      document.getElementById("user_list").innerHTML = result;
+   }
+</script>
+
+</body>
+</html>

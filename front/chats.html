@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Chats Tool</TITLE>
+<link rel="stylesheet" href="styles.css">
+<script src="chats.js" async=""></script> 
+</head>
+
+<body>
+
+<h3 align=center>Chats Tool</h3>
+
+<form action="#">
+   <fieldset class="fieldset1">
+    <legend>Find chat by Id:</legend>
+    <input id="chat_id" placeholder="Chat Id">
+    <button onclick="findChatById()">Search</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset class="fieldset1">
+    <legend>List all chats</legend>
+    <button onclick="findAllChats()">Show all chats</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset>
+    <legend>Create new chat:</legend>
+    <label class="label1" for="chat_name" >Chat name:</label>
+    <label class="label1" for="chat_description" >Desctiption:</label>
+    <label class="label1" for="chat_type" >Chat type:</label>
+    <br>
+    <input id="chat_name" placeholder="Chat name">&nbsp;
+    <input id="chat_description" placeholder="Description">&nbsp;
+    <select name="chat_type_list" id="chat_type_list">
+	<!-- getChatTypes() puts '<option value="**">**</option>' with chatTypes here  -->
+    </select>
+    <button onclick="getChatTypes()">Refresh chat types</button>
+    <br>
+    <button onclick="createChat()">Create chat</button>
+    <font color=#FF0000>&nbsp;&nbsp;&nbsp;&nbsp;Needs to update by clicking "Show all chats" button after call</font>
+   </fieldset>
+</form>
+
+<br><hr align=left width=1000>
+<div id="chat_list"></div> 
+<br><hr align=left width=1000>
+<div id="debug_frame"></div>
+
+<script>
+   function findChatById() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var id = parseInt(document.getElementById("chat_id").value);
+      document.getElementById("chat_list").innerHTML = chats_findById(id);
+   }
+
+   function findAllChats() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      document.getElementById("chat_list").innerHTML = chats_getAllChats();
+   }
+
+   function getChatTypes() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      document.getElementById("chat_type_list").innerHTML = chats_getChatTypes();
+   }
+
+   function createChat() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var name = document.getElementById("chat_name").value;
+      var description = document.getElementById("chat_description").value;
+      var type_elem = document.getElementById("chat_type_list");
+      var chatType = type_elem.options[type_elem.selectedIndex].text;
+      var result = chats_createChat(name, description, chatType); 
+      document.getElementById("chat_list").innerHTML = result;
+   }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<style>
+   table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+      }
+
+   td, th {
+      border: 1px solid #dddddd;
+      text-align: center;
+      padding: 8px;
+      }
+
+   tr:nth-child(even) { background-color: #dddddd; }
+
+   .label1 { width:180px; display: inline-block; align:right; }
+   .label2 { width:60px; display: inline-block; align:right; }
+   .fieldset1 { width:500px; }
+
+   .doublediv { display: flex; flex-direction: row; }
+
+   .table_message { width: 100%; font-family: arial, sans-serif; border-collapse: collapse; border:1px solid black;  border-radius: 12px;}
+   .td_mes_info { width: 150px; font-family: arial, sans-serif; text-align: center; border:1px solid black; border-radius: 12px;}
+   .td_mes_text { font-family: arial, sans-serif; text-align:left; }
+   .td_author_info { width: 150px; font-family: arial, sans-serif; text-align: center; background-color: #D6EEEE; border:1px solid black; border-radius: 12px;}
+   .td_author_text { font-family: arial, sans-serif; text-align:left; background-color: #D6EEEE;}
+   .td_create { text-align:left; background-color: #D6EEEE; }
+
+   .div_author { float: right; width: 80%;  border:1px solid black; border-radius: 12px;}
+   .div_nonauthor { float: left; width: 80%;  border:1px solid black;border-radius: 12px;}
+   .div_create { float: center; width: 80%;  border:1px solid black; }
+
+</style>

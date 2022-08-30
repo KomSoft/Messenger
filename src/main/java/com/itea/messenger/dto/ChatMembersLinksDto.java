@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ChatMembersLinksDto {
     private Long id;
-    private Long chatID;
-    private Long userID;
+    private Long chatId;
+    private Long userId;
 }

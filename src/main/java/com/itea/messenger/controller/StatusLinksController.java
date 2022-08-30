@@ -22,10 +22,16 @@ public class StatusLinksController {
         return statusLinksService.saveStatusLink(statusLinksDto);
     }
 
-    @GetMapping("/{id}")
-    public StatusLinksDto findById(@PathVariable Long id) throws ValidationException {
+    @GetMapping("/{Id}")
+    public StatusLinksDto findById(@PathVariable("Id") Long id) throws ValidationException {
         log.info("Handling find by id: " + id);
         return statusLinksService.findById(id);
+    }
+
+    @GetMapping("/{Id}/message")
+    public List<StatusLinksDto> findByMessageId(@PathVariable("Id") Long messageId) throws ValidationException {
+        log.info("Handling find by messageId: " + messageId);
+        return statusLinksService.findByMessageId(messageId);
     }
 
 }

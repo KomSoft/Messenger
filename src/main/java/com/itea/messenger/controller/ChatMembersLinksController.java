@@ -29,7 +29,7 @@ public class ChatMembersLinksController {
     }
 
     @GetMapping("/{id}")
-    public ChatMembersLinksDto findById(@PathVariable Long id)throws ValidationException{
+    public ChatMembersLinksDto findById(@PathVariable Long id)throws ValidationException {
         log.info("Handling find by id chat members link");
         return chatMembersLinksService.findById(id);
     }

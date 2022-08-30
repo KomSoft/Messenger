@@ -7,10 +7,8 @@ import com.itea.messenger.repository.StatusLinksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Id;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -34,7 +32,8 @@ public class DefaultStatusLinksService implements StatusLinksService{
         validateStatusLinkDto(statusLinksDto);
         StatusLinks savedStatusLinks = 
                 statusLinksRepository.save(statusLinksConverter.statusLinksFromDto(statusLinksDto));
-        return statusLinksDto;
+//      corrected by KomSoft
+        return statusLinksConverter.dtoFromStatusLinks(savedStatusLinks);
     }
 
     @Override
@@ -42,5 +41,11 @@ public class DefaultStatusLinksService implements StatusLinksService{
         StatusLinks statusLinks = statusLinksRepository.findById(id).orElseThrow(() ->
                 new ValidationException("No status links with this id"));
         return statusLinksConverter.dtoFromStatusLinks(statusLinks);
+    }
+
+    @Override
+    public List<StatusLinksDto> findByMessageId(Long messageId) {
+        List<StatusLinks> statusLinks = statusLinksRepository.findByMessageId(messageId);
+        return statusLinks.stream().map(statusLinksConverter::dtoFromStatusLinks).collect(Collectors.toList());
     }
 }

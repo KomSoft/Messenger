@@ -23,7 +23,7 @@ public class UsersController {
     }
 
     @GetMapping("/{id}")
-    public UsersDto findById(@PathVariable Long id)throws ValidationException{
+    public UsersDto findById(@PathVariable Long id)throws ValidationException {
         log.info("Handling find by id: " + id);
         return usersService.findById(id);
     }
