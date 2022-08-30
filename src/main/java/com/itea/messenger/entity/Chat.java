@@ -6,19 +6,20 @@ import lombok.NoArgsConstructor;
 //import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name = "chats")
 public class Chat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    Rename to "id" will be better;
-    private Long chatId;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -29,7 +30,7 @@ public class Chat {
     @Enumerated(EnumType.STRING)
     private ChatTypeEnum chatType;
 
-//    Added to create links with Chat's Messages
+    //    Added to create links with Chat's Messages
     @OneToMany
     @JoinColumn(name = "chat_id")
     private List<Messages> chatMessages;
@@ -40,4 +41,7 @@ public class Chat {
         this.chatType = chatType;
         chatMessages = new ArrayList<>();
     }
+
+    @ManyToMany(mappedBy = "chats")
+    private Set<Users> users;
 }

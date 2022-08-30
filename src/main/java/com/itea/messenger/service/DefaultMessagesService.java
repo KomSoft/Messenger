@@ -1,7 +1,7 @@
 package com.itea.messenger.service;
 
 import com.itea.messenger.dto.MessagesDto;
-import com.itea.messenger.entity.ChatMembersLinks;
+import com.itea.messenger.entity.ChatUsersLinks;
 import com.itea.messenger.entity.Messages;
 import com.itea.messenger.converter.MessagesConverter;
 import com.itea.messenger.entity.StatusLinks;
@@ -169,7 +169,7 @@ public class DefaultMessagesService implements MessagesService {
 */
     @Override
     public List<MessagesDto> getMessagesForUserByChatId(Long chatId, Long userId) {
-        ChatMembersLinks chatMember = chatMembersLinksRepository.findByChatIdAndUserId(chatId, userId);
+        ChatUsersLinks chatMember = chatMembersLinksRepository.findByChatIdAndUserId(chatId, userId);
         List<Messages> messagesList = messagesRepository.findMessagesByChatIdAndDateTimeAfter(chatId, chatMember.getJoinDate());
         List<MessagesDto> result = new ArrayList<>();
   log.info("getMessagesForUserByChatId --> by chatId: " + chatId + ",   userId: " + userId + "\n" + messagesList);

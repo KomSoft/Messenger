@@ -1,13 +1,13 @@
 package com.itea.messenger.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "users_table")
+@Table(name = "users")
 @NoArgsConstructor
 
 public class Users {
@@ -29,5 +29,9 @@ public class Users {
 
     @Column
     private int age;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "chats_users", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "chat_id"))
+    public Set<Chat> chats;
 
 }

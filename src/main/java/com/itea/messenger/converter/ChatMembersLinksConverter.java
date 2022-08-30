@@ -1,19 +1,19 @@
 package com.itea.messenger.converter;
 
 import com.itea.messenger.dto.ChatMembersLinksDto;
-import com.itea.messenger.entity.ChatMembersLinks;
+import com.itea.messenger.entity.ChatUsersLinks;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ChatMembersLinksConverter {
-    public ChatMembersLinks chatMembersLinkEntityFromDto(ChatMembersLinksDto chatMembersLinksDto) {
-        ChatMembersLinks chatMembersLinks = new ChatMembersLinks();
+    public ChatUsersLinks chatMembersLinkEntityFromDto(ChatMembersLinksDto chatMembersLinksDto) {
+        ChatUsersLinks chatMembersLinks = new ChatUsersLinks();
         chatMembersLinks.setId(chatMembersLinksDto.getId());
         chatMembersLinks.setChatId(chatMembersLinksDto.getChatId());
         chatMembersLinks.setUserId(chatMembersLinksDto.getChatId());
         return chatMembersLinks;
     }
-    public ChatMembersLinksDto dtoFromChatMembersLinkEntity(ChatMembersLinks chatMembersLinks){
+    public ChatMembersLinksDto dtoFromChatMembersLinkEntity(ChatUsersLinks chatMembersLinks){
         ChatMembersLinksDto chatMembersLinksDto = new ChatMembersLinksDto();
         chatMembersLinksDto.setId(chatMembersLinks.getId());
         chatMembersLinksDto.setChatId(chatMembersLinks.getChatId());
