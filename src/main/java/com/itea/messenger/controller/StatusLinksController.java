@@ -1,8 +1,8 @@
 package com.itea.messenger.controller;
 
 import com.itea.messenger.dto.StatusLinksDto;
+import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.service.StatusLinksService;
-import com.itea.messenger.service.ValidationException;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;

@@ -1,13 +1,13 @@
 TODO
 
-1. controller/service getAllChats()
+	controller/service getAllChats()
 controller/service getChatTypes()
-controller/service createChat()
-controller/service deleteChat()
+	controller/service createChat()
+	controller/service deleteChat()
 
-controller/service deleteUser()
-controller/service findByLoginUser()
-controller/service findByNameUser
+	controller/service deleteUser()
+	controller/service findByLoginUser()
+	controller/service findByNameUser
 
-controller/service List<Chats> ChatMembersLinkService.getChatsByUserId(Long userId)
-controller/service List<Users> ChatMembersLinkService.getUsersByChatId(Long userId)
+	controller/service List<Chats> ChatMembersLinkService.getChatsByUserId(Long userId)
+	controller/service List<Users> ChatMembersLinkService.getUsersByChatId(Long userId)

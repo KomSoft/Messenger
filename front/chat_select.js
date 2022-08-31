@@ -1,24 +1,34 @@
 var host = 'http://localhost:8080';
+var gUsers;
 
 function mess_getUsersList() {
    var xhttp = new XMLHttpRequest();
    var request = host + "/users";
    var debug = '[debug] Request: ' + request;
-   var html = new Array;
+   gUsers = new Array;
    xhttp.open('GET', request , false);
    xhttp.send();
       debug = debug + '<br>[debug] Response status: ' + xhttp.status;
       if (xhttp.status == 200) {
          debug += '<br>[debug] Response: ' + xhttp.responseText;
-         var users = JSON.parse(xhttp.responseText);  
-         for (var i = 0; i < users.length; i++) {
-            html.push([ users[i].id, users[i].name]);
+         var users_resp = JSON.parse(xhttp.responseText);  
+         for (var i = 0; i < users_resp.length; i++) {
+            gUsers.push([ users_resp[i].id, users_resp[i].name]);
          }   
-         console.log(html);
+         console.log(gUsers);
       }
    document.getElementById("debug_frame").innerHTML = debug;
-   return html;
+   return gUsers;
 }	
+
+function _getUserById(id) {
+   for (i = 0; i < gUsers.length; i++) {
+      if (parseInt(gUsers[i][0]) == id) {
+         return gUsers[i][1];
+      }
+   }
+   return 'unknown user';
+}
 	
 function mess_getChatListForUser(user_id) {
 //	var chatId_list = getChatListByUserId(parseInt(user_id));
@@ -55,9 +65,45 @@ function mess_getChatListForUser(user_id) {
    document.getElementById("debug_frame").innerHTML = debug;
 }
 
+function getStatusesByMessageId(id) {
+  	var xhttp = new XMLHttpRequest();
+   var request = host + "/statusLinks/" + id + '/message';
+   var debug = '<br>[debug] Request: ' + request;
+   xhttp.open('GET', request , false);
+   xhttp.send();
+	if (xhttp.status == 200) {
+      var statuses = JSON.parse(xhttp.responseText);
+   } else {
+		console.log('[getStatusesByMessageId] Id:' + id + ' -> Error. Response status: ' + xhttp.status);
+      statuses = null;
+   }
+	return statuses;
+}
+
+
 function getMessageInfo(id) {
-// get message info TODO  - write sevice & request
-   alert('Statuses for message Id:' + id + '\n API not exists yet');
+	statuses = getStatusesByMessageId(id);
+	var res;
+	if (statuses != null) {
+      for (i = 0; i < statuses.length; i++) {
+         res += _getUserById(statuses[i].userId) + ' - ' + statuses[i].status + '\n';
+      }
+	} else {
+      res = 'No statuses for this message.';
+   }
+   alert('Statuses for message Id:' + id + '\n' + res);
+}
+
+function getStatusbyMessageIdByUserId(id, user_id) {
+	statuses = getStatusesByMessageId(id);
+	if (statuses != null) {
+      for (i = 0; i < statuses.length; i++) {
+			if (statuses[i].userId == iser_id) {
+				return statuses[i].status;
+			}
+      }
+	}
+	return 'no status';
 }
 
 function editMessage(id) {
@@ -69,7 +115,8 @@ function createDivMessage(user_id, message) {
    var res =  '<tr id="messageId' + message.id + '"><td class="';
    var td1 = user_id == message.userId ? 'td_author_info' : 'td_mes_info';
    var td2 = user_id == message.userId ? 'td_author_text' : 'td_mes_text';
-   res += td1 + '">userId:' + message.userId + '<br><br>photo</td><td class="' + td2 + '">';
+//   res += td1 + '">userId:' + message.userId + '<br><br>photo</td><td class="' + td2 + '">';
+   res += td1 + '"><b>' + _getUserById(message.userId) + '</b><br><br>photo</td><td class="' + td2 + '">';
    res += '<b>Posted at: ' + message.dateTime + '</b>&nbsp;&nbsp;&nbsp;&nbsp;';
    res += '<button onclick="getMessageInfo(' + message.id + ' )">Message status</button>';
    if (user_id == message.userId) {
@@ -84,12 +131,16 @@ function createDivMessage(user_id, message) {
 }
 
 function createMessage(chat_id, user_id) {
-      var file_id = null;
-// TODO - save file & get Id or change method      
-      text = document.getElementById("message_text").value;
-      if (text != '') {
-          var result = messages_create(chat_id, user_id, file_id, document.getElementById("message_text").value); 
-      }
+   var file_name = document.getElementById("attached_file").files[0].name;
+   var file_id = null;
+// TODO - we can save message only if file_id or text != null
+   if (file_name != '') {
+		file_id = common_saveFile(file_name);
+   }
+   text = document.getElementById("message_text").value;
+   if (text != '') {
+      var result = messages_create(chat_id, user_id, file_id, text); 
+   }
    alert('Save message result:\n' + result + '\nPlease update chat!');
    getChatMessages(chat_id);
 }
@@ -98,11 +149,12 @@ function addFormCreateMessage(chat_id, user_id) {
    res = '<tr><td></td><td class="td_create"><form action="#"><fieldset class="fieldset1"><legend>Reply (create new message):</legend>';
    res += '<label class="label1" for="message_text" >Your message:</label>';
    res += '<input id="message_text" size=65 placeholder="Message text (up to 255 chars)"><br>';
-   res += '<label class="label1" for="file_id" >File Id:</label>';
-   res += '<input id="file_id" placeholder="(Long) File Id">TODO - add select file button<br>'
+   res += '<label class="label1" for="attached_file" >Attach file:</label>';
+   res += '<input id="attached_file" type="file"><br>'
    res += '<button onclick="createMessage('+ chat_id + ',' + user_id + ')">';
    res += 'Save message</button>&nbsp;&nbsp;&nbsp;&nbsp;';
-   res += '<button type="reset" value="Reset">Cancel</button></fieldset></form></td></tr>'
+//   res += '<button type="reset" value="Reset">Cancel</button>'
+   res += '</fieldset></form></td></tr>'
    return res;
 }
 
@@ -127,8 +179,8 @@ function mess_getChatMessages(chat_id, user_id) {
       xhttp.send();
       if (xhttp.status == 200) {
          messages = JSON.parse(xhttp.responseText);
-         for (i = 0; i < messages.length; i++) {
-            html += createDivMessage(user_id, messages[i]);
+         for (k = 0; k < messages.length; k++) {
+            html += createDivMessage(user_id, messages[k]);
          }
          html += addFormCreateMessage(chat_id, user_id);
          html += '</table>';

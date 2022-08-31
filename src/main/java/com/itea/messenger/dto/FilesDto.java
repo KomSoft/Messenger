@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class FilesDto {
     private Long id;
-    private String file;
+    private String fileName;
     private FileTypes fileType;
 }

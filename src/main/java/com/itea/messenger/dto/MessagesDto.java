@@ -19,6 +19,6 @@ public class MessagesDto {
     private Long fileId;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
     private LocalDateTime dateTime;
-    private List<StatusLinks> messageStatus;
-//    private Long statusId;
+//  Do we need to send Statuses? or we get its by another method?
+//    private List<StatusLinks> messageStatus;
 }

@@ -62,6 +62,7 @@ function chats_findById(id) {
 }
 
 function chats_getAllChats() {
+alert('APUI not exists yet!');	
    var xhttp = new XMLHttpRequest();
    var request = host;
    var debug = '[debug] Request: ' + request;

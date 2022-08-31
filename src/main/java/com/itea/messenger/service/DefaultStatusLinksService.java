@@ -3,6 +3,7 @@ package com.itea.messenger.service;
 import com.itea.messenger.converter.StatusLinksConverter;
 import com.itea.messenger.dto.StatusLinksDto;
 import com.itea.messenger.entity.StatusLinks;
+import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.repository.StatusLinksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

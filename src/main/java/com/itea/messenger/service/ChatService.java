@@ -1,11 +1,11 @@
 package com.itea.messenger.service;
 
-import com.itea.messenger.converter.ChatConverter;
-import com.itea.messenger.dto.ChatDto;
-import com.itea.messenger.entity.Chat;
+import com.itea.messenger.converter.ChatsConverter;
+import com.itea.messenger.dto.ChatsDto;
+import com.itea.messenger.entity.Chats;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.itea.messenger.repository.ChatRepository;
+import com.itea.messenger.repository.ChatsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 public class ChatService implements ChatServiceInterface {
 
-    private final ChatRepository chatRepository;
-    private final ChatConverter chatConverter;
+    private final ChatsRepository chatsRepository;
+    private final ChatsConverter chatsConverter;
 
     @Override
-    public void startChat(Chat chat) {
+    public void startChat(Chats chat) {
     }
 
     @Override
@@ -27,30 +27,18 @@ public class ChatService implements ChatServiceInterface {
     }
 
     @Override
-    public List<Chat> findChatList(String name) {
-        return null;
-    }
-
-//    @Override
-//    public List<Chat> findChatList(String name) {
-//        return null;
-//    }
-
-    @Override
-    public List<ChatDto> getAllChats() {
-        List<ChatDto> dtoList = new ArrayList<>();
-        List<Chat> list = chatRepository.findAll();
-        for (Chat chat : list
-        ) {
-            dtoList.add(chatConverter.dtoFromChatEntity(chat));
+    public List<ChatsDto> getAllChats() {
+        List<ChatsDto> dtoList = new ArrayList<>();
+        List<Chats> list = chatsRepository.findAll();
+        for (Chats chat : list) {
+            dtoList.add(chatsConverter.dtoFromChatEntity(chat));
         }
         return dtoList;
     }
 
     @Override
-    public Chat getChatById(Long chatId) {
-        return chatRepository.getChatById(chatId);
+    public Chats getChatById(Long chatId) {
+        return chatsRepository.getChatById(chatId);
     }
-
 
 }

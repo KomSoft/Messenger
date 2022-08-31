@@ -3,17 +3,7 @@ var table_header = '<table><tr><th>messageId</th><th>chatId</th><th>userId</th>'
 		   '<th>fileId</th><th>dateTime</th><th width="400">messageText</th></tr>';
 var table_footer = '</table>';
 
-function timestamp(date) {
-   if (date == null) { date = new Date(); }
-   var date_time = date.getFullYear() + '-' + (date.getMonth() < 9 ? "0" : "") + (date.getMonth()+1) + '-';
-       date_time = date_time + (date.getDate() < 10 ? "0" : "") + date.getDate() + 'T';
-       date_time = date_time + (date.getHours() < 10 ? "0" : "") + date.getHours() + ':';
-       date_time = date_time + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes() + ':';
-       date_time = date_time + (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
-   return date_time;
-}
-
-function fillMessageRow(message) {
+function _fillMessageRow(message) {
    res = '<tr><td>' + message.id + '</td><td>' + message.chatId + '</td><td>' + message.userId;
 	res += '</td><td>' + message.fileId +'</td><td>' + message.dateTime + '</td><td>' + message.messageText;
 	res += '</td></tr>';
@@ -31,7 +21,7 @@ function messages_findById(message_id) {
       var message = JSON.parse(xhttp.responseText);  
       debug += '<br>[debug] Response: ' + xhttp.responseText;
       console.log(message);
-      var html = table_header + fillMessageRow(message) + table_footer; 
+      var html = table_header + _fillMessageRow(message) + table_footer; 
    }
    document.getElementById("debug_frame").innerHTML = debug;
    return html;
@@ -51,7 +41,7 @@ function messages_findAllByChatId(chat_id) {
       for (var i = 0; i < messages.length; i++) {
          var message = messages[i];
          console.log(message);
-         html += fillMessageRow(message);
+         html += _fillMessageRow(message);
       }
 		html += table_footer;	
       if (messages.length == 0) {
@@ -62,10 +52,10 @@ function messages_findAllByChatId(chat_id) {
    return html;
 }
 
-function messages_deleteById(id) {
+function messages_deleteById(id, user_id) {
    if (!confirm ('Are you sure to delete message id:' + id + '?')) { return 'Canceled'; } 
    var xhttp = new XMLHttpRequest();
-   var request = host + '/' + id;
+   var request = host + '/' + id + '/user/' + user_id;
    var debug = '[debug] Request: ' + request;
    xhttp.open("DELETE", request, false);
    xhttp.send();
@@ -74,9 +64,13 @@ function messages_deleteById(id) {
    return ('Delete Status: ' + xhttp.status);
 }
 
-function messages_create(chat_id, user_id, file_id, m_text) {
-  if (!confirm ('Are you sure to create message "' + m_text + '"?')) { return 'Canceled'; } 
-  var xhttp = new XMLHttpRequest();   // new HttpRequest instance
+function messages_create(chat_id, user_id, file_name, m_text) {
+   if (!confirm ('Are you sure to create message "' + m_text + '"?')) { return 'Canceled'; } 
+// save file_name & get file_id   
+//alert('temporary file not saved. file_id sets to null. TODO');
+//	common_saveFile(file_name)
+   file_id = common_saveFile(file_name);
+   var xhttp = new XMLHttpRequest();   // new HttpRequest instance
    xhttp.open("POST", host);
    xhttp.setRequestHeader("Content-Type", "application/json");
    xhttp.send(JSON.stringify({id: 0, chatId: chat_id, userId: user_id, messageText: m_text, fileId: file_id, dateTime: timestamp(new Date())}));

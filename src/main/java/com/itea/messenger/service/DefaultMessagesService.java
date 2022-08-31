@@ -7,7 +7,7 @@ import com.itea.messenger.converter.MessagesConverter;
 import com.itea.messenger.entity.StatusLinks;
 import com.itea.messenger.entity.Users;
 import com.itea.messenger.exception.ValidationException;
-import com.itea.messenger.repository.ChatMembersLinksRepository;
+import com.itea.messenger.repository.ChatUsersLinksRepository;
 import com.itea.messenger.repository.MessagesRepository;
 import com.itea.messenger.type.MessageStatus;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,7 @@ import static java.util.Objects.isNull;
 public class DefaultMessagesService implements MessagesService {
     private final MessagesRepository messagesRepository;
     private final MessagesConverter messagesConverter;
-    private final ChatMembersLinksRepository chatMembersLinksRepository;
+    private final ChatUsersLinksRepository chatUsersLinksRepository;
 //    private final StatusLinksRepository statusLinksRepository;
     private final DefaultStatusLinksService defaultStatusLinksService;
     private static final String DELETED_MESSAGE_TEXT = "Message was deleted";
@@ -72,7 +72,7 @@ public class DefaultMessagesService implements MessagesService {
         Messages savedMessage;
 //        save new message
         if (messagesRepository.findById(message.getId()).isPresent()) {
-            List<Users> chatUsersList = chatMembersLinksRepository.findAllUsersByChatId(message.getChatId());
+            List<Users> chatUsersList = chatUsersLinksRepository.getUsersByChatId(message.getChatId());
             List<StatusLinks> statusLinksList = new ArrayList<>();
             StatusLinks status = new StatusLinks();
             for (Users user : chatUsersList) {
@@ -169,7 +169,7 @@ public class DefaultMessagesService implements MessagesService {
 */
     @Override
     public List<MessagesDto> getMessagesForUserByChatId(Long chatId, Long userId) {
-        ChatUsersLinks chatMember = chatMembersLinksRepository.findByChatIdAndUserId(chatId, userId);
+        ChatUsersLinks chatMember = chatUsersLinksRepository.findByChatIdAndUserId(chatId, userId);
         List<Messages> messagesList = messagesRepository.findMessagesByChatIdAndDateTimeAfter(chatId, chatMember.getJoinDate());
         List<MessagesDto> result = new ArrayList<>();
   log.info("getMessagesForUserByChatId --> by chatId: " + chatId + ",   userId: " + userId + "\n" + messagesList);

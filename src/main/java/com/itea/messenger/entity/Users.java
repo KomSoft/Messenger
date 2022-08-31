@@ -31,7 +31,15 @@ public class Users {
     private int age;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "chats_users", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "chat_id"))
-    public Set<Chat> chats;
+    @JoinTable(name = "chats_users", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "chat_id"))
+    public Set<Chats> chats;
+/*
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(name = "chats_users",
+            joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
+            inverseJoinColumns = { @JoinColumn(name = "chat_id", referencedColumnName = "id") })
+    public Chats chat;
+*/
 
 }

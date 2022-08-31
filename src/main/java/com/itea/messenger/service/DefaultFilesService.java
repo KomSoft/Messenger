@@ -4,6 +4,7 @@ package com.itea.messenger.service;
 import com.itea.messenger.converter.FilesConverter;
 import com.itea.messenger.dto.FilesDto;
 import com.itea.messenger.entity.Files;
+import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.repository.FilesRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class DefaultFilesService implements FilesService {
         if (isNull(filesDto)){
             throw new ValidationException("Object file is null");
             }
-        if (isNull(filesDto.getFile()) || isNull(filesDto.getFileType())){
+        if (isNull(filesDto.getFileName()) || isNull(filesDto.getFileType())){
           throw new ValidationException("File or file type is null");
         }
     }

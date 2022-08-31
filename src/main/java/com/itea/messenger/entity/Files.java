@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "file_table")
+@Table(name = "files")
 
 public class Files {
     @Id
@@ -15,7 +15,7 @@ public class Files {
     private Long id;
 
     @Column
-    private String file;
+    private String fileName;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "file_type")

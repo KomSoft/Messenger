@@ -1,8 +1,8 @@
 package com.itea.messenger.controller;
 
 import com.itea.messenger.dto.FilesDto;
+import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.service.FilesService;
-import com.itea.messenger.service.ValidationException;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +28,8 @@ public class FilesController {
         return filesService.findAll();
     }
 
-    @GetMapping("/{id}")
-    public FilesDto findById(@PathVariable Long id)throws ValidationException {
+    @GetMapping("/{Id}")
+    public FilesDto findById(@PathVariable("Id") Long id)throws ValidationException {
         log.info("Handling find by id");
         return filesService.findById(id);
     }

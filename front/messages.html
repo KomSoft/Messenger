@@ -4,6 +4,7 @@
 <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <title>Messages Tool</TITLE>
 <link rel="stylesheet" href="styles.css">
+<script src="common.js" async=""></script> 
 <script src="messages.js" async=""></script> 
 </head>
 
@@ -21,7 +22,10 @@
 <form action="#">
    <fieldset class="fieldset1">
     <legend style="color:red;">Delete message by Id:</legend>
+    <label class="label1" for="message_del_id" >Message Id:</label>
     <input id="message_del_id" placeholder="Message Id">
+    <label class="label1" for="message_del_user_id" >User Id, who tries to delete:</label>
+    <input id="message_del_user_id" placeholder="User Id"><br>
     <button onclick="deleteMessageById()">Delete</button>
    </fieldset>
 </form>
@@ -46,8 +50,10 @@
     <select name="users_list" id="users_list">
          <!-- dynamically put users list here when chats_list.onSelect() called  -->
     </select><br>
-    <label class="label1" for="file_id" >File Id:</label>
-    <input id="file_id" placeholder="(Long) File Id"><br>
+    <label class="label1" for="attached_file" >Attach file:</label>
+<!--    <button onclick="getElementById('attached_file').click()">Attach file</button>
+    <input type="file" id="attached_file" style="display:none"><br>  -->
+    <input type="file" id="attached_file"><br>
     <label class="label1" for="message_text" >Your message:</label><br>
     <input id="message_text" size=65 placeholder="Message text (up to 255 chars)"><br>
     <button onclick="createMessage()">Create</button>
@@ -111,16 +117,19 @@
 
    function deleteMessageById() {
       document.getElementById("debug_frame").innerHTML = ' ';
-      var param = document.getElementById("message_del_id").value;
-      document.getElementById("message_list").innerHTML = messages_deleteById(parseInt(param));
+      var mess_id = document.getElementById("message_del_id").value;
+      var user_id = document.getElementById("message_del_user_id").value;
+      document.getElementById("message_list").innerHTML = messages_deleteById(parseInt(mess_id), parseInt(user_id));
    }
 
    function createMessage() {
       document.getElementById("debug_frame").innerHTML = ' ';
+//		console.log(document.getElementById("chats_list").value + '  ' + document.getElementById("users_list").value + 
+//		'  ' + document.getElementById("attached_file").files[0].name + '   ' +  document.getElementById("message_text").value);
       var result = messages_create(parseInt(document.getElementById("chats_list").value), 
 	         parseInt(document.getElementById("users_list").value), 
-            parseInt(document.getElementById("file_id").value),
-            document.getElementById("message_text").value); 
+            document.getElementById("attached_file").files[0].name, 
+				document.getElementById("message_text").value); 
       document.getElementById("message_list").innerHTML = result;
    }
 
