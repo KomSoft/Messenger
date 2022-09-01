@@ -19,14 +19,14 @@ public class ChatUsersLinksController {
     private final ChatUsersLinksService chatUsersLinksService;
 
     @PostMapping
-    public ChatUsersLinksDto saveChatMembersLink(@RequestBody ChatUsersLinksDto chatMembersLinksDto) throws ValidationException {
-        log.info("Handling save chat members links: " + chatMembersLinksDto);
-        return chatUsersLinksService.saveChatMembersLink(chatMembersLinksDto);
+    public ChatUsersLinksDto saveChatMembersLink(@RequestBody ChatUsersLinksDto chatUsersLinksDto) throws ValidationException {
+        log.info("Handling save chat users links: " + chatUsersLinksDto);
+        return chatUsersLinksService.saveChatUsersLink(chatUsersLinksDto);
     }
 
     @GetMapping
     public List<ChatUsersLinksDto> findAll() {
-        log.info("Handling find all chat members links");
+        log.info("Handling find all chat users links");
         return chatUsersLinksService.findAll();
     }
 
@@ -37,13 +37,13 @@ public class ChatUsersLinksController {
     }
 
     @GetMapping("/{id}/user")
-    public List<ChatsDto> getChatsByUserId(@PathVariable("id") Long id) throws ValidationException {
+    public List<ChatsDto> getChatsByUserId(@PathVariable("id") Long id) {
         log.info("Handling find by id chat users link with id:" + id);
         return chatUsersLinksService.getChatsByUserId(id);
     }
 
     @GetMapping("/{id}/chat")
-    public List<UsersDto> getUsersByChatId(@PathVariable("id") Long id) throws ValidationException {
+    public List<UsersDto> getUsersByChatId(@PathVariable("id") Long id) {
         log.info("Handling find by id chat users link with id:" + id);
         return chatUsersLinksService.getUsersByChatId(id);
     }

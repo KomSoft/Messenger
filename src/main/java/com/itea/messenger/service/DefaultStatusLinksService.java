@@ -7,10 +7,8 @@ import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.repository.StatusLinksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static java.util.Objects.isNull;
 
 @Service
@@ -33,7 +31,6 @@ public class DefaultStatusLinksService implements StatusLinksService{
         validateStatusLinkDto(statusLinksDto);
         StatusLinks savedStatusLinks = 
                 statusLinksRepository.save(statusLinksConverter.statusLinksFromDto(statusLinksDto));
-//      corrected by KomSoft
         return statusLinksConverter.dtoFromStatusLinks(savedStatusLinks);
     }
 

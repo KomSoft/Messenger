@@ -1,7 +1,6 @@
 package com.itea.messenger.controller;
 
 import com.itea.messenger.dto.ChatsDto;
-import com.itea.messenger.entity.Chats;
 import com.itea.messenger.service.ChatService;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
@@ -17,7 +16,7 @@ public class ChatsController {
     private final ChatService chatService;
 
     @GetMapping("{Id}")
-    public Chats getChatById(@PathVariable("Id") Long chatId) {
+    public ChatsDto getChatById(@PathVariable("Id") Long chatId) {
         log.info("Handling get chat by ID: " + chatId);
         return chatService.getChatById(chatId);
     }

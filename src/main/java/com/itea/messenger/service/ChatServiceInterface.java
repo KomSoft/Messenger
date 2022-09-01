@@ -8,11 +8,8 @@ import java.util.List;
 public interface ChatServiceInterface {
 
     void startChat (Chats chat);
-
     boolean deleteChat (String name);
-
-    Chats getChatById(Long chatId);
-
+    ChatsDto getChatById(Long chatId);
     List<ChatsDto> getAllChats();
 
 

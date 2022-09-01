@@ -7,10 +7,8 @@ import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.repository.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static java.util.Objects.isNull;
 
 @Service
@@ -46,7 +44,7 @@ public class DefaultUsersService implements UsersService{
 
     @Override
     public UsersDto findById(Long id) throws ValidationException {
-        Users user = usersRepository.findById(id).orElseThrow(( ) -> new ValidationException("No users with this id"));
+        Users user = usersRepository.findById(id).orElseThrow(() -> new ValidationException("No users with this id"));
         return usersConverter.dtoFromUsersEntity(user);
     }
 

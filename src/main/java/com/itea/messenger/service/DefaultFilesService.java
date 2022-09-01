@@ -45,10 +45,8 @@ public class DefaultFilesService implements FilesService {
     public List<FilesDto> findAll() {
         List<FilesDto> dtoList = new ArrayList<>();
         List<Files> list = filesRepository.findAll();
-        for (Files file: list
-             ) {
+        for (Files file: list) {
             dtoList.add(filesConverter.dtoFromFileEntity(file));
-
         }
         return dtoList;
     }

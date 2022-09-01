@@ -4,7 +4,6 @@ import com.itea.messenger.type.ChatTypeEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,21 +30,27 @@ public class Chats {
     @JoinColumn(name = "chat_id")
     private List<Messages> chatMessages;
 
-    @ManyToMany
-    @JoinTable(name = "chats_users", joinColumns = @JoinColumn(name = "chat_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(mappedBy = "chats")
     private List<Users> users;
 //    private Set<Users> users;
-/*
-    @OneToOne(mappedBy = "chat")
-    public Users user;
 
-*/
+    public Chats(Long id, String name, String description, ChatTypeEnum chatType) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.chatType = chatType;
+        users = new ArrayList<>();
+        chatMessages = new ArrayList<>();
+    }
+/*
+
     public Chats(String name, String description, ChatTypeEnum chatType) {
         this.name = name;
         this.description = description;
         this.chatType = chatType;
+        users = new ArrayList<>();
         chatMessages = new ArrayList<>();
     }
+*/
 
 }

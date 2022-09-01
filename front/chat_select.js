@@ -94,16 +94,20 @@ function getMessageInfo(id) {
    alert('Statuses for message Id:' + id + '\n' + res);
 }
 
-function getStatusbyMessageIdByUserId(id, user_id) {
-	statuses = getStatusesByMessageId(id);
+function _getMessageStatusByUserId(user_id, statuses) {
 	if (statuses != null) {
       for (i = 0; i < statuses.length; i++) {
-			if (statuses[i].userId == iser_id) {
+			if (statuses[i].userId == user_id) {
 				return statuses[i].status;
 			}
       }
 	}
-	return 'no status';
+ 	return 'no status';  
+}
+
+function getStatusByMessageIdByUserId(id, user_id) {
+	statuses = getStatusesByMessageId(id);
+   return _getMessageStatusByUserId(user_id, statuses);
 }
 
 function editMessage(id) {
@@ -117,8 +121,12 @@ function createDivMessage(user_id, message) {
    var td2 = user_id == message.userId ? 'td_author_text' : 'td_mes_text';
 //   res += td1 + '">userId:' + message.userId + '<br><br>photo</td><td class="' + td2 + '">';
    res += td1 + '"><b>' + _getUserById(message.userId) + '</b><br><br>photo</td><td class="' + td2 + '">';
-   res += '<b>Posted at: ' + message.dateTime + '</b>&nbsp;&nbsp;&nbsp;&nbsp;';
-   res += '<button onclick="getMessageInfo(' + message.id + ' )">Message status</button>';
+   res += '<i>Posted at: ' + message.dateTime + '';
+   res += ' (' + _getMessageStatusByUserId(user_id, message.messageStatus) + ') ';
+   res += '</i>&nbsp;&nbsp;&nbsp;&nbsp;';
+//
+
+   res += '<button onclick="getMessageInfo(' + message.id + ' )">See statuses</button>';
    if (user_id == message.userId) {
       res += '&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="editMessage(' + message.id + ' )">Edit message</button>';
    }   

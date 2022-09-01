@@ -1,13 +1,9 @@
 TODO
 
-	controller/service getAllChats()
-controller/service getChatTypes()
-	controller/service createChat()
-	controller/service deleteChat()
+createChat
+deleteChat
+deleteUser
 
-	controller/service deleteUser()
-	controller/service findByLoginUser()
-	controller/service findByNameUser
 
-	controller/service List<Chats> ChatMembersLinkService.getChatsByUserId(Long userId)
-	controller/service List<Users> ChatMembersLinkService.getUsersByChatId(Long userId)
+edit(update)Message
+getMessagesForUserByChatId (? need to correct)

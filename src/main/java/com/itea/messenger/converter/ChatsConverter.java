@@ -2,7 +2,10 @@ package com.itea.messenger.converter;
 
 import com.itea.messenger.dto.ChatsDto;
 import com.itea.messenger.entity.Chats;
+import com.itea.messenger.interfaces.ChatInfo;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 @Component
 public class ChatsConverter {
@@ -16,6 +19,15 @@ public class ChatsConverter {
     }
 
     public ChatsDto dtoFromChatEntity(Chats chat){
+        ChatsDto chatsDto = new ChatsDto();
+        chatsDto.setChatId(chat.getId());
+        chatsDto.setName(chat.getName());
+        chatsDto.setDescription(chat.getDescription());
+        chatsDto.setChatType(chat.getChatType());
+        return chatsDto;
+    }
+
+    public ChatsDto dtoFromChatInfo(ChatInfo chat){
         ChatsDto chatsDto = new ChatsDto();
         chatsDto.setChatId(chat.getId());
         chatsDto.setName(chat.getName());

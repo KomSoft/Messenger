@@ -37,8 +37,10 @@ public class ChatService implements ChatServiceInterface {
     }
 
     @Override
-    public Chats getChatById(Long chatId) {
-        return chatsRepository.getChatById(chatId);
+    public ChatsDto getChatById(Long chatId) {
+        return chatsConverter.dtoFromChatEntity(chatsRepository.getChatById(chatId));
+//      This gets us recursion. Changed result type to ChatsDto
+//        return chatsRepository.getChatById(chatId);
     }
 
 }

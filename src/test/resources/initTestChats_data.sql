@@ -15,7 +15,7 @@ VALUES (20, 'karina', 'Karina Pinchuk', 'kp', 1),
 	(25, 'denis', 'Δενθρ', 'den', null);
 
 --	chat members
-INSERT INTO chats_users(id, user_id, join_date, view_date)
+INSERT INTO chats_users(chat_id, user_id, join_date, view_date)
 --	chatId=1, users 1, 3, 4, 5, 6
 -- VALUES (1, 1), (1, 3), (1, 4), (1, 5), (1, 6),
 VALUES 	(1, 1, '2022-08-19 08:12:00', '2022-08-19 08:13:00'), (1, 3, '2022-08-19 15:31:00', '2022-08-20 11:13:00'), 
@@ -33,12 +33,12 @@ VALUES 	(1, 1, '2022-08-19 08:12:00', '2022-08-19 08:13:00'), (1, 3, '2022-08-19
 
 --	file_table / 5 files
 INSERT INTO files(file_name, file_type) 
-VALUES ('karina_photo.jpg', 'image'), 
-	('car_bugatti.jpg', 'image'),                                                       
-	('user_list.doc', 'msoffice_document'), 
-	('google_sheet.xls', 'msoffice_document'), 
-	('manual.pdf', 'acrobat_document'), 
-	('Chervona_kalyna.mp3', 'sound');
+VALUES ('karina_photo.jpg', 'IMAGE'), 
+	('car_bugatti.jpg', 'IMAGE'),                                                       
+	('user_list.doc', 'MSOFFICE_DOCUMENT'), 
+	('google_sheet.xls', 'MSOFFICE_DOCUMENT'), 
+	('manual.pdf', 'ACROBAT_DOCUMENT'), 
+	('Chervona_kalyna.mp3', 'SOUND');
 
 --	messages_table / 30 messages
 INSERT INTO messages(chat_id, user_id, message_text, file_id, date_time)

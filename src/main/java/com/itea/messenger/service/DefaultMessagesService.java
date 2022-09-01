@@ -5,15 +5,14 @@ import com.itea.messenger.entity.ChatUsersLinks;
 import com.itea.messenger.entity.Messages;
 import com.itea.messenger.converter.MessagesConverter;
 import com.itea.messenger.entity.StatusLinks;
-import com.itea.messenger.entity.Users;
 import com.itea.messenger.exception.ValidationException;
+import com.itea.messenger.interfaces.UserInfo;
 import com.itea.messenger.repository.ChatUsersLinksRepository;
 import com.itea.messenger.repository.MessagesRepository;
 import com.itea.messenger.type.MessageStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +27,6 @@ public class DefaultMessagesService implements MessagesService {
     private final MessagesRepository messagesRepository;
     private final MessagesConverter messagesConverter;
     private final ChatUsersLinksRepository chatUsersLinksRepository;
-//    private final StatusLinksRepository statusLinksRepository;
     private final DefaultStatusLinksService defaultStatusLinksService;
     private static final String DELETED_MESSAGE_TEXT = "Message was deleted";
 
@@ -38,13 +36,13 @@ public class DefaultMessagesService implements MessagesService {
             throw new ValidationException("Object MessageDto is null");
         }
         if (messageDto.getUserId() == null) {
-            throw new ValidationException("[MessageDto.]userId is null");
+            throw new ValidationException("[MessageDto].userId is null");
         }
         if (messageDto.getChatId() == null) {
-            throw new ValidationException("[MessageDto.]chatId is null");
+            throw new ValidationException("[MessageDto].chatId is null");
         }
-        if (messageDto.getMessageText() == null ||  messageDto.getMessageText().length() == 0 || messageDto.getFileId() == null) {
-            throw new ValidationException("[MessageDto.]Message can be empty only if file is attached");
+        if (messageDto.getMessageText() == null || messageDto.getMessageText().length() == 0 || messageDto.getFileId() == null) {
+            throw new ValidationException("[MessageDto].message can be empty only if file is attached");
         }
         if (messageDto.getMessageText().length() > 255) {
             messageDto.setMessageText(messageDto.getMessageText().substring(0, 254));
@@ -72,13 +70,18 @@ public class DefaultMessagesService implements MessagesService {
         Messages savedMessage;
 //        save new message
         if (messagesRepository.findById(message.getId()).isPresent()) {
-            List<Users> chatUsersList = chatUsersLinksRepository.getUsersByChatId(message.getChatId());
+            List<UserInfo> chatUsersList = chatUsersLinksRepository.getUsersByChatId(message.getChatId());
+//            List<Users> chatUsersList = chatUsersLinksRepository.getUsersByChatId(message.getChatId());
+//            List<ChatUsersLinks> chatUsersList = chatUsersLinksRepository.getUsersByChatId(message.getChatId());
             List<StatusLinks> statusLinksList = new ArrayList<>();
             StatusLinks status = new StatusLinks();
-            for (Users user : chatUsersList) {
+            for (UserInfo user : chatUsersList) {
+//            for (ChatUsersLinks user : chatUsersList) {
                 status.setUserId(user.getId());
+//                status.setUserId(user.getUserId());
                 status.setStatus(MessageStatus.SENT);
                 if (message.getUserId().equals(user.getId())) {
+//                if (message.getUserId().equals(user.getUserId())) {
                     status.setStatus(MessageStatus.READ);
                 }
                 statusLinksList.add(status);
@@ -150,6 +153,9 @@ public class DefaultMessagesService implements MessagesService {
             }
         }
         boolean isAllDelete = true;
+        if (message.getMessageStatus().size() == 0) {
+            isAllDelete = message.getUserId().equals(userId);
+        }
         int i = 0;
         while (isAllDelete && (i < message.getMessageStatus().size())) {
             isAllDelete = message.getMessageStatus().get(i).getStatus().equals(MessageStatus.DELETED);
@@ -164,13 +170,13 @@ public class DefaultMessagesService implements MessagesService {
 /*
     1.	При висвітлюванні повідомлень з чату для користувача висвітлюються лише ті повідомлення,
     які створені після його під’єднання до чату та не мають статусу DELETED.
-    Це потребує додавання в ChatMemberLinks поля JoinDate. Воно заповнюється один раз, коли користувач
+    Це потребує додавання в ChatUsersLinks поля JoinDate. Воно заповнюється один раз, коли користувач
     під’єднується до чату.
 */
     @Override
     public List<MessagesDto> getMessagesForUserByChatId(Long chatId, Long userId) {
-        ChatUsersLinks chatMember = chatUsersLinksRepository.findByChatIdAndUserId(chatId, userId);
-        List<Messages> messagesList = messagesRepository.findMessagesByChatIdAndDateTimeAfter(chatId, chatMember.getJoinDate());
+        ChatUsersLinks chatUser = chatUsersLinksRepository.findByChatIdAndUserId(chatId, userId);
+        List<Messages> messagesList = messagesRepository.findMessagesByChatIdAndDateTimeAfter(chatId, chatUser.getJoinDate());
         List<MessagesDto> result = new ArrayList<>();
   log.info("getMessagesForUserByChatId --> by chatId: " + chatId + ",   userId: " + userId + "\n" + messagesList);
         //        can use predicate if no exception
@@ -191,11 +197,5 @@ public class DefaultMessagesService implements MessagesService {
 
         return result;
     }
-
-/*  @Query("SELECT mes.id AS id, mes.chat_id AS chatId, mes.user_id AS userId, mes.message_text AS messageText, mes.file_id AS fileId, mes.date_time AS dateTime, " +
-//          mes.StatusLinks
-            "u.name AS name, from Message mes, Users u WHERE mes.chatId=?1 AND mes.userId=u.id ORDER BY AND mes.dateTime ")
-    public List<MessagesDto> getAllMessagesByChatIdAndUserIdAfterUserJoin(Long chatId, Long userId) { return null; }
-*/
 
 }

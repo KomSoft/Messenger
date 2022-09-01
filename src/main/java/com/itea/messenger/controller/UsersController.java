@@ -28,20 +28,21 @@ public class UsersController {
         return usersService.findById(id);
     }
 
-    @GetMapping("/{login}")
-    public UsersDto getByLogin(@PathVariable("login") String login) throws ValidationException {
+    @GetMapping("/{login}/login")
+    public UsersDto getByLogin(@PathVariable("login") String login) {
         log.info("Handling find user by login: " + login);
         return usersService.findByLogin(login);
     }
 
-    @GetMapping("/{name}")
-    public UsersDto getByName(@PathVariable("name") String name) throws ValidationException {
-        log.info("Handling find user by login: " + name);
+    @GetMapping("/{name}/name")
+    public UsersDto getByName(@PathVariable("name") String name) {
+        log.info("Handling find user by name: " + name);
         return usersService.findByName(name);
     }
 
     @GetMapping
-    public List<UsersDto> findAll() {log.info("Handling find all service");
+    public List<UsersDto> findAll() {
+        log.info("Handling find all users service");
         return usersService.findAll();
     }
 

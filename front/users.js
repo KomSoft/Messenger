@@ -68,23 +68,39 @@ function users_getAllUsers() {
 }
 
 function users_findByLogin(login) {
-//   var xhttp = new XMLHttpRequest();
-//   var request = host + '/' + login;
-//   var debug = '[debug] Request: ' + request;
-//   xhttp.open('GET', request , false);
-//   xhttp.send();
-//   debug += '<br>[debug] Response status: ' + xhttp.status;
-//   if (xhttp.status == 200) {
-//   }
-	html = 'users_findByLogin(login:' + login + ') called. API not exists yet!';
-	alert(html);
-	return html;
+   var xhttp = new XMLHttpRequest();
+   var request = host + '/' + login + '/login' ;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open('GET', request , false);
+   xhttp.send();
+   debug += '<br>[debug] Response status: ' + xhttp.status;
+   if (xhttp.status == 200) {
+      var user = JSON.parse(xhttp.responseText);
+      console.log(user);
+      var html = table_header + fillUserRow(user, getDeleteButton(user.id)) + table_footer;
+      }  else {
+			html = 'Error. Response status: ' + xhttp.status;
+		}
+   document.getElementById("debug_frame").innerHTML = debug;
+   return html;
 }
 
 function users_findByName(name) {
-	html = 'users_findByLogin(login:' + name + ') called. API not exists yet!';
-	alert(html);
-	return html;
+   var xhttp = new XMLHttpRequest();
+   var request = host + '/' + name + '/name' ;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open('GET', request , false);
+   xhttp.send();
+   debug += '<br>[debug] Response status: ' + xhttp.status;
+   if (xhttp.status == 200) {
+      var user = JSON.parse(xhttp.responseText);
+      console.log(user);
+      var html = table_header + fillUserRow(user, getDeleteButton(user.id)) + table_footer;
+      }  else {
+			html = 'Error. Response status: ' + xhttp.status;
+		}
+   document.getElementById("debug_frame").innerHTML = debug;
+   return html;
 }
 
 function users_createUser(name, password, photo_id, login, age) {
