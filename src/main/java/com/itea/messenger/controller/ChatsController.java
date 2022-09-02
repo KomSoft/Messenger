@@ -27,4 +27,10 @@ public class ChatsController {
         return chatService.getAllChats();
     }
 
+//    TODO - public ChatsDto createChat(name, description)
+
+//    TODO - public void deleteChat(id)
+
+//    TODO - public ? addChatUser(userId)
+
 }

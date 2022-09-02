@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class ChatsDto {
-    private Long chatId;
+    private Long Id;
     private String name;
     private String description;
     private ChatTypeEnum chatType;

@@ -28,6 +28,23 @@
 </form>
 
 <form action="#">
+   <fieldset class="fieldset1">
+    <legend style="color:red;">Delete chat by Id:</legend>
+    <label class="label1" for="chat_del_id" >chat Id:</label>
+    <input id="chat_del_id" placeholder="Chat Id">
+    <button onclick="deleteChatById()">Delete</button><br>
+    <font color=#0000FF>Needs to update by clicking "Show all chats" button after call</font>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset class="fieldset1">
+    <legend>Add users to chat</legend>
+    <font color=#FF0000>Under construction</font>    
+   </fieldset>
+</form>
+
+<form action="#">
    <fieldset>
     <legend>Create new chat:</legend>
     <label class="label1" for="chat_name" >Chat name:</label>
@@ -42,7 +59,8 @@
     <button onclick="getChatTypes()">Refresh chat types</button>
     <br>
     <button onclick="createChat()">Create chat</button>
-    <font color=#FF0000>&nbsp;&nbsp;&nbsp;&nbsp;Needs to update by clicking "Show all chats" button after call</font>
+    <br>
+    <font color=#000000FF>&nbsp;&nbsp;&nbsp;&nbsp;Needs to update by clicking "Show all chats" button after call</font>
    </fieldset>
 </form>
 
@@ -67,6 +85,27 @@
       document.getElementById("debug_frame").innerHTML = ' ';
       document.getElementById("chat_type_list").innerHTML = chats_getChatTypes();
    }
+   
+   function deleteChatById() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var chat_id = document.getElementById("chat_del_id").value;
+      if (!confirm ('Are you sure to delete chat (id:' + chat_id + ')?')) { 
+         document.getElementById("chat_list").innerHTML = ' ';
+         return; 
+      } 
+      document.getElementById("chat_list").innerHTML = chats_deleteChat(parseInt(chat_id));
+   }
+
+   function addUserToChat() {
+//      document.getElementById("debug_frame").innerHTML = ' ';
+//      var chat_id = document.getElementById("chat_del_id").value;
+//      if (!confirm ('Are you sure to delete chat (id:' + chat_id + ')?')) { 
+//         document.getElementById("chat_list").innerHTML = ' ';
+         return; 
+//      } 
+//      document.getElementById("chat_list").innerHTML = chats_deleteChat(parseInt(chat_id));
+   }
+
 
    function createChat() {
       document.getElementById("debug_frame").innerHTML = ' ';

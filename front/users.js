@@ -1,4 +1,3 @@
-var host = 'http://localhost:8080/users';
 var table_header = '<table><tr><th width=50>id</th><th width=100>name</th><th width=50>age</th><th width=100>login</th>' +
 			'<th width=100>password</th><th width=50>photoId</th><th width=100>action</th></tr>';
 var table_footer = '</table>';
@@ -18,7 +17,7 @@ function getDeleteButton(id) {
 
 function users_findById(id) {
    var xhttp = new XMLHttpRequest();
-   var request = host + '/' + id;
+   var request = host_users + '/' + id;
    var debug = '[debug] Request: ' + request;
    xhttp.open('GET', request, false);
    xhttp.send();
@@ -36,18 +35,19 @@ function users_findById(id) {
 }
 
 function users_deleteUser(id) {
-   if (!confirm ('Are you sure to delete user id:' + id + '?')) { return 'Canceled'; } 
-//  var xhttp = new XMLHttpRequest();
-//  xhttp.open("DELETE", "http://localhost:8080/users/delete/" + userId, true);
-//        xhttp.send();
-	html = 'users_deleteUser(userId:' + id + ') called. API not exists yet!';
-	alert(html);
-	return html;
+   var xhttp = new XMLHttpRequest();
+   var request = host_users + '/' + id;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open("DELETE", request, true);
+   xhttp.send();
+   debug += '<br>[debug] Response status: ' + xhttp.status;
+   document.getElementById("debug_frame").innerHTML = debug;
+   return ('Delete Status: ' + xhttp.status);
 }
 
 function users_getAllUsers() {
    var xhttp = new XMLHttpRequest();
-   var request = host;
+   var request = host_users;
    var debug = '[debug] Request: ' + request;
    xhttp.open('GET', request , false);
    xhttp.send();
@@ -69,7 +69,7 @@ function users_getAllUsers() {
 
 function users_findByLogin(login) {
    var xhttp = new XMLHttpRequest();
-   var request = host + '/' + login + '/login' ;
+   var request = host_users + '/' + login + '/login' ;
    var debug = '[debug] Request: ' + request;
    xhttp.open('GET', request , false);
    xhttp.send();
@@ -87,7 +87,7 @@ function users_findByLogin(login) {
 
 function users_findByName(name) {
    var xhttp = new XMLHttpRequest();
-   var request = host + '/' + name + '/name' ;
+   var request = host_users + '/' + name + '/name' ;
    var debug = '[debug] Request: ' + request;
    xhttp.open('GET', request , false);
    xhttp.send();
@@ -103,11 +103,11 @@ function users_findByName(name) {
    return html;
 }
 
-function users_createUser(name, password, photo_id, login, age) {
-   if (!confirm ('Are you sure to save new user "' + name + '"?')) { return 'Canceled'; } 
+function users_createUser(name, password, photo_file, login, age) {
+   photo_id = common_saveFile(photo_file);
    var xhttp = new XMLHttpRequest(); 
 	var request = JSON.stringify({id: 0, name: name, password: password, photoId: photo_id, login: login, age: age});
-   xhttp.open("POST", host);
+   xhttp.open("POST", host_users);
    xhttp.setRequestHeader("Content-Type", "application/json");
    xhttp.send(request);
    var debug = '[debug] POST: ' + request;

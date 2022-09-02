@@ -17,11 +17,11 @@ public class FilesController {
     private final FilesService filesService;
 
     @PostMapping
-    public FilesDto saveFile(@RequestBody FilesDto filesDto)throws ValidationException {
+    public FilesDto saveFile(@RequestBody FilesDto filesDto) throws ValidationException {
         log.info("Handling save file: " + filesDto);
         return filesService.saveFile(filesDto);
-
     }
+
     @GetMapping
     public List<FilesDto> findAll(){
         log.info("Handling find all files");
@@ -29,7 +29,7 @@ public class FilesController {
     }
 
     @GetMapping("/{Id}")
-    public FilesDto findById(@PathVariable("Id") Long id)throws ValidationException {
+    public FilesDto findById(@PathVariable("Id") Long id) throws ValidationException {
         log.info("Handling find by id");
         return filesService.findById(id);
     }

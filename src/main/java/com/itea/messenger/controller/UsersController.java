@@ -46,4 +46,10 @@ public class UsersController {
         return usersService.findAll();
     }
 
+    @DeleteMapping("{id}")
+    public void deleteMessage(@PathVariable("id") Long userId) {
+        log.info("Handling delete user by ID: " + userId);
+        usersService.deleteUser(userId);
+    }
+
 }

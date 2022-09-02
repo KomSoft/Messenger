@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class ChatsConverter {
     public Chats chatEntityFromDto(ChatsDto chatsDto) {
         Chats chat = new Chats();
-        chat.setId(chatsDto.getChatId());
+        chat.setId(chatsDto.getId());
         chat.setName(chatsDto.getName());
         chat.setDescription(chatsDto.getDescription());
         chat.setChatType(chatsDto.getChatType());
@@ -20,7 +20,7 @@ public class ChatsConverter {
 
     public ChatsDto dtoFromChatEntity(Chats chat){
         ChatsDto chatsDto = new ChatsDto();
-        chatsDto.setChatId(chat.getId());
+        chatsDto.setId(chat.getId());
         chatsDto.setName(chat.getName());
         chatsDto.setDescription(chat.getDescription());
         chatsDto.setChatType(chat.getChatType());
@@ -29,7 +29,7 @@ public class ChatsConverter {
 
     public ChatsDto dtoFromChatInfo(ChatInfo chat){
         ChatsDto chatsDto = new ChatsDto();
-        chatsDto.setChatId(chat.getId());
+        chatsDto.setId(chat.getId());
         chatsDto.setName(chat.getName());
         chatsDto.setDescription(chat.getDescription());
         chatsDto.setChatType(chat.getChatType());

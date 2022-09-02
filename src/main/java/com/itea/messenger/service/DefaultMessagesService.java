@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import static java.util.Objects.isNull;
 
 @Log
@@ -30,7 +29,6 @@ public class DefaultMessagesService implements MessagesService {
     private final DefaultStatusLinksService defaultStatusLinksService;
     private static final String DELETED_MESSAGE_TEXT = "Message was deleted";
 
-
     private void validateMessagesDto(MessagesDto messageDto) throws ValidationException {
         if (isNull(messageDto)) {
             throw new ValidationException("Object MessageDto is null");
@@ -41,7 +39,7 @@ public class DefaultMessagesService implements MessagesService {
         if (messageDto.getChatId() == null) {
             throw new ValidationException("[MessageDto].chatId is null");
         }
-        if (messageDto.getMessageText() == null || messageDto.getMessageText().length() == 0 || messageDto.getFileId() == null) {
+        if ((messageDto.getMessageText() == null || messageDto.getMessageText().isEmpty()) && messageDto.getFileId() == null) {
             throw new ValidationException("[MessageDto].message can be empty only if file is attached");
         }
         if (messageDto.getMessageText().length() > 255) {
@@ -69,19 +67,19 @@ public class DefaultMessagesService implements MessagesService {
         Messages message = messagesConverter.messagesFromDto(messageDto);
         Messages savedMessage;
 //        save new message
-        if (messagesRepository.findById(message.getId()).isPresent()) {
+        if (!messagesRepository.findById(message.getId()).isPresent()) {
             List<UserInfo> chatUsersList = chatUsersLinksRepository.getUsersByChatId(message.getChatId());
-//            List<Users> chatUsersList = chatUsersLinksRepository.getUsersByChatId(message.getChatId());
-//            List<ChatUsersLinks> chatUsersList = chatUsersLinksRepository.getUsersByChatId(message.getChatId());
             List<StatusLinks> statusLinksList = new ArrayList<>();
             StatusLinks status = new StatusLinks();
+//  TODO - save the statusLinks before save message
+/*
+            error: org.hibernate.TransientObjectException: object references an unsaved transient instance -
+            save the transient instance before flushing: com.itea.messenger.entity.StatusLinks
+*/
             for (UserInfo user : chatUsersList) {
-//            for (ChatUsersLinks user : chatUsersList) {
                 status.setUserId(user.getId());
-//                status.setUserId(user.getUserId());
                 status.setStatus(MessageStatus.SENT);
                 if (message.getUserId().equals(user.getId())) {
-//                if (message.getUserId().equals(user.getUserId())) {
                     status.setStatus(MessageStatus.READ);
                 }
                 statusLinksList.add(status);
@@ -162,7 +160,7 @@ public class DefaultMessagesService implements MessagesService {
             i++;
         }
         if (isAllDelete) {
-//            should we delete Statuses from StatusLinks?
+//          TODO -   should we delete Statuses from StatusLinks?
             messagesRepository.deleteById(messageId);
         }
     }
@@ -178,23 +176,16 @@ public class DefaultMessagesService implements MessagesService {
         ChatUsersLinks chatUser = chatUsersLinksRepository.findByChatIdAndUserId(chatId, userId);
         List<Messages> messagesList = messagesRepository.findMessagesByChatIdAndDateTimeAfter(chatId, chatUser.getJoinDate());
         List<MessagesDto> result = new ArrayList<>();
-  log.info("getMessagesForUserByChatId --> by chatId: " + chatId + ",   userId: " + userId + "\n" + messagesList);
         //        can use predicate if no exception
 //        Predicate<Long> notDeleted = userIdForStatus -> !defaultStatusLinksService.findById(userIdForStatus).getStatus().equals(MessageStatus.DELETED);
         for (Messages message : messagesList) {
-//        TODO - add check if status isn't DELETED
-//            if message.messageStatus != DELETED - add to result
-//            try {
-//                MessageStatus status = defaultStatusLinksService.findById(userId).getStatus();
-//                if (!status.equals(MessageStatus.DELETED)) {
-                    result.add(messagesConverter.messagesToDto(message));
-//                }
-//            } catch (com.itea.messenger.service.ValidationException e) {
-//                new com.itea.messenger.service.ValidationException("For chatId:" + chatId + ", userId:" + userId + ", messageId:" + message.getId() + " status not exists!");
-//            }
+            MessageStatus status = message.getStatusByUserId(userId);
+            if (status != null && status != MessageStatus.DELETED) {
+                result.add(messagesConverter.messagesToDto(message));
+            } else {
+//                skip (or need to do something, throw exception?)
+            }
         }
-  log.info("getMessagesForUserByChatId --> result: " + result);
-
         return result;
     }
 

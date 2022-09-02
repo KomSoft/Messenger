@@ -2,7 +2,6 @@ package com.itea.messenger.entity;
 
 import com.itea.messenger.type.FileTypes;
 import lombok.Data;
-
 import javax.persistence.*;
 
 @Data
@@ -20,4 +19,5 @@ public class Files {
     @Enumerated(EnumType.STRING)
     @Column(name = "file_type")
     private FileTypes fileType;
+
 }

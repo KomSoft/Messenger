@@ -4,7 +4,6 @@ import com.itea.messenger.dto.FilesDto;
 import com.itea.messenger.entity.Files;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class FilesConverter {
     public Files fileEntityFromDto(FilesDto filesDto){
@@ -15,13 +14,14 @@ public class FilesConverter {
         return file;
     }
 
-    public FilesDto dtoFromFileEntity(Files files){
+    public FilesDto dtoFromFileEntity(Files file){
         FilesDto fileDto = new FilesDto();
-        fileDto.setId(files.getId());
-        fileDto.setFileType(files.getFileType());
-        fileDto.setFileName(files.getFileName());
+        fileDto.setId(file.getId());
+        fileDto.setFileType(file.getFileType());
+        fileDto.setFileName(file.getFileName());
         return fileDto;
     }
+
 }
 
 

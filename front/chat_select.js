@@ -1,9 +1,8 @@
-var host = 'http://localhost:8080';
 var gUsers;
 
 function mess_getUsersList() {
    var xhttp = new XMLHttpRequest();
-   var request = host + "/users";
+   var request = host_users;
    var debug = '[debug] Request: ' + request;
    gUsers = new Array;
    xhttp.open('GET', request , false);
@@ -31,43 +30,29 @@ function _getUserById(id) {
 }
 	
 function mess_getChatListForUser(user_id) {
-//	var chatId_list = getChatListByUserId(parseInt(user_id));
-//   var html = chatlist_header;
-   var debug = '[debug] user_id: ' + user_id;
-//   console.log('[getChatListForUser] user_id: ' + user_id + ', chatId_list: ' + chatId_list);
-// can be changed when use ChatMembersLinkService.getChatsByUserId(Long userId) will create 
-// заглушка, поки немає методу List<Chats> ChatMembersLinkService.getChatsByUserId(Long userId)
-   var a = [ ['1', 'Wild World'], ['2', 'ITEA'], ['3', 'Green Energy is our future'], ['4', 'Programmers news'] ];
-   var html = new Array;
-   switch (user_id) {
-      case 1 : { html.push(a[0]); html.push(a[2]); html.push(a[3]); break; }
-      case 2 : { html.push(a[1]); html.push(a[2]); html.push(a[3]); break; }
-      case 3 : { html.push(a[0]); html.push(a[2]); html.push(a[3]); break; }
-      case 4 : { html.push(a[0]); html.push(a[1]); html.push(a[3]); break; }
-      case 5 : { html.push(a[0]); html.push(a[3]); break; }
-      case 6 : { html.push(a[0]); html.push(a[2]); html.push(a[3]); break; }
+   var xhttp = new XMLHttpRequest();
+   var request = host_chats_users + '/' + user_id + '/user';
+   var debug = '<br>[debug] Request: ' + request;
+   var result = new Array;
+   xhttp.open('GET', request , false);
+   xhttp.send();
+   if (xhttp.status == 200) {
+      var chats = JSON.parse(xhttp.responseText); 
+      for (var i = 0; i < chats.length; i++) {
+         var elem = new Array(2);
+         elem[0] = chats[i].id;
+         elem[1] = chats[i].name;
+         result.push(elem);
+      }
    }
-//  	var xhttp = new XMLHttpRequest();
-//   var request = host + "/chats/" + chatId_list[i];
-//      debug += '<br>[debug] Request: ' + request;
-//      xhttp.open('GET', request , false);
-//      xhttp.send();
-//		if (xhttp.status == 200) {
-//         var chat = JSON.parse(xhttp.responseText);
-//         html += '<option value="' + chat.chatId + '">' + chat.name + '</option>';
-//      }
-//   }
-//	html += chatlist_footer;
-   console.log(html);
-//	if (chatId_list.length == 0) { html = 'list is empty'; }
-//   document.getElementById("select_chat").innerHTML = html;
-   return html;
    document.getElementById("debug_frame").innerHTML = debug;
+   console.log(result);
+	return result;
 }
 
 function getStatusesByMessageId(id) {
   	var xhttp = new XMLHttpRequest();
-   var request = host + "/statusLinks/" + id + '/message';
+   var request = host_status + '/' + id + '/message';
    var debug = '<br>[debug] Request: ' + request;
    xhttp.open('GET', request , false);
    xhttp.send();
@@ -80,13 +65,12 @@ function getStatusesByMessageId(id) {
 	return statuses;
 }
 
-
 function getMessageInfo(id) {
 	statuses = getStatusesByMessageId(id);
-	var res;
+	var res = '';
 	if (statuses != null) {
-      for (i = 0; i < statuses.length; i++) {
-         res += _getUserById(statuses[i].userId) + ' - ' + statuses[i].status + '\n';
+      for (i2 = 0; i2 < statuses.length; i2++) {
+         res += _getUserById(statuses[i2].userId) + ' - ' + statuses[i2].status + '\n';
       }
 	} else {
       res = 'No statuses for this message.';
@@ -119,13 +103,10 @@ function createDivMessage(user_id, message) {
    var res =  '<tr id="messageId' + message.id + '"><td class="';
    var td1 = user_id == message.userId ? 'td_author_info' : 'td_mes_info';
    var td2 = user_id == message.userId ? 'td_author_text' : 'td_mes_text';
-//   res += td1 + '">userId:' + message.userId + '<br><br>photo</td><td class="' + td2 + '">';
    res += td1 + '"><b>' + _getUserById(message.userId) + '</b><br><br>photo</td><td class="' + td2 + '">';
    res += '<i>Posted at: ' + message.dateTime + '';
    res += ' (' + _getMessageStatusByUserId(user_id, message.messageStatus) + ') ';
    res += '</i>&nbsp;&nbsp;&nbsp;&nbsp;';
-//
-
    res += '<button onclick="getMessageInfo(' + message.id + ' )">See statuses</button>';
    if (user_id == message.userId) {
       res += '&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="editMessage(' + message.id + ' )">Edit message</button>';
@@ -170,7 +151,7 @@ function mess_getChatMessages(chat_id, user_id) {
    var debug = '[debug] userId: ' + user_id + ', chatId: ' + chat_id;
 //    get chat info     
    var xhttp = new XMLHttpRequest();
-	var request = host + "/chats/" + chat_id;
+	var request = host_chats + '/' + chat_id;
    debug += '<br>[debug] Request: ' + request;
    xhttp.open('GET', request , false);
    xhttp.send();
@@ -181,7 +162,7 @@ function mess_getChatMessages(chat_id, user_id) {
       html += '<table class="table_message">';
 //    get messages      
       xhttp = new XMLHttpRequest();
-      request = host + "/messages/" + chat_id + "/chat/" + user_id;
+      request = host_messages + "/" + chat_id + "/chat/" + user_id;
       debug += '<br>[debug] Request: ' + request;
       xhttp.open('GET', request , false);
       xhttp.send();

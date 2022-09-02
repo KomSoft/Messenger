@@ -1,5 +1,6 @@
 package com.itea.messenger.entity;
 
+import com.itea.messenger.type.MessageStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -57,5 +58,14 @@ public class Messages {
         this.fileId = fileId;
         this.dateTime = LocalDateTime.now();
         this.messageStatus = new ArrayList<>();
+    }
+
+    public MessageStatus getStatusByUserId(Long userId) {
+        for (StatusLinks status : this.getMessageStatus()) {
+            if (status.getUserId().equals(userId)) {
+                return status.getStatus();
+            }
+        }
+        return null;
     }
 }

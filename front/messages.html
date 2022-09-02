@@ -40,6 +40,20 @@
 
 <form action="#">
    <fieldset class="fieldset1">
+    <legend>Edit message by Id:</legend>
+    <input id="message_edit_id" placeholder="Message to edit Id">
+    <button onclick="findMessageToEditById()">Find</button><br>
+    <label id="message_edit_label" ></label><br>
+    <label class="label1" for="message_edit_text" >Edit message:</label><br>
+    <input id="message_edit_text" onchange="textChanged()" size=65 placeholder=""><br>
+    <font color=#FF0000>&nbsp;&nbsp;&nbsp;&nbsp;Needs to add "Add/Delete attached file"</font>
+    <br>
+    <button id="message_edit_button" onclick="editMessage()" disabled="true" >Save edited message</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset class="fieldset1">
     <legend>Save (create) new message:</legend>
     <button onclick="getChatsList()">Get chats list</button>&nbsp;Then select Chat & User<br>
     <label class="label1" for="chats_list" >Chat:</label>
@@ -122,13 +136,53 @@
       document.getElementById("message_list").innerHTML = messages_deleteById(parseInt(mess_id), parseInt(user_id));
    }
 
-   function createMessage() {
+   function textChanged() {
+      document.getElementById("message_edit_button").disabled = false;
+   }
+
+   function editMessageReset() {
+      document.getElementById("message_edit_label").innerHTML = ' ';
+      document.getElementById("message_edit_text").disabled = true;
+      document.getElementById("message_edit_button").disabled = true;
+   }
+
+// TODO - finish and check
+   function findMessageToEditById() {
+      editMessageReset();
       document.getElementById("debug_frame").innerHTML = ' ';
-//		console.log(document.getElementById("chats_list").value + '  ' + document.getElementById("users_list").value + 
-//		'  ' + document.getElementById("attached_file").files[0].name + '   ' +  document.getElementById("message_text").value);
+      var param = document.getElementById("message_edit_id").value;
+      var message = messages_getMessageDtoById(parseInt(param));
+      if (message == null) {
+         document.getElementById("message_edit_label").innerHTML = 'message id:' + param + ' not found';
+         return;
+      }
+      document.getElementById("message_edit_label").innerHTML = 'Found message id:' + message.id + 
+         ', userId:' + message.userId + ', chatId:' + message.chatId + ', date: ' + message.dateTime;
+      document.getElementById("message_edit_text").value = message.messageText;
+      document.getElementById("message_edit_text").disabled = false;
+      document.getElementById("message_edit_button").disabled = true;
+   }
+
+   function editMessage() {
+      editMessageReset();
+//********************   
+//
+// TODO - finish and check
+//
+//********************  
+// get id(s) frm saved and update message 
+alert('editMessage is under construction');
+  }
+
+ function createMessage() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var file_name = '';
+      if (document.getElementById("attached_file").files.length > 0) {
+         file_name = document.getElementById("attached_file").files[0].name;
+      }
       var result = messages_create(parseInt(document.getElementById("chats_list").value), 
 	         parseInt(document.getElementById("users_list").value), 
-            document.getElementById("attached_file").files[0].name, 
+            file_name, 
 				document.getElementById("message_text").value); 
       document.getElementById("message_list").innerHTML = result;
    }

@@ -1,9 +1,38 @@
 TODO
 
-createChat
-deleteChat
-deleteUser
+1. createChat
+2. deleteChat
+3. addChatUser
+4. Create (check) Links:  Users with Files, CharUsersLinks, StatusLinks and Messages tables
+5.	(UsersService) Коли користувач логіниться в системі (оновити LastLoginDate) 
+   (хай буде так, замість враховувати його появу в мережі), 
+   статус всіх нових (after LastLoginDate) повідомлень для цього користувача змінюється з SENT на DELIVERED. 
+6.	(?? Service) Коли користувач відкриває чат, 
+   статус всіх нових повідомлень для цього користувача змінюється з DELIVERED на READ. 
+7. chats_getChatTypes() from ENUM
 
 
-edit(update)Message
-getMessagesForUserByChatId (? need to correct)
+get library import org.apache.commons.io.FilenamesUtils;
+
+
+!!!!!  my task - saveMessage / convert / stream() - messageStatus is null
+my task - edit(update)Message
+my task - getMessagesForUserByChatId - check DELETED ststus
+
+
+front-end
+=========
+chats:
+function chats_deleteChat(id) {
+function chats_createChat(name, description, chatType) {
+function chats_getChatTypes() {
+function addChatUser
+
+	check
+createMessage(chat_id, user_id)	- check
+messages.js - messages_create		- check
+
+	make
+messages.html & messages.js - editMessage(id)		- finish
+
+

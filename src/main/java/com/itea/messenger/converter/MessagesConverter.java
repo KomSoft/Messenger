@@ -24,8 +24,10 @@ public class MessagesConverter {
         message.setMessageText(messageDto.getMessageText());
         message.setFileId(messageDto.getFileId());
         message.setDateTime(messageDto.getDateTime());
-        message.setMessageStatus(messageDto.getMessageStatus().stream().toList());
-//        message.setMessageStatus(new ArrayList<>(messageDto.getMessageStatus().stream().toList()));
+//  TODO - check if messageDto.getMessageStatus() is null
+        if (messageDto.getMessageStatus() != null) {
+            message.setMessageStatus(messageDto.getMessageStatus().stream().toList());
+        }
         return message;
     }
 }

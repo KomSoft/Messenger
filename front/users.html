@@ -44,22 +44,33 @@
 </form>
 
 <form action="#">
-   <fieldset>
+   <fieldset class="fieldset1">
+    <legend style="color:red;">Delete user by Id:</legend>
+    <label class="label1" for="user_del_id" >user Id:</label>
+    <input id="user_del_id" placeholder="User Id">
+    <button onclick="deleteUserById()">Delete</button><br>
+    <font color=#0000FF>Needs to update by clicking "Show all users" button after call</font>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset >
     <legend>Create new user:</legend>
     <label class="label1" for="user_newname" >User name:</label>
     <label class="label1" for="user_newlogin" >Login:</label>
     <label class="label1" for="user_newpassword" >Password:</label>
     <label class="label1" for="user_newage" >Age:</label>
-    <label class="label1" for="user_photo" >File with photo:</label>
     <br>
     <input id="user_newname" placeholder="User name">&nbsp;
     <input id="user_newlogin" placeholder="User login">&nbsp;
     <input id="user_newpassword" placeholder="User password">&nbsp;
     <input id="user_newage" placeholder="User age">&nbsp;
-    <input id="user_photo" placeholder="file with photo">&nbsp;
+    <br><br>
+    <label class="label1" for="attached_photo" >Attach avatar:</label>
+    <input type="file" id="attached_photo"><br>
     <br>
-    <button onclick="createUser()">Create user</button>
-    <font color=#FF0000>&nbsp;&nbsp;&nbsp;&nbsp;Needs to update by clicking "Show all users" button after call</font>
+    <button onclick="createUser()">Create user</button><br>
+    <font color=#0000FF>Needs to update by clicking "Show all users" button after call</font>
    </fieldset>
 </form>
 
@@ -91,6 +102,16 @@
       document.getElementById("debug_frame").innerHTML = ' ';
       document.getElementById("user_list").innerHTML = users_getAllUsers();
    }
+   
+   function deleteUserById() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      var user_id = document.getElementById("user_del_id").value;
+      if (!confirm ('Are you sure to delete user (id:' + user_id + ')?')) { 
+         document.getElementById("user_list").innerHTML = ' ';
+         return; 
+      } 
+      document.getElementById("user_list").innerHTML = users_deleteUser(parseInt(user_id));
+   }
 
    function createUser() {
       document.getElementById("debug_frame").innerHTML = ' ';
@@ -98,12 +119,15 @@
       var login = document.getElementById("user_newlogin").value;
       var password = document.getElementById("user_newpassword").value;
       var age = parseInt(document.getElementById("user_newage").value);
-//      var photo_file = document.getElementById("user_photo").value;
-//	var photo_result = saveFile(photo_file);
-//	photoId = або photo_result.id  або null;
-      var photoId = null;
-      var result = users_createUser(name, password, photoId, login, age); 
-      document.getElementById("user_list").innerHTML = result;
+      var photo_file = '';
+      if (document.getElementById("attached_photo").files.length > 0) {
+         photo_file = document.getElementById("attached_photo").files[0].name;
+      }
+      if (!confirm ('Are you sure to save new user "' + name + '"?')) {
+         document.getElementById("user_list").innerHTML = ' ';
+         return; 
+      }
+      document.getElementById("user_list").innerHTML = users_createUser(name, password, photo_file, login, age);
    }
 </script>
 

@@ -17,14 +17,18 @@ public class ChatService implements ChatServiceInterface {
     private final ChatsRepository chatsRepository;
     private final ChatsConverter chatsConverter;
 
+//    TODO - public ChatsDto createChat(name, description)
     @Override
     public void startChat(Chats chat) {
     }
 
+//    TODO - public void deleteChat(id)
     @Override
     public boolean deleteChat(String name) {
         return false;
     }
+
+//    TODO - public ? addChatUser(userId)
 
     @Override
     public List<ChatsDto> getAllChats() {
@@ -39,8 +43,8 @@ public class ChatService implements ChatServiceInterface {
     @Override
     public ChatsDto getChatById(Long chatId) {
         return chatsConverter.dtoFromChatEntity(chatsRepository.getChatById(chatId));
-//      This gets us recursion. Changed result type to ChatsDto
-//        return chatsRepository.getChatById(chatId);
+//      Below gets us recursion. Changed result type to ChatsDto
+//        return (Chats) chatsRepository.getChatById(chatId);
     }
 
 }

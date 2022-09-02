@@ -1,13 +1,13 @@
-var host = 'http://localhost:8080/chats';
 var chat_table_header = '<table><tr><th width=50>id</th><th width=100>name</th><th width=150>description</th>' + 
 							'<th width=100>chatType</th><th width=100>action</th></tr>';
 var chat_table_footer = '</table>';
 
-
+// ****************************
 //		заглушка, поки немає API
+//
 function chats_getChatTypes() {
 //   var xhttp = new XMLHttpRequest();
-//   var request = host + '/' + id;
+//   var request = host_chats + '/' + id;
 //   var debug = '[debug] Request: ' + request;
 //   xhttp.open('GET', request, false);
 //   xhttp.send();
@@ -44,7 +44,7 @@ function getDeleteButton(id) {
 
 function chats_findById(id) {
    var xhttp = new XMLHttpRequest();
-   var request = host + '/' + id;
+   var request = host_chats + '/' + id;
    var debug = '[debug] Request: ' + request;
    xhttp.open('GET', request, false);
    xhttp.send();
@@ -63,7 +63,7 @@ function chats_findById(id) {
 
 function chats_getAllChats() {
    var xhttp = new XMLHttpRequest();
-   var request = host;
+   var request = host_chats;
    var debug = '[debug] Request: ' + request;
    xhttp.open('GET', request , false);
    xhttp.send();
@@ -83,16 +83,29 @@ function chats_getAllChats() {
    return html;
 }
 
+//***********************************
+// заглушка
 function chats_deleteChat(id) {
-   if (!confirm ('Are you sure to delete chat id:' + id + '?')) { return 'Canceled'; } 
-//  var xhttp = new XMLHttpRequest();
-//  xhttp.open("DELETE", "http://localhost:8080/users/delete/" + userId, true);
-//        xhttp.send();
 	html = 'chats_deleteChat(chatId:' + id + ') called. API not exists yet!';
 	alert(html);
 	return html;
+//   var xhttp = new XMLHttpRequest();
+//   var request = host_chats + '/' + id;
+//   var debug = '[debug] Request: ' + request;
+//   xhttp.open("DELETE", request, true);
+//   xhttp.send();
+//   debug += '<br>[debug] Response status: ' + xhttp.status;
+//   document.getElementById("debug_frame").innerHTML = debug;
+//   return ('Delete Status: ' + xhttp.status);
+}
+
+ 
+   
+   
 }
 	
+//***********************************
+// заглушка
 function chats_createChat(name, description, chatType) {
    if (!confirm ('Save new Chat "' + name + '" (' + description + '), ' + chatType + '?')) { 
 	   return 'Canceled'; 
