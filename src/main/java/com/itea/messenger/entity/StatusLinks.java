@@ -3,7 +3,6 @@ package com.itea.messenger.entity;
 import com.itea.messenger.type.MessageStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Entity

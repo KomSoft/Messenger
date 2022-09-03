@@ -1,21 +1,16 @@
 package com.itea.messenger.service;
 
-import com.itea.messenger.dto.ChatDto;
-import com.itea.messenger.entity.Chat;
+import com.itea.messenger.dto.ChatsDto;
+import com.itea.messenger.entity.Chats;
 
 import java.util.List;
 
 public interface ChatServiceInterface {
 
-    void startChat (Chat chat);
-
+    void startChat (Chats chat);
     boolean deleteChat (String name);
-
-    List<Chat> findChatList (String name);
-
-    Chat getChatById(Long chatId);
-
-    List<ChatDto> getAllChats();
+    ChatsDto getChatById(Long chatId);
+    List<ChatsDto> getAllChats();
 
 
 }

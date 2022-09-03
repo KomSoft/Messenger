@@ -3,10 +3,7 @@ package com.itea.messenger.entity;
 import com.itea.messenger.type.ChatTypeEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-//import org.hibernate.validator.constraints.Length;
-
 import javax.persistence.*;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "chats")
-public class Chat {
+public class Chats {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    Rename to "id" will be better;
     private Long id;
 
     @Column(nullable = false)
@@ -30,18 +26,31 @@ public class Chat {
     @Enumerated(EnumType.STRING)
     private ChatTypeEnum chatType;
 
-    //    Added to create links with Chat's Messages
     @OneToMany
     @JoinColumn(name = "chat_id")
     private List<Messages> chatMessages;
 
-    public Chat(String name, String description, ChatTypeEnum chatType) {
+    @ManyToMany(mappedBy = "chats")
+    private List<Users> users;
+//    private Set<Users> users;
+
+    public Chats(Long id, String name, String description, ChatTypeEnum chatType) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.chatType = chatType;
+        users = new ArrayList<>();
         chatMessages = new ArrayList<>();
     }
+/*
 
-    @ManyToMany(mappedBy = "chats")
-    private Set<Users> users;
+    public Chats(String name, String description, ChatTypeEnum chatType) {
+        this.name = name;
+        this.description = description;
+        this.chatType = chatType;
+        users = new ArrayList<>();
+        chatMessages = new ArrayList<>();
+    }
+*/
+
 }

@@ -3,13 +3,12 @@ package com.itea.messenger.service;
 import com.itea.messenger.converter.UsersConverter;
 import com.itea.messenger.dto.UsersDto;
 import com.itea.messenger.entity.Users;
+import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.repository.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static java.util.Objects.isNull;
 
 @Service
@@ -32,26 +31,43 @@ public class DefaultUsersService implements UsersService{
     @Override
     public UsersDto saveUser(UsersDto usersDto) throws ValidationException {
         validateUserDto(usersDto);
-        Users users = usersRepository.save(usersConverter.usersEntityFromDto(usersDto));
+        Users user = usersRepository.save(usersConverter.usersEntityFromDto(usersDto));
         System.out.println(usersDto);
-        System.out.println(users);
-        return usersConverter.dtoFromUsersEntity(users);
+        System.out.println(user);
+        return usersConverter.dtoFromUsersEntity(user);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        usersRepository.deleteById(id);
     }
 
     @Override
     public UsersDto findById(Long id) throws ValidationException {
-        Users users = usersRepository.findById(id).orElseThrow(( ) -> new ValidationException("No users with this id"));
-        return usersConverter.dtoFromUsersEntity(users);
+        Users user = usersRepository.findById(id).orElseThrow(() -> new ValidationException("No users with this id"));
+        return usersConverter.dtoFromUsersEntity(user);
+    }
+
+    @Override
+    public UsersDto findByLogin(String login) {
+        Users user = usersRepository.findByLogin(login);
+        return user == null ? null : usersConverter.dtoFromUsersEntity(user);
+    }
+
+    @Override
+    public UsersDto findByName(String name) {
+        Users user = usersRepository.findByName(name);
+        return user == null ? null : usersConverter.dtoFromUsersEntity(user);
     }
 
     @Override
     public List<UsersDto> findAll() {
         List<UsersDto> dtoList = new ArrayList<>();
         List<Users> list = usersRepository.findAll();
-        for (Users users: list
-        ) {
-            dtoList.add(usersConverter.dtoFromUsersEntity(users));
+        for (Users user: list) {
+            dtoList.add(usersConverter.dtoFromUsersEntity(user));
         }
         return dtoList;
     }
+
 }

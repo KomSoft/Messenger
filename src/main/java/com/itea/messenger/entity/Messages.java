@@ -1,5 +1,6 @@
 package com.itea.messenger.entity;
 
+import com.itea.messenger.type.MessageStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -8,10 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "messages_table")
+@Table(name = "messages")
 @Data
 @NoArgsConstructor
-//@AllArgsConstructor
 public class Messages {
 
     @Id
@@ -32,11 +32,7 @@ public class Messages {
 
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
-/*
-    @Column(name = "status_id")
-    private Long statusId;
-*/
-//    Added to link with message statuses (StatusLinks table)
+
     @OneToMany
     @JoinColumn(name = "message_id")
     private List<StatusLinks> messageStatus;
@@ -62,5 +58,14 @@ public class Messages {
         this.fileId = fileId;
         this.dateTime = LocalDateTime.now();
         this.messageStatus = new ArrayList<>();
+    }
+
+    public MessageStatus getStatusByUserId(Long userId) {
+        for (StatusLinks status : this.getMessageStatus()) {
+            if (status.getUserId().equals(userId)) {
+                return status.getStatus();
+            }
+        }
+        return null;
     }
 }

@@ -4,8 +4,8 @@ import com.itea.messenger.type.ChatTypeEnum;
 import lombok.Data;
 
 @Data
-public class ChatDto {
-    private Long chatId;
+public class ChatsDto {
+    private Long Id;
     private String name;
     private String description;
     private ChatTypeEnum chatType;

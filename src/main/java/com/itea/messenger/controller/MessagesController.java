@@ -39,7 +39,7 @@ public class MessagesController {
     @GetMapping("{chatId}/chat/{userId}")
     public List<MessagesDto> getMessagesForUserByChatId(@PathVariable("chatId") Long chatId, @PathVariable("userId") Long userId) {
         log.info("Handling get messages by chatId: " + chatId + ",   userId: " + userId);
-        return messagesService.getMessagesForUserByChatId(chatId,userId);
+        return messagesService.getMessagesForUserByChatId(chatId, userId);
     }
 
     @SneakyThrows
@@ -49,4 +49,4 @@ public class MessagesController {
         messagesService.deleteMessage(messageId);
     }
 
-    }
+}
