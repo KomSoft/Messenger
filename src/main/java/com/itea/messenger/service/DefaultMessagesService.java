@@ -13,6 +13,8 @@ import com.itea.messenger.type.MessageStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +37,6 @@ public class DefaultMessagesService implements MessagesService {
         }
         if (messageDto.getUserId() == null) {
             throw new ValidationException("[MessageDto].userId is null");
-        }
-        if (messageDto.getChatId() == null) {
-            throw new ValidationException("[MessageDto].chatId is null");
         }
         if ((messageDto.getMessageText() == null || messageDto.getMessageText().isEmpty()) && messageDto.getFileId() == null) {
             throw new ValidationException("[MessageDto].message can be empty only if file is attached");
@@ -164,13 +163,18 @@ public class DefaultMessagesService implements MessagesService {
             messagesRepository.deleteById(messageId);
         }
     }
+    @Transactional
+    @Override
+    public void deleteAllMessagesByChatId(Long chatId) {
+        messagesRepository.deleteAllByChatId(chatId);
+    }
 
-/*
-    1.	При висвітлюванні повідомлень з чату для користувача висвітлюються лише ті повідомлення,
-    які створені після його під’єднання до чату та не мають статусу DELETED.
-    Це потребує додавання в ChatUsersLinks поля JoinDate. Воно заповнюється один раз, коли користувач
-    під’єднується до чату.
-*/
+    /*
+        1.	При висвітлюванні повідомлень з чату для користувача висвітлюються лише ті повідомлення,
+        які створені після його під’єднання до чату та не мають статусу DELETED.
+        Це потребує додавання в ChatUsersLinks поля JoinDate. Воно заповнюється один раз, коли користувач
+        під’єднується до чату.
+    */
     @Override
     public List<MessagesDto> getMessagesForUserByChatId(Long chatId, Long userId) {
         ChatUsersLinks chatUser = chatUsersLinksRepository.findByChatIdAndUserId(chatId, userId);

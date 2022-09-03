@@ -12,4 +12,5 @@ public interface MessagesService {
     List<MessagesDto> getMessagesForUserByChatId(Long chatId, Long userId);
     void deleteMessage(Long messageId) throws ValidationException;
     void deleteMessage(Long messageId, Long userId);
+    void deleteAllMessagesByChatId(Long chatId);
     }

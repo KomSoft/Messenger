@@ -19,6 +19,7 @@ public class ChatService implements ChatServiceInterface {
 
     private final ChatsRepository chatsRepository;
     private final ChatsConverter chatsConverter;
+    private final MessagesService messagesService;
 
     private void validateChat(ChatsDto chatsDto) throws ValidationException {
         if (isNull(chatsDto)) {
@@ -39,7 +40,12 @@ public class ChatService implements ChatServiceInterface {
 //    TODO - public void deleteChat(id)
     @Override
     public void deleteChat(Long chatId){
-            chatsRepository.deleteById(chatId);
+       try {
+           messagesService.deleteAllMessagesByChatId(chatId);
+           chatsRepository.deleteById(chatId);
+       } catch (Exception e) {
+           System.out.println(e.getMessage());
+       }
     }
 
 //    TODO - public ? addChatUser(userId)
