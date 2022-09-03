@@ -1,6 +1,7 @@
 package com.itea.messenger.service;
 
 import com.itea.messenger.converter.ChatsConverter;
+import com.itea.messenger.dto.ChatUsersLinksDto;
 import com.itea.messenger.dto.ChatsDto;
 import com.itea.messenger.entity.Chats;
 import com.itea.messenger.exception.ValidationException;
@@ -32,9 +33,10 @@ public class ChatService implements ChatServiceInterface {
     }
 
     @Override
-    public void createChat(ChatsDto chatDto) throws ValidationException {
+    public void createChat(ChatsDto chatDto, Long userId) throws ValidationException {
         validateChat(chatDto);
-        chatsRepository.save(chatsConverter.chatEntityFromDto(chatDto));
+        final Long chatId = chatsRepository.save(chatsConverter.chatEntityFromDto(chatDto)).getId();
+        chatUsersLinksService.saveChatUsersLink(new ChatUsersLinksDto(chatId, userId));
     }
 
     @Override

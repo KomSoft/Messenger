@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ChatServiceInterface {
 
-    void createChat (ChatsDto chatsDto) throws ValidationException;
+    void createChat (ChatsDto chatsDto, Long userId) throws ValidationException;
 
     void deleteChat (Long chatId);
 
