@@ -24,14 +24,14 @@ public class MessagesController {
         return messagesService.saveMessage(messageDto);
     }
 
-    @GetMapping("{Id}")
-    public MessagesDto getMessageById(@PathVariable("Id") Long messageId) {
+    @GetMapping("{id}")
+    public MessagesDto getMessageById(@PathVariable("id") Long messageId) {
         log.info("Handling get message by ID: " + messageId);
         return messagesService.getMessageById(messageId);
     }
 
-    @GetMapping("{Id}/chat")
-    public List<MessagesDto> getAllMessagesByChatId(@PathVariable("Id") Long chatId) {
+    @GetMapping("{chatId}/chat")
+    public List<MessagesDto> getAllMessagesByChatId(@PathVariable("chatId") Long chatId) {
         log.info("Handling get all messages by chat ID: " + chatId);
         return messagesService.getAllMessagesByChatId(chatId);
     }
@@ -43,8 +43,8 @@ public class MessagesController {
     }
 
     @SneakyThrows
-    @DeleteMapping("{Id}")
-    public void deleteMessage(@PathVariable("Id") Long messageId) {
+    @DeleteMapping("{id}")
+    public void deleteMessage(@PathVariable("id") Long messageId) {
         log.info("Handling delete message by ID: " + messageId);
         messagesService.deleteMessage(messageId);
     }

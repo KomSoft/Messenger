@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "chats_users")
-
 public class ChatUsersLinks {
 
     @Id

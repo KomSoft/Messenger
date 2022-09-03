@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+
 ### Personal Notes ###
 notes
 
@@ -34,3 +35,4 @@ build/
 
 ### VS Code ###
 .vscode/
+

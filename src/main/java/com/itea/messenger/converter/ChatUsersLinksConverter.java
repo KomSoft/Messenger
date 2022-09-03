@@ -10,7 +10,7 @@ public class ChatUsersLinksConverter {
         ChatUsersLinks chatUsersLinks = new ChatUsersLinks();
         chatUsersLinks.setId(chatUsersLinksDto.getId());
         chatUsersLinks.setChatId(chatUsersLinksDto.getChatId());
-        chatUsersLinks.setUserId(chatUsersLinksDto.getChatId());
+        chatUsersLinks.setUserId(chatUsersLinksDto.getUserId());
         return chatUsersLinks;
     }
     public ChatUsersLinksDto dtoFromChatUsersLinks(ChatUsersLinks chatUsersLinks){

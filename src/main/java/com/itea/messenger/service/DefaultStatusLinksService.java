@@ -7,6 +7,8 @@ import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.repository.StatusLinksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
@@ -46,4 +48,5 @@ public class DefaultStatusLinksService implements StatusLinksService{
         List<StatusLinks> statusLinks = statusLinksRepository.findByMessageId(messageId);
         return statusLinks.stream().map(statusLinksConverter::dtoFromStatusLinks).collect(Collectors.toList());
     }
+
 }

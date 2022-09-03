@@ -15,6 +15,8 @@ import com.itea.messenger.repository.ChatsRepository;
 import com.itea.messenger.repository.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,5 +74,11 @@ public class DefaultChatUsersLinksService implements ChatUsersLinksService {
     public List<UsersDto> getUsersByChatId(Long id) {
         List<UserInfo> users = chatUsersLinksRepository.getUsersByChatId(id);
         return users.stream().map(usersConverter::dtoFromUserInfo).collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllByChatId(Long chatId) {
+        chatUsersLinksRepository.deleteAllByChatId(chatId);
     }
 }

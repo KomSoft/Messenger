@@ -19,4 +19,6 @@ public interface ChatUsersLinksRepository extends JpaRepository<ChatUsersLinks, 
     List<ChatInfo> getChatsByUserId(Long userId);
 
     ChatUsersLinks findByChatIdAndUserId(Long chatId, Long userId);
+
+    void deleteAllByChatId(Long chatId);
 }
