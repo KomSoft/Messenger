@@ -13,4 +13,5 @@ public interface ChatUsersLinksService {
     List<ChatUsersLinksDto> findAll();
     List<ChatsDto> getChatsByUserId(Long id);
     List<UsersDto> getUsersByChatId(Long id);
+    void deleteAllByChatId(Long chatId);
 }
