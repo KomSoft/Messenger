@@ -31,14 +31,12 @@ public class ChatService implements ChatServiceInterface {
         }
     }
 
-//    TODO - public ChatsDto createChat(name, description)
     @Override
     public void createChat(ChatsDto chatDto) throws ValidationException {
         validateChat(chatDto);
         chatsRepository.save(chatsConverter.chatEntityFromDto(chatDto));
     }
 
-//    TODO - public void deleteChat(id)
     @Override
     public void deleteChat(Long chatId){
        try {
