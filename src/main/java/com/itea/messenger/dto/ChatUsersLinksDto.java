@@ -20,7 +20,14 @@ public class ChatUsersLinksDto {
     public ChatUsersLinksDto(Long chatId, Long userId) {
         this.chatId = chatId;
         this.userId = userId;
+        this.joinDate = LocalDateTime.now();
     }
+/*
+    public ChatUsersLinksDto(Long chatId, Long userId, LocalDateTime) {
+        this.chatId = chatId;
+        this.userId = userId;
+    }
+*/
 
 
 }

@@ -33,8 +33,8 @@ public class ChatsController {
     }
 
 //    TODO - public ChatsDto createChat(name, description)
-    @PostMapping
-    public ResponseEntity<Void> createChat(@RequestBody ChatsDto chatsDto, Long userId ) throws ValidationException {
+    @PostMapping("{userId}")
+    public ResponseEntity<Void> createChat(@RequestBody ChatsDto chatsDto, @PathVariable("userId") Long userId ) throws ValidationException {
         log.info("Handling creating chat");
         chatService.createChat(chatsDto, userId);
         return ResponseEntity.ok().build();

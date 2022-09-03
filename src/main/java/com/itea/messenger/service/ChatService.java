@@ -23,18 +23,21 @@ public class ChatService implements ChatServiceInterface {
     private final MessagesService messagesService;
     private final ChatUsersLinksService chatUsersLinksService;
 
-    private void validateChat(ChatsDto chatsDto) throws ValidationException {
+    private void validateChat(ChatsDto chatsDto, Long userId) throws ValidationException {
         if (isNull(chatsDto)) {
             throw new ValidationException("Chat object is null");
         }
         if (isNull(chatsDto.getChatType()) || chatsDto.getChatType().describeConstable().isEmpty()) {
             throw new ValidationException("Chat type can't be empty");
         }
+        if (isNull(userId)) {
+            throw new ValidationException("User id can't be empty");
+        }
     }
 
     @Override
     public void createChat(ChatsDto chatDto, Long userId) throws ValidationException {
-        validateChat(chatDto);
+        validateChat(chatDto, userId);
         final Long chatId = chatsRepository.save(chatsConverter.chatEntityFromDto(chatDto)).getId();
         chatUsersLinksService.saveChatUsersLink(new ChatUsersLinksDto(chatId, userId));
     }
