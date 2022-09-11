@@ -15,7 +15,7 @@
 
    .label1 { width:180px; display: inline-block; align:right; }
    .label2 { width:60px; display: inline-block; align:right; }
-   .fieldset1 { width:500px; }
+   .fieldset1 { width:400px; }
 
    .doublediv { display: flex; flex-direction: row; }
 

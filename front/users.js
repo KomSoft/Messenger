@@ -1,11 +1,13 @@
-var table_header = '<table><tr><th width=50>id</th><th width=100>name</th><th width=50>age</th><th width=100>login</th>' +
-			'<th width=100>password</th><th width=50>photoId</th><th width=100>action</th></tr>';
+var table_header = '<table><tr><th width=50>id</th><th width=100>name</th><th width=50>age</th>' + 
+      '<th width=100>login</th><th width=100>password</th>' + 
+      '<th width=50>avatarId</th><th width=100>avatarFile</th><th width=100>action</th></tr>';
 var table_footer = '</table>';
 
 function fillUserRow(user, lastColText) {
    if (lastColText == null && lastColText == '') { lastColText = '&nbsp;'; }
    res = '<tr><td>' + user.id + '</td><td>' + user.name + '</td><td>' + user.age;
-	res += '</td><td>' + user.login + '</td><td>' + user.password + '</td><td>' + user.photoId + '</td>';
+	res += '</td><td>' + user.login + '</td><td>' + user.password + '</td><td>' + user.avatarId;
+   res += '</td><td>' + user.avatarName + '</td>';
 	res += '<td>' + lastColText + '</td></tr>';
    return res;
 }
@@ -106,7 +108,7 @@ function users_findByName(name) {
 function users_createUser(name, password, photo_file, login, age) {
    photo_id = common_saveFile(photo_file);
    var xhttp = new XMLHttpRequest(); 
-	var request = JSON.stringify({id: 0, name: name, password: password, photoId: photo_id, login: login, age: age});
+	var request = JSON.stringify({id: 0, name: name, password: password, avatarId: photo_id, login: login, age: age});
    xhttp.open("POST", host_users);
    xhttp.setRequestHeader("Content-Type", "application/json");
    xhttp.send(request);

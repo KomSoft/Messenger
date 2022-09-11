@@ -1,4 +1,4 @@
-var host = 'http://localhost:8080/';
+var host = 'http://localhost:8090/';
 var host_chats = host + 'chats';
 var host_chats_users = host + 'chatuserslinks';
 var host_file = host + 'file';

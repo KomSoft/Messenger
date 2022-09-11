@@ -8,7 +8,7 @@ import com.itea.messenger.dto.ChatsDto;
 import com.itea.messenger.dto.UsersDto;
 import com.itea.messenger.entity.ChatUsersLinks;
 import com.itea.messenger.exception.ValidationException;
-import com.itea.messenger.interfaces.ChatInfo;
+import com.itea.messenger.interfaces.ChatsInfo;
 import com.itea.messenger.interfaces.UserInfo;
 import com.itea.messenger.repository.ChatUsersLinksRepository;
 import com.itea.messenger.repository.ChatsRepository;
@@ -42,16 +42,15 @@ public class DefaultChatUsersLinksService implements ChatUsersLinksService {
         }
     }
     @Override
-    public ChatUsersLinksDto saveChatUsersLink(ChatUsersLinksDto chatUsersLinksDto) throws ValidationException {
-        validateChatUsersLinkDto(chatUsersLinksDto);
-        ChatUsersLinks chatUsersLinks = chatUsersLinksRepository.save(chatUsersLinksConverter.chatUsersLinksFromDto(chatUsersLinksDto));
-        return chatUsersLinksConverter.dtoFromChatUsersLinks(chatUsersLinks);
+    public ChatUsersLinksDto saveChatUsersLink(ChatUsersLinks chatUsersLinks) {
+        ChatUsersLinks new_chatUsersLinks = chatUsersLinksRepository.save(chatUsersLinks);
+        return chatUsersLinksConverter.chatUsersLinksToDto(new_chatUsersLinks);
     }
 
     @Override
     public ChatUsersLinksDto findById(Long id) throws ValidationException {
         ChatUsersLinks chatUsersLinks = chatUsersLinksRepository.findById(id).orElseThrow(() ->new ValidationException("No object with this id"));
-        return chatUsersLinksConverter.dtoFromChatUsersLinks(chatUsersLinks);
+        return chatUsersLinksConverter.chatUsersLinksToDto(chatUsersLinks);
     }
 
     @Override
@@ -59,21 +58,21 @@ public class DefaultChatUsersLinksService implements ChatUsersLinksService {
         List<ChatUsersLinksDto> listDto = new ArrayList<>();
         List<ChatUsersLinks> list = chatUsersLinksRepository.findAll();
         for (ChatUsersLinks entity: list) {
-            listDto.add(chatUsersLinksConverter.dtoFromChatUsersLinks(entity));
+            listDto.add(chatUsersLinksConverter.chatUsersLinksToDto(entity));
         }
         return listDto;
     }
 
     @Override
     public List<ChatsDto> getChatsByUserId(Long id) {
-        List<ChatInfo> chats = chatUsersLinksRepository.getChatsByUserId(id);
-        return chats.stream().map(chatsConverter::dtoFromChatInfo).collect(Collectors.toList());
+        List<ChatsInfo> chats = chatUsersLinksRepository.getChatsByUserId(id);
+        return chats.stream().map(chatsConverter::ChatEntityToDto).collect(Collectors.toList());
     }
 
     @Override
     public List<UsersDto> getUsersByChatId(Long id) {
         List<UserInfo> users = chatUsersLinksRepository.getUsersByChatId(id);
-        return users.stream().map(usersConverter::dtoFromUserInfo).collect(Collectors.toList());
+        return users.stream().map(usersConverter::userToDto).collect(Collectors.toList());
     }
 
     @Transactional

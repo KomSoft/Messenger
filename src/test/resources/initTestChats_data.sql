@@ -5,8 +5,17 @@ VALUES ('GROUP_CHAT', 'Group Chat about animals', 'Wild World'),
 	('GROUP_CHAT', 'Group Chat Green Way', 'Green Energy is our future'), 
 	('CHANNEL', 'Our Habr Channel', 'Programmers news');
 
+--	file_table / 5 files
+INSERT INTO files(file_name, file_type) 
+VALUES ('karina_photo.jpg', 'IMAGE'), 
+	('car_bugatti.jpg', 'IMAGE'),                                                       
+	('user_list.doc', 'MSOFFICE_DOCUMENT'), 
+	('google_sheet.xls', 'MSOFFICE_DOCUMENT'), 
+	('manual.pdf', 'ACROBAT_DOCUMENT'), 
+	('Chervona_kalyna.mp3', 'SOUND');
+
 --	users / 6 users
-INSERT INTO users(age, login, name, password, photo_id) 
+INSERT INTO users(age, login, name, password, avatar_id) 
 VALUES (20, 'karina', 'Karina Pinchuk', 'kp', 1), 
 	(99, 'admin', 'Administrator', 'admin', null), 
 	(22, 'veron', 'Veronika', 'bugatti', 2), 
@@ -30,15 +39,6 @@ VALUES 	(1, 1, '2022-08-19 08:12:00', '2022-08-19 08:13:00'), (1, 3, '2022-08-19
 	(4, 2, '2022-08-20 08:00:00', '2022-08-20 08:01:00'), (4, 1, '2022-08-20 08:01:00', '2022-08-24 00:00:00'), 
 	(4, 3, '2022-08-20 08:02:00', '2022-08-23 08:01:00'), (4, 4, '2022-08-20 08:03:00', null), 
 	(4, 5, '2022-08-20 08:04:00', null), (4, 6, '2022-08-20 08:05:00', '2022-08-25 12:10:30'); 
-
---	file_table / 5 files
-INSERT INTO files(file_name, file_type) 
-VALUES ('karina_photo.jpg', 'IMAGE'), 
-	('car_bugatti.jpg', 'IMAGE'),                                                       
-	('user_list.doc', 'MSOFFICE_DOCUMENT'), 
-	('google_sheet.xls', 'MSOFFICE_DOCUMENT'), 
-	('manual.pdf', 'ACROBAT_DOCUMENT'), 
-	('Chervona_kalyna.mp3', 'SOUND');
 
 --	messages_table / 30 messages
 INSERT INTO messages(chat_id, user_id, message_text, file_id, date_time)

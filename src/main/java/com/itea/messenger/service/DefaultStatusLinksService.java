@@ -7,7 +7,6 @@ import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.repository.StatusLinksRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +27,7 @@ public class DefaultStatusLinksService implements StatusLinksService{
         }
     }
     
+/*
     @Override
     public StatusLinksDto saveStatusLink(StatusLinksDto statusLinksDto) throws ValidationException {
         validateStatusLinkDto(statusLinksDto);
@@ -36,17 +36,18 @@ public class DefaultStatusLinksService implements StatusLinksService{
         return statusLinksConverter.dtoFromStatusLinks(savedStatusLinks);
     }
 
+*/
     @Override
     public StatusLinksDto findById(Long id) throws ValidationException {
         StatusLinks statusLinks = statusLinksRepository.findById(id).orElseThrow(() ->
                 new ValidationException("No status links with this id"));
-        return statusLinksConverter.dtoFromStatusLinks(statusLinks);
+        return statusLinksConverter.statusLinksToDto(statusLinks);
     }
 
     @Override
     public List<StatusLinksDto> findByMessageId(Long messageId) {
         List<StatusLinks> statusLinks = statusLinksRepository.findByMessageId(messageId);
-        return statusLinks.stream().map(statusLinksConverter::dtoFromStatusLinks).collect(Collectors.toList());
+        return statusLinks.stream().map(statusLinksConverter::statusLinksToDto).collect(Collectors.toList());
     }
 
 }

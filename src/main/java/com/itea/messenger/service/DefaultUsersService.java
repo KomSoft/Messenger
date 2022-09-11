@@ -17,24 +17,10 @@ public class DefaultUsersService implements UsersService{
     private final UsersRepository usersRepository;
     private final UsersConverter usersConverter;
 
-    private void validateUserDto(UsersDto usersDto) throws ValidationException {
-        if (isNull(usersDto)){throw new ValidationException("Object is null");
-        }
-        if (isNull(usersDto.getLogin()) || usersDto.getLogin().isEmpty()){
-            throw new ValidationException("Login is empty");
-        }
-        if (isNull(usersDto.getName()) || usersDto.getName().isEmpty()) {
-            throw new ValidationException("Name is empty");
-        }
-    }
-
     @Override
     public UsersDto saveUser(UsersDto usersDto) throws ValidationException {
-        validateUserDto(usersDto);
-        Users user = usersRepository.save(usersConverter.usersEntityFromDto(usersDto));
-        System.out.println(usersDto);
-        System.out.println(user);
-        return usersConverter.dtoFromUsersEntity(user);
+        Users user = usersRepository.save(usersConverter.userFromDto(usersDto));
+        return usersConverter.userToDto(user);
     }
 
     @Override
@@ -44,30 +30,30 @@ public class DefaultUsersService implements UsersService{
 
     @Override
     public UsersDto findById(Long id) throws ValidationException {
-        Users user = usersRepository.findById(id).orElseThrow(() -> new ValidationException("No users with this id"));
-        return usersConverter.dtoFromUsersEntity(user);
+        Users user = usersRepository.findById(id).orElseThrow(() -> new ValidationException("No users with id:" + id));
+        return usersConverter.userToDto(user);
     }
 
     @Override
     public UsersDto findByLogin(String login) {
         Users user = usersRepository.findByLogin(login);
-        return user == null ? null : usersConverter.dtoFromUsersEntity(user);
+        return user == null ? null : usersConverter.userToDto(user);
     }
 
     @Override
     public UsersDto findByName(String name) {
         Users user = usersRepository.findByName(name);
-        return user == null ? null : usersConverter.dtoFromUsersEntity(user);
+        return user == null ? null : usersConverter.userToDto(user);
     }
 
     @Override
     public List<UsersDto> findAll() {
-        List<UsersDto> dtoList = new ArrayList<>();
-        List<Users> list = usersRepository.findAll();
-        for (Users user: list) {
-            dtoList.add(usersConverter.dtoFromUsersEntity(user));
+        List<UsersDto> usersDto = new ArrayList<>();
+        List<Users> users = usersRepository.findAll();
+        for (Users user: users) {
+            usersDto.add(usersConverter.userToDto(user));
         }
-        return dtoList;
+        return usersDto;
     }
 
 }

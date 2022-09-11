@@ -1,18 +1,17 @@
 package com.itea.messenger.service;
 
 import com.itea.messenger.converter.ChatsConverter;
-import com.itea.messenger.dto.ChatUsersLinksDto;
 import com.itea.messenger.dto.ChatsDto;
 import com.itea.messenger.entity.Chats;
 import com.itea.messenger.exception.ValidationException;
+import com.itea.messenger.repository.UsersRepository;
+import com.itea.messenger.type.ChatTypeEnum;
 import lombok.AllArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import com.itea.messenger.repository.ChatsRepository;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import static java.util.Objects.isNull;
 
 @Service
 @AllArgsConstructor
@@ -22,24 +21,22 @@ public class ChatService implements ChatServiceInterface {
     private final ChatsConverter chatsConverter;
     private final MessagesService messagesService;
     private final ChatUsersLinksService chatUsersLinksService;
-
-    private void validateChat(ChatsDto chatsDto, Long userId) throws ValidationException {
-        if (isNull(chatsDto)) {
-            throw new ValidationException("Chat object is null");
-        }
-        if (isNull(chatsDto.getChatType()) || chatsDto.getChatType().describeConstable().isEmpty()) {
-            throw new ValidationException("Chat type can't be empty");
-        }
-        if (isNull(userId)) {
-            throw new ValidationException("User id can't be empty");
-        }
-    }
+    private final UsersRepository usersRepository;
 
     @Override
-    public void createChat(ChatsDto chatDto, Long userId) throws ValidationException {
-        validateChat(chatDto, userId);
+//    public void createChat(ChatsDto chatDto, Long userId) throws ValidationException {
+    public ChatsDto createChat(ChatsDto chatDto) throws ValidationException {
+//        validateChat(chatDto, userId);
+/*
+        Optional<Users> user = usersRepository.findById(userId);
+        if (!user.isPresent()) {
+            throw new ValidationException("[createChat] userId:" + userId + " is incorrect");
+        }
         final Long chatId = chatsRepository.save(chatsConverter.chatEntityFromDto(chatDto)).getId();
-        chatUsersLinksService.saveChatUsersLink(new ChatUsersLinksDto(chatId, userId));
+        chatUsersLinksService.saveChatUsersLink(new ChatUsersLinks(chatId, userId));
+*/
+        Chats chat = chatsRepository.save(chatsConverter.chatEntityFromDto(chatDto));
+        return chatsConverter.chatEntityToDto(chat);
     }
 
     @Override
@@ -60,16 +57,20 @@ public class ChatService implements ChatServiceInterface {
         List<ChatsDto> dtoList = new ArrayList<>();
         List<Chats> list = chatsRepository.findAll();
         for (Chats chat : list) {
-            dtoList.add(chatsConverter.dtoFromChatEntity(chat));
+            dtoList.add(chatsConverter.chatEntityToDto(chat));
         }
         return dtoList;
     }
 
     @Override
     public ChatsDto getChatById(Long chatId) {
-        return chatsConverter.dtoFromChatEntity(chatsRepository.getChatById(chatId));
+        return chatsConverter.chatEntityToDto(chatsRepository.findById(chatId).orElse(null));
 //      Below gets us recursion. Changed result type to ChatsDto
 //        return (Chats) chatsRepository.getChatById(chatId);
     }
 
+    public List<ChatTypeEnum> getChatTypes() {
+        List<ChatTypeEnum> typesOfChat = Arrays.asList(ChatTypeEnum.values());
+        return typesOfChat;
+    }
 }

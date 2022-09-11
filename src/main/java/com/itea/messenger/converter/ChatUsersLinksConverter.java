@@ -6,16 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ChatUsersLinksConverter {
-    public ChatUsersLinks chatUsersLinksFromDto(ChatUsersLinksDto chatUsersLinksDto) {
-        ChatUsersLinks chatUsersLinks = new ChatUsersLinks();
-        chatUsersLinks.setId(chatUsersLinksDto.getId());
-        chatUsersLinks.setChatId(chatUsersLinksDto.getChatId());
-        chatUsersLinks.setUserId(chatUsersLinksDto.getUserId());
-        chatUsersLinks.setJoinDate(chatUsersLinksDto.getJoinDate());
-        chatUsersLinks.setViewDate(chatUsersLinksDto.getViewDate());
-        return chatUsersLinks;
-    }
-    public ChatUsersLinksDto dtoFromChatUsersLinks(ChatUsersLinks chatUsersLinks){
+
+    public ChatUsersLinksDto chatUsersLinksToDto(ChatUsersLinks chatUsersLinks){
+
         ChatUsersLinksDto chatUsersLinksDto = new ChatUsersLinksDto();
         chatUsersLinksDto.setId(chatUsersLinks.getId());
         chatUsersLinksDto.setChatId(chatUsersLinks.getChatId());

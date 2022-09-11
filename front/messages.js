@@ -9,7 +9,7 @@ function _fillMessageRow(message) {
 	return res;
 }
 
-function messages_getMessageDtoById(message_id) {
+function messages_getMessageById(message_id) {
    var xhttp = new XMLHttpRequest();
    var request = host_messages + '/' + message_id;
    var debug = '[debug] Request: ' + request;
@@ -27,7 +27,7 @@ function messages_getMessageDtoById(message_id) {
 }   
 
 function messages_findById(message_id) {
-   messages_getMessageDtoById(message_id);
+   message = messages_getMessageById(message_id);
    if (message == null) {
       return 'message id:' + message_id + ' not found';
    }

@@ -1,11 +1,14 @@
 package com.itea.messenger.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "chats_users")
 public class ChatUsersLinks {
 
@@ -24,4 +27,12 @@ public class ChatUsersLinks {
 
     @Column(name = "view_date")
     private LocalDateTime viewDate;
+
+/*
+    public ChatUsersLinks(Long chatId, Long userId) {
+        this.chatId = chatId;
+        this.userId = userId;
+        this.joinDate = LocalDateTime.now();
+    }
+*/
 }

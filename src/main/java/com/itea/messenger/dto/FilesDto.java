@@ -2,7 +2,6 @@ package com.itea.messenger.dto;
 
 import com.itea.messenger.type.FileTypes;
 import lombok.Data;
-//import org.apache.commons.io.FilenamesUtils;
 
 @Data
 public class FilesDto {
@@ -10,10 +9,13 @@ public class FilesDto {
     private String fileName;
     private FileTypes fileType;
 
+    private String getFileExt() {
+        int i = this.fileName.lastIndexOf('.');
+        return i > 0 ? this.fileName.substring(i+1) : "";
+    }
+
     public void setFileType() {
-//        String fileExt = FilenameUtils.getExtension(this.getFileName());
-//        TODO - get library and remove next line
-        String fileExt = "";
+        String fileExt = getFileExt();
         this.fileType =  FileTypes.UNKNOWN;
         if (fileExt.compareToIgnoreCase("wav") == 0 || fileExt.compareToIgnoreCase("mp3") == 0) {
             this.fileType = FileTypes.SOUND;

@@ -1,6 +1,8 @@
 package com.itea.messenger.exception;
 
-public class ValidationException extends Exception {
+import java.util.function.Supplier;
+
+public class ValidationException extends Exception implements Supplier<String> {
     private String message;
 
     public ValidationException(String message) {
@@ -9,6 +11,11 @@ public class ValidationException extends Exception {
 
     @Override
     public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public String get() {
         return message;
     }
 }

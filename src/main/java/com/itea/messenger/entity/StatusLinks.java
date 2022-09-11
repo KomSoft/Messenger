@@ -17,12 +17,11 @@ public class StatusLinks {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status_type")
-//    @OneToOne
     private MessageStatus status;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Users user;
 
-    @Column(name = "message_id")
-    private Long messageId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Messages message;
 }

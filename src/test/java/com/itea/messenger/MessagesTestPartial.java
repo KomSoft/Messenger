@@ -38,7 +38,7 @@ public class MessagesTestPartial {
     @Test
     public void testMessageControllerGetMessageById() {
         ldt = LocalDateTime.now();
-        when(messagesRepository.findById(any())).thenReturn(java.util.Optional.of(new Messages(2L, 3L, 4L, TEST_TEXT, 5L, ldt)));
+//        when(messagesRepository.findById(any())).thenReturn(java.util.Optional.of(new Messages(2L, 3L, 4L, TEST_TEXT, 5L, ldt)));
         System.out.println(messagesRepository.findById(5L));
     }
 

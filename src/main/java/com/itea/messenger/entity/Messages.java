@@ -1,5 +1,6 @@
 package com.itea.messenger.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.itea.messenger.type.MessageStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,54 +19,56 @@ public class Messages {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "chat_id", nullable = false)
-    private Long chatId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Chats chat;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Users user;
 
-    @Column(name = "message_text", length = 255)
+    @Column(name = "message_text", nullable = false, length = 255)
     private String messageText;
 
-    @Column(name = "file_id")
-    private Long fileId;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "file_id", referencedColumnName = "id")
+    private Files file;
 
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
-    @OneToMany
-    @JoinColumn(name = "message_id")
-    private List<StatusLinks> messageStatus;
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<StatusLinks> messageStatuses;
 
-    public Messages(Long id, Long chatId, Long userId, String messageText, Long fileId, LocalDateTime dateTime) {
-        this.id = id;
-        this.chatId = chatId;
-        this.userId = userId;
-        this.messageText = messageText;
-        this.fileId = fileId;
-        this.dateTime = dateTime;
-        this.messageStatus = new ArrayList<>();
+
+    public void setStatus(StatusLinks status) {
+        messageStatuses.add(status);
+        status.setMessage(this);
     }
 
-    public Messages(Long chatId, Long userId, String messageText, Long fileId) {
-/*
-    public Messages(Long id, Long chatId, Long userId, String messageText, Long fileId) {
-        this.id = id;
-*/
-        this.chatId = chatId;
-        this.userId = userId;
-        this.messageText = messageText;
-        this.fileId = fileId;
-        this.dateTime = LocalDateTime.now();
-        this.messageStatus = new ArrayList<>();
+    public void removeStatus(StatusLinks status) {
+        messageStatuses.remove(status);
+        status.setMessage(null);
     }
 
     public MessageStatus getStatusByUserId(Long userId) {
-        for (StatusLinks status : this.getMessageStatus()) {
-            if (status.getUserId().equals(userId)) {
+        for (StatusLinks status : messageStatuses) {
+            if (status.getUser().getId().equals(userId)) {
                 return status.getStatus();
             }
         }
         return null;
     }
+
+    public MessageStatus getStatusForAuthor() {
+        return getStatusByUserId(this.getUser().getId());
+    }
+
+    public void setAttachment(Files file) {
+        this.file = file;
+        file.setMessage(this);
+}
+
+    public void removeAttachment() {
+        this.file = null;
+    }
+
 }

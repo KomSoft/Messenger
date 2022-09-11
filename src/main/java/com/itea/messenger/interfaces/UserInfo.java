@@ -1,19 +1,12 @@
 package com.itea.messenger.interfaces;
 
-import com.itea.messenger.type.ChatTypeEnum;
-
-import javax.persistence.Column;
+import com.itea.messenger.entity.Files;
 
 public interface UserInfo {
-    long getId();
+    Long getId();
     String getName();
     String getPassword();
     String getLogin();
-    long getPhotoId();
-/*
-    default long getPhotoId() {
-       if (photoId. == null)
-    }
-*/
+    Files getAvatar();
     int getAge();
 }

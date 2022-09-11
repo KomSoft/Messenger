@@ -59,7 +59,7 @@ function getStatusesByMessageId(id) {
 	if (xhttp.status == 200) {
       var statuses = JSON.parse(xhttp.responseText);
    } else {
-		console.log('[getStatusesByMessageId] Id:' + id + ' -> Error. Response status: ' + xhttp.status);
+		console.log('[getStatusesByMessageId] id:' + id + ' -> Error. Response status: ' + xhttp.status);
       statuses = null;
    }
 	return statuses;
@@ -103,17 +103,18 @@ function createDivMessage(user_id, message) {
    var res =  '<tr id="messageId' + message.id + '"><td class="';
    var td1 = user_id == message.userId ? 'td_author_info' : 'td_mes_info';
    var td2 = user_id == message.userId ? 'td_author_text' : 'td_mes_text';
-   res += td1 + '"><b>' + _getUserById(message.userId) + '</b><br><br>photo</td><td class="' + td2 + '">';
+   res += td1 + '"><b>' + message.userName + '</b><br><br>photo</td><td class="' + td2 + '">';
    res += '<i>Posted at: ' + message.dateTime + '';
-   res += ' (' + _getMessageStatusByUserId(user_id, message.messageStatus) + ') ';
+   res += ' (' + _getMessageStatusByUserId(user_id, message.statuses) + ') ';
    res += '</i>&nbsp;&nbsp;&nbsp;&nbsp;';
    res += '<button onclick="getMessageInfo(' + message.id + ' )">See statuses</button>';
    if (user_id == message.userId) {
       res += '&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="editMessage(' + message.id + ' )">Edit message</button>';
    }   
    res += '<p>' + message.messageText + '</p>';
-   if (message.file != null) {
-      res += 'attached file: (id=' + message.fileId + '), type=(next time)'; 
+   if (message.fileId != null) {
+      res += 'attached file: "' + message.fileName + '" (id:' + message.fileId + ', ';
+      res += message.fileType + ')';
    }
    res += '</td></tr>';
    return res;

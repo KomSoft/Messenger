@@ -6,21 +6,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class StatusLinksConverter {
-    public StatusLinks statusLinksFromDto(StatusLinksDto statusLinksDto) {
-        StatusLinks statusLinks = new StatusLinks();
-        statusLinks.setId(statusLinksDto.getId());
-        statusLinks.setStatus(statusLinksDto.getStatus());
-        statusLinks.setUserId(statusLinksDto.getUserId());
-        statusLinks.setMessageId(statusLinksDto.getMessageId());
-        return statusLinks;
-    }
 
-    public StatusLinksDto dtoFromStatusLinks(StatusLinks statusLinks) {
-        StatusLinksDto dto = new StatusLinksDto();
-        dto.setId(statusLinks.getId());
-        dto.setStatus(statusLinks.getStatus());
-        dto.setUserId(statusLinks.getUserId());
-        dto.setMessageId(statusLinks.getMessageId());
-        return dto;
+    public StatusLinksDto statusLinksToDto(StatusLinks statusLinks) {
+        StatusLinksDto statusLinksDto = new StatusLinksDto();
+        statusLinksDto.setId(statusLinks.getId());
+        statusLinksDto.setMessageId(statusLinks.getMessage().getId());
+        statusLinksDto.setUserId(statusLinks.getUser().getId());
+        statusLinksDto.setUserName(statusLinks.getUser().getName());
+        statusLinksDto.setStatus(statusLinks.getStatus());
+        return statusLinksDto;
     }
 }

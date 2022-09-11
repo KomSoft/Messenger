@@ -5,12 +5,14 @@ import com.itea.messenger.entity.ChatUsersLinks;
 import com.itea.messenger.entity.Messages;
 import com.itea.messenger.converter.MessagesConverter;
 import com.itea.messenger.entity.StatusLinks;
+import com.itea.messenger.entity.Users;
 import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.interfaces.UserInfo;
 import com.itea.messenger.repository.ChatUsersLinksRepository;
 import com.itea.messenger.repository.MessagesRepository;
 import com.itea.messenger.type.MessageStatus;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,10 +38,10 @@ public class DefaultMessagesService implements MessagesService {
             throw new ValidationException("Object MessageDto is null");
         }
         if (messageDto.getUserId() == null) {
-            throw new ValidationException("[MessageDto].userId is null");
+            throw new ValidationException("[MessageDto].user is null");
         }
         if ((messageDto.getMessageText() == null || messageDto.getMessageText().isEmpty()) && messageDto.getFileId() == null) {
-            throw new ValidationException("[MessageDto].message can be empty only if file is attached");
+            throw new ValidationException("[MessageDto].messageText can be empty only if file is attached");
         }
         if (messageDto.getMessageText().length() > 255) {
             messageDto.setMessageText(messageDto.getMessageText().substring(0, 254));
@@ -61,13 +63,14 @@ public class DefaultMessagesService implements MessagesService {
 */
 //    TODO - may be make two method: save and update (for edited message)?
     @Override
+    @SneakyThrows
     public MessagesDto saveMessage(MessagesDto messageDto) throws ValidationException {
-        validateMessagesDto(messageDto);
+//        validateMessagesDto(messageDto);
         Messages message = messagesConverter.messagesFromDto(messageDto);
         Messages savedMessage;
 //        save new message
-        if (!messagesRepository.findById(message.getId()).isPresent()) {
-            List<UserInfo> chatUsersList = chatUsersLinksRepository.getUsersByChatId(message.getChatId());
+//        if (!messagesRepository.findById(message.getId()).isPresent()) {
+//            List<UserInfo> chatUsersList = chatUsersLinksRepository.getUsersByChatId(message.getChat().getId());
             List<StatusLinks> statusLinksList = new ArrayList<>();
             StatusLinks status = new StatusLinks();
 //  TODO - save the statusLinks before save message
@@ -75,6 +78,7 @@ public class DefaultMessagesService implements MessagesService {
             error: org.hibernate.TransientObjectException: object references an unsaved transient instance -
             save the transient instance before flushing: com.itea.messenger.entity.StatusLinks
 */
+/*
             for (UserInfo user : chatUsersList) {
                 status.setUserId(user.getId());
                 status.setStatus(MessageStatus.SENT);
@@ -83,8 +87,11 @@ public class DefaultMessagesService implements MessagesService {
                 }
                 statusLinksList.add(status);
             }
-            message.setMessageStatus(statusLinksList);
-        } else {
+            message.setMessageStatuses(statusLinksList);
+*/
+//        }
+/*
+        else {
 //            update (edit) existing message, change statuses to EDITED
             for (int i = 0; i < message.getMessageStatus().size(); i++) {
                 if (message.getMessageStatus().get(i).getStatus().equals(MessageStatus.READ)) {
@@ -92,14 +99,22 @@ public class DefaultMessagesService implements MessagesService {
                 }
             }
         }
+*/
         savedMessage = messagesRepository.save(message);
         return messagesConverter.messagesToDto(savedMessage);
     }
 
     @Override
-    public MessagesDto getMessageById(Long messageId) {
-        Optional<Messages> message = messagesRepository.findById(messageId);
-        return message.map(messagesConverter::messagesToDto).orElse(null);
+    public MessagesDto getMessageById(Long messageId) throws ValidationException {
+        Messages message = messagesRepository.findById(messageId).orElseThrow(() -> new ValidationException("No message with id:" + messageId));
+//        Optional<Messages> message = messagesRepository.findById(messageId);
+        return messagesConverter.messagesToDto(message);
+
+/*
+        Users user = usersRepository.findById(id).orElseThrow(() -> new ValidationException("No users with this id"));
+        return usersConverter.userToDto(user);
+*/
+
     }
 
     @Override
@@ -131,11 +146,11 @@ public class DefaultMessagesService implements MessagesService {
            return;
         }
         Messages message = optionalMessage.get();
-        if (message.getUserId().equals(userId)) {
+        if (message.getUser().getId().equals(userId)) {
             if (message.getMessageText().equalsIgnoreCase(DELETED_MESSAGE_TEXT)) {
-                for (int i = 0; i < message.getMessageStatus().size(); i++) {
-                    if (message.getMessageStatus().get(i).getUserId().equals(userId)) {
-                        message.getMessageStatus().get(i).setStatus(MessageStatus.DELETED);
+                for (int i = 0; i < message.getMessageStatuses().size(); i++) {
+                    if (message.getMessageStatuses().get(i).getUser().getId().equals(userId)) {
+                        message.getMessageStatuses().get(i).setStatus(MessageStatus.DELETED);
                     }
                 }
             } else {
@@ -143,19 +158,19 @@ public class DefaultMessagesService implements MessagesService {
                messagesRepository.save(message);
            }
         } else {
-            for (int i = 0; i < message.getMessageStatus().size(); i++) {
-                if (message.getMessageStatus().get(i).getUserId().equals(userId)) {
-                    message.getMessageStatus().get(i).setStatus(MessageStatus.DELETED);
+            for (int i = 0; i < message.getMessageStatuses().size(); i++) {
+                if (message.getMessageStatuses().get(i).getUser().getId().equals(userId)) {
+                    message.getMessageStatuses().get(i).setStatus(MessageStatus.DELETED);
                 }
             }
         }
         boolean isAllDelete = true;
-        if (message.getMessageStatus().size() == 0) {
-            isAllDelete = message.getUserId().equals(userId);
+        if (message.getMessageStatuses().size() == 0) {
+            isAllDelete = message.getUser().getId().equals(userId);
         }
         int i = 0;
-        while (isAllDelete && (i < message.getMessageStatus().size())) {
-            isAllDelete = message.getMessageStatus().get(i).getStatus().equals(MessageStatus.DELETED);
+        while (isAllDelete && (i < message.getMessageStatuses().size())) {
+            isAllDelete = message.getMessageStatuses().get(i).getStatus().equals(MessageStatus.DELETED);
             i++;
         }
         if (isAllDelete) {
@@ -184,7 +199,9 @@ public class DefaultMessagesService implements MessagesService {
 //        Predicate<Long> notDeleted = userIdForStatus -> !defaultStatusLinksService.findById(userIdForStatus).getStatus().equals(MessageStatus.DELETED);
         for (Messages message : messagesList) {
             MessageStatus status = message.getStatusByUserId(userId);
-            if (status != null && status != MessageStatus.DELETED) {
+//log.info("[getMessagesForUserByChatId]" + messagesConverter.messagesToDto(message));
+//            if (status != null && status != MessageStatus.DELETED) {
+            if (status == null || (status != null && status != MessageStatus.DELETED)) {
                 result.add(messagesConverter.messagesToDto(message));
             } else {
 //                skip (or need to do something, throw exception?)

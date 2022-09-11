@@ -4,51 +4,54 @@ import com.itea.messenger.dto.UsersDto;
 import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.service.UsersService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-@AllArgsConstructor
+@NoArgsConstructor
 @Log
 public class UsersController {
-    private final UsersService usersService;
+
+    @Autowired
+    UsersService usersService;
 
     @PostMapping
-    public UsersDto saveUsers(@RequestBody UsersDto usersDto) throws ValidationException {
-        log.info("Handling save users: " + usersDto);
-        return usersService.saveUser(usersDto);
+    public UsersDto saveUsers(@RequestBody UsersDto userDto) throws ValidationException {
+        log.info("Handling save User: " + userDto);
+        return usersService.saveUser(userDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public UsersDto findById(@PathVariable("id") Long id) throws ValidationException {
-        log.info("Handling find user by id: " + id);
+        log.info("Handling find User by id:" + id);
         return usersService.findById(id);
     }
 
-    @GetMapping("/{login}/login")
+    @GetMapping("{login}/login")
     public UsersDto getByLogin(@PathVariable("login") String login) {
-        log.info("Handling find user by login: " + login);
+        log.info("Handling find User by login:" + login);
         return usersService.findByLogin(login);
     }
 
-    @GetMapping("/{name}/name")
+    @GetMapping("{name}/name")
     public UsersDto getByName(@PathVariable("name") String name) {
-        log.info("Handling find user by name: " + name);
+        log.info("Handling find User by name:" + name);
         return usersService.findByName(name);
     }
 
     @GetMapping
     public List<UsersDto> findAll() {
-        log.info("Handling find all users service");
+        log.info("Handling find all Users");
         return usersService.findAll();
     }
 
     @DeleteMapping("{id}")
     public void deleteMessage(@PathVariable("id") Long userId) {
-        log.info("Handling delete user by ID: " + userId);
+        log.info("Handling delete User by id:" + userId);
         usersService.deleteUser(userId);
     }
 

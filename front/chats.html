@@ -88,12 +88,8 @@
    
    function deleteChatById() {
       document.getElementById("debug_frame").innerHTML = ' ';
-      var chat_id = document.getElementById("chat_del_id").value;
-      if (!confirm ('Are you sure to delete chat (id:' + chat_id + ')?')) { 
-         document.getElementById("chat_list").innerHTML = ' ';
-         return; 
-      } 
-      document.getElementById("chat_list").innerHTML = chats_deleteChat(parseInt(chat_id));
+      var chat_id = parseInt(document.getElementById("chat_del_id").value);
+      document.getElementById("chat_list").innerHTML = chats_deleteChat(chat_id);
    }
 
    function addUserToChat() {
@@ -113,8 +109,11 @@
       var description = document.getElementById("chat_description").value;
       var type_elem = document.getElementById("chat_type_list");
       var chatType = type_elem.options[type_elem.selectedIndex].text;
-      var result = chats_createChat(name, description, chatType); 
-      document.getElementById("chat_list").innerHTML = result;
+      if (!confirm ('Are you sure to create new Chat "' + name + '" (' + description + '), ' + chatType + '?')) { 
+         document.getElementById("user_list").innerHTML = ' ';
+	      return; 
+	   } 
+      document.getElementById("chat_list").innerHTML = chats_createChat(name, description, chatType);
    }
 </script>
 

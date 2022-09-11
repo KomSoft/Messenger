@@ -17,17 +17,4 @@ public class ChatUsersLinksDto {
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime viewDate;
 
-    public ChatUsersLinksDto(Long chatId, Long userId) {
-        this.chatId = chatId;
-        this.userId = userId;
-        this.joinDate = LocalDateTime.now();
-    }
-/*
-    public ChatUsersLinksDto(Long chatId, Long userId, LocalDateTime) {
-        this.chatId = chatId;
-        this.userId = userId;
-    }
-*/
-
-
 }

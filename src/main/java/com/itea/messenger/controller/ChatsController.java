@@ -3,60 +3,77 @@ package com.itea.messenger.controller;
 import com.itea.messenger.dto.ChatsDto;
 import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.service.ChatService;
+import com.itea.messenger.type.ChatTypeEnum;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/chats")
-@AllArgsConstructor
+@NoArgsConstructor
 @Log
 public class ChatsController {
-    private final ChatService chatService;
 
-    @GetMapping("{Id}")
-    public ChatsDto getChatById(@PathVariable("Id") Long chatId) {
-        log.info("Handling get chat by ID: " + chatId);
+    @Autowired
+    ChatService chatService;
+
+    @GetMapping("{id}")
+    public ChatsDto getChatById(@PathVariable("id") Long chatId) {
+        log.info("Handling get Chat by id: " + chatId);
         return chatService.getChatById(chatId);
     }
 
     @GetMapping
     public List<ChatsDto> getAll() {
-        log.info("Handling get all chats");
+        log.info("Handling get all Chats");
         return chatService.getAllChats();
     }
 
-//    TODO - public ChatsDto createChat(name, description)
-    @PostMapping
-    public ResponseEntity<Void> createChat(@RequestBody ChatsDto chatsDto, @RequestBody Long userId ) throws ValidationException {
-        log.info("Handling creating chat");
-        chatService.createChat(chatsDto, userId);
-        return ResponseEntity.ok().build();
+    @GetMapping("/types")
+    public List<ChatTypeEnum> getChatTypes() {
+        log.info("Handling get Chat types");
+        return chatService.getChatTypes();
     }
 
-//    TODO - public void deleteChat(id)
+    @PostMapping
+    public ChatsDto createChat(@RequestBody ChatsDto chatsDto) throws ValidationException {
+        log.info("Handling creating Chat");
+        return chatService.createChat(chatsDto);
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity deleteChat(@PathVariable("id") Long chatId) {
-        log.info("Handling delete chat by id: " + chatId);
+        log.info("Handling delete Chat by id: " + chatId);
         try {
             chatService.deleteChat(chatId);
-            return ResponseEntity
-                    .ok().build();
+            return ResponseEntity.ok().build();
         }
         catch(EmptyResultDataAccessException e) {
             e.printStackTrace();
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Chat with id " + chatId + " doesn't exists");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Chat with id:" + chatId + " doesn't exists");
         }
     }
 
 //    TODO - public ? addChatUser(userId)
+    /*
+        @PostMapping("{userId}")
+        public ResponseEntity<Void> createChat(@RequestBody ChatsDto chatsDto, @RequestBody Long userId) throws ValidationException {
+            log.info("Handling creating chat. ");
+            try {
+                chatService.createChat(chatsDto, userId);
+            } catch (ValidationException e) {
+                e.printStackTrace();
+            }
+            return ResponseEntity.ok().build();
+        }
+     }
+   */
 
 }
