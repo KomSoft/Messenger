@@ -3,25 +3,42 @@ package com.itea.messenger.service;
 import com.itea.messenger.converter.ChatsConverter;
 import com.itea.messenger.dto.ChatsDto;
 import com.itea.messenger.entity.Chats;
+import com.itea.messenger.entity.Users;
 import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.repository.UsersRepository;
 import com.itea.messenger.type.ChatTypeEnum;
 import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.itea.messenger.repository.ChatsRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+@Log
 @Service
 @AllArgsConstructor
 public class ChatService implements ChatServiceInterface {
 
+    @Autowired
+    ChatsRepository chatsRepository;
+    @Autowired
+    private final ChatsConverter chatsConverter;
+    @Autowired
+    private final MessagesService messagesService;
+    @Autowired
+    private final ChatUsersLinksService chatUsersLinksService;
+    @Autowired
+    private final UsersRepository usersRepository;
+/*
     private final ChatsRepository chatsRepository;
     private final ChatsConverter chatsConverter;
     private final MessagesService messagesService;
     private final ChatUsersLinksService chatUsersLinksService;
     private final UsersRepository usersRepository;
+*/
 
     @Override
 //    public void createChat(ChatsDto chatDto, Long userId) throws ValidationException {
@@ -42,15 +59,13 @@ public class ChatService implements ChatServiceInterface {
     @Override
     public void deleteChat(Long chatId){
        try {
-           chatUsersLinksService.deleteAllByChatId(chatId);
            messagesService.deleteAllMessagesByChatId(chatId);
+           chatUsersLinksService.deleteAllByChatId(chatId);
            chatsRepository.deleteById(chatId);
        } catch (Exception e) {
            System.out.println(e.getMessage());
        }
     }
-
-//    TODO - public ? addChatUser(userId)
 
     @Override
     public List<ChatsDto> getAllChats() {
@@ -73,4 +88,21 @@ public class ChatService implements ChatServiceInterface {
         List<ChatTypeEnum> typesOfChat = Arrays.asList(ChatTypeEnum.values());
         return typesOfChat;
     }
+
+    public void addUserToChat(Long chatId, Long userId) {
+//        Optional<Chats> chatsOptional = chatsRepository.findById(chatId);
+        Chats chat = chatsRepository.findById(chatId).orElse(null);
+        Users user = usersRepository.findById(userId).orElse(null);
+//        Optional<Users> usersOptional = usersRepository.findById(userId);
+        if (chat != null && user != null) {
+            chat.addUser(user);
+        }
+/*
+        if (chatsOptional.isPresent() && usersOptional.isPresent()) {
+            chatsOptional.get().addUser(usersOptional.get());
+        }
+*/
+        log.info("Can't add user id:" + userId + " to chat id:" + chatId);
+    }
+
 }

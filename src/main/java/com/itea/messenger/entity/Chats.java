@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -26,10 +27,10 @@ public class Chats {
     private ChatTypeEnum chatType;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Messages> chatMessages;
+    private Set<Messages> chatMessages;
 
     @ManyToMany(mappedBy = "chats")
-    private List<Users> users;
+    private Set<Users> users;
 
     public void addMessage(Messages message) {
         chatMessages.add(message);
@@ -45,5 +46,11 @@ public class Chats {
 //  TODO - write logic
         //        messages.remove(message);    message.setUser(null);
     }
+
+    public void addUser(Users user) {
+        users.add(user);
+        user.chats.add(this);
+    }
+
 
 }

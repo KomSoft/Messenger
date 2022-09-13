@@ -8,11 +8,13 @@ import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.interfaces.UserInfo;
 import com.itea.messenger.repository.FilesRepository;
 import com.itea.messenger.type.MessageStatus;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 import static java.util.Objects.isNull;
 
+@Log
 @Component
 public class UsersConverter {
 
@@ -40,9 +42,9 @@ public class UsersConverter {
         user.setLogin(userDto.getLogin());
 //        TODO - extend logic when we send file body with FileDto object
 //        now we should save file before convert User to get avatarId
-        if (userDto.getAvatarId() != null) {
-            Optional<Files> file = filesRepository.findById(userDto.getAvatarId());
-            user.setAvatar(file.orElseThrow(() -> new ValidationException("[UserDto] File id:" + userDto.getAvatarId() + " is incorrect")));
+        if (userDto.getAvatarId() != null && userDto.getAvatarId() > 0) {
+            Files file = filesRepository.findById(userDto.getAvatarId()).orElseThrow(() -> new ValidationException("[UserDto] File id:" + userDto.getAvatarId() + " is incorrect"));
+            user.setAvatar(file);
         }
         return user;
     }

@@ -1,12 +1,10 @@
 package com.itea.messenger.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.itea.messenger.type.MessageStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -67,8 +65,9 @@ public class Messages {
         file.setMessage(this);
 }
 
-    public void removeAttachment() {
+    public void removeAttachment(Files file) {
         this.file = null;
+        file.setMessage(null);
     }
 
 }

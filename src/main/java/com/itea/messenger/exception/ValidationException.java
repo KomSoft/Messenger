@@ -6,7 +6,7 @@ public class ValidationException extends Exception implements Supplier<String> {
     private String message;
 
     public ValidationException(String message) {
-        super(message);
+        this.message = message;
     }
 
     @Override

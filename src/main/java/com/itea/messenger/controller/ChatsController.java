@@ -48,6 +48,12 @@ public class ChatsController {
         return chatService.createChat(chatsDto);
     }
 
+    @PostMapping("{id}/adduser/{userId}")
+    public void addUserToChat(@PathVariable("id") Long chatId, @PathVariable("userId") Long userId) {
+        log.info("Handling add User id:" + userId + " to Chat id:" + chatId);
+        chatService.addUserToChat(chatId, userId);
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity deleteChat(@PathVariable("id") Long chatId) {
         log.info("Handling delete Chat by id: " + chatId);
