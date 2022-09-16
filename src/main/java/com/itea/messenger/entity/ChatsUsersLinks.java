@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @Table(name = "chats_users")
-public class ChatUsersLinks {
+public class ChatsUsersLinks {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +28,14 @@ public class ChatUsersLinks {
     @Column(name = "view_date")
     private LocalDateTime viewDate;
 
+    public ChatsUsersLinks(Long chatId, Long userId) {
+        this.chatId = chatId;
+        this.userId = userId;
+        this.joinDate = LocalDateTime.now();
+    }
+
 /*
-    public ChatUsersLinks(Long chatId, Long userId) {
+    public ChatUsersLinks(Long id, Long chatId, Long userId, LocalDateTime joinDate, LocalDateTime viewDate) {
         this.chatId = chatId;
         this.userId = userId;
         this.joinDate = LocalDateTime.now();

@@ -5,24 +5,25 @@ import com.itea.messenger.dto.UsersShortDto;
 import com.itea.messenger.entity.Files;
 import com.itea.messenger.entity.Users;
 import com.itea.messenger.exception.ValidationException;
-import com.itea.messenger.interfaces.UserInfo;
+import com.itea.messenger.interfaces.UsersInfo;
 import com.itea.messenger.repository.FilesRepository;
-import com.itea.messenger.type.MessageStatus;
-import lombok.extern.java.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.Optional;
+
+import java.lang.invoke.MethodHandles;
 import static java.util.Objects.isNull;
 
-@Log
 @Component
 public class UsersConverter {
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     FilesRepository filesRepository;
 
     private void validateUserDto(UsersDto usersDto) throws ValidationException {
-        if (isNull(usersDto)){throw new ValidationException("Object [UserDto] is null");
+        if (isNull(usersDto)){throw new ValidationException("[UserDto] Object is null");
         }
         if (isNull(usersDto.getLogin()) || usersDto.getLogin().isEmpty()){
             throw new ValidationException("[UserDto] Login is empty");
@@ -54,7 +55,6 @@ public class UsersConverter {
         userDto.setId(user.getId());
         userDto.setName(user.getName());
         userDto.setPassword("********");
-//        userDto.setPassword(user.getPassword());
         userDto.setAge(user.getAge());
         userDto.setLogin(user.getLogin());
         if (user.getAvatar() != null) {
@@ -64,11 +64,12 @@ public class UsersConverter {
         return userDto;
     }
 
+/*
     public UsersDto userToDto(UserInfo user) {
         UsersDto userDto = new UsersDto();
         userDto.setId(user.getId());
         userDto.setName(user.getName());
-        userDto.setPassword(user.getPassword());
+        userDto.setPassword("********");
         userDto.setAge(user.getAge());
         userDto.setLogin(user.getLogin());
         if (user.getAvatar() != null) {
@@ -77,8 +78,20 @@ public class UsersConverter {
         }
         return userDto;
     }
+*/
 
-    public UsersShortDto userShortToDto(Users user) {
+    public UsersShortDto userToShortDto(Users user) {
+        UsersShortDto userDto = new UsersShortDto();
+        userDto.setId(user.getId());
+        userDto.setName(user.getName());
+        if (user.getAvatar() != null) {
+            userDto.setAvatarId(user.getAvatar().getId());
+            userDto.setAvatarName(user.getAvatar().getFileName());
+        }
+        return userDto;
+    }
+
+    public UsersShortDto userToShortDto(UsersInfo user) {
         UsersShortDto userDto = new UsersShortDto();
         userDto.setId(user.getId());
         userDto.setName(user.getName());

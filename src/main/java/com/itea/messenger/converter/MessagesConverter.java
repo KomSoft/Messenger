@@ -8,9 +8,12 @@ import com.itea.messenger.repository.FilesRepository;
 import com.itea.messenger.repository.StatusLinksRepository;
 import com.itea.messenger.repository.UsersRepository;
 import lombok.extern.java.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,8 +21,8 @@ import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
 
 @Component
-@Log
 public class MessagesConverter {
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Autowired
     ChatsRepository chatsRepository;
     @Autowired

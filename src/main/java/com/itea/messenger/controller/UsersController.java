@@ -3,18 +3,20 @@ package com.itea.messenger.controller;
 import com.itea.messenger.dto.UsersDto;
 import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.service.UsersService;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.extern.java.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 @NoArgsConstructor
-@Log
 public class UsersController {
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     UsersService usersService;

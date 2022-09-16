@@ -1,80 +1,72 @@
 package com.itea.messenger.service;
 
 import com.itea.messenger.converter.ChatsConverter;
-import com.itea.messenger.converter.ChatUsersLinksConverter;
+import com.itea.messenger.converter.ChatsUsersLinksConverter;
 import com.itea.messenger.converter.UsersConverter;
 import com.itea.messenger.dto.ChatUsersLinksDto;
-import com.itea.messenger.dto.ChatsDto;
-import com.itea.messenger.dto.UsersDto;
-import com.itea.messenger.entity.ChatUsersLinks;
-import com.itea.messenger.exception.ValidationException;
+import com.itea.messenger.dto.ChatsShortDto;
+import com.itea.messenger.dto.UsersShortDto;
+import com.itea.messenger.entity.ChatsUsersLinks;
+import com.itea.messenger.exception.NotFoundException;
 import com.itea.messenger.interfaces.ChatsInfo;
-import com.itea.messenger.interfaces.UserInfo;
-import com.itea.messenger.repository.ChatUsersLinksRepository;
-import com.itea.messenger.repository.ChatsRepository;
-import com.itea.messenger.repository.UsersRepository;
-import lombok.AllArgsConstructor;
+import com.itea.messenger.interfaces.UsersInfo;
+import com.itea.messenger.repository.ChatsUsersLinksRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
 
 @Service
-@AllArgsConstructor
-public class DefaultChatUsersLinksService implements ChatUsersLinksService {
-    private final ChatUsersLinksRepository chatUsersLinksRepository;
-    private final ChatUsersLinksConverter chatUsersLinksConverter;
-    private final ChatsRepository chatsRepository;
-    private final UsersRepository usersRepository;
-    private final UsersConverter usersConverter;
-    private final ChatsConverter chatsConverter;
+public class DefaultChatUsersLinksService implements ChatsUsersLinksService {
+    @Autowired
+    ChatsUsersLinksRepository chatUsersLinksRepository;
+    @Autowired
+    ChatsUsersLinksConverter chatUsersLinksConverter;
+    @Autowired
+    UsersConverter usersConverter;
+    @Autowired
+    ChatsConverter chatsConverter;
 
-    private void validateChatUsersLinkDto(ChatUsersLinksDto chatUsersLinksDto)throws ValidationException {
-        if (isNull(chatUsersLinksDto)) {
-            throw new ValidationException("Object chat users link is null");
-        }
-        if (isNull(chatUsersLinksDto.getChatId()) || isNull(chatUsersLinksDto.getUserId())) {
-            throw new ValidationException("Chat id or user id is null");
-        }
-    }
     @Override
-    public ChatUsersLinksDto saveChatUsersLink(ChatUsersLinks chatUsersLinks) {
-        ChatUsersLinks new_chatUsersLinks = chatUsersLinksRepository.save(chatUsersLinks);
-        return chatUsersLinksConverter.chatUsersLinksToDto(new_chatUsersLinks);
+    public ChatUsersLinksDto saveChatUsersLink(ChatsUsersLinks chatUsersLinks) {
+        ChatsUsersLinks new_chatUsersLinks = chatUsersLinksRepository.save(chatUsersLinks);
+        return chatUsersLinksConverter.chatUsersLinksEntityToDto(new_chatUsersLinks);
     }
 
     @Override
-    public ChatUsersLinksDto findById(Long id) throws ValidationException {
-        ChatUsersLinks chatUsersLinks = chatUsersLinksRepository.findById(id).orElseThrow(() ->new ValidationException("No object with this id"));
-        return chatUsersLinksConverter.chatUsersLinksToDto(chatUsersLinks);
+    public ChatUsersLinksDto findById(Long id) throws NotFoundException {
+        ChatsUsersLinks chatUsersLinks = chatUsersLinksRepository.findById(id).orElseThrow(() -> new NotFoundException("[ChatUsersLinks] record with id:" + id + " not found"));
+        return chatUsersLinksConverter.chatUsersLinksEntityToDto(chatUsersLinks);
     }
 
     @Override
-    public List<ChatUsersLinksDto> findAll() {
-        List<ChatUsersLinksDto> listDto = new ArrayList<>();
-        List<ChatUsersLinks> list = chatUsersLinksRepository.findAll();
-        for (ChatUsersLinks entity: list) {
-            listDto.add(chatUsersLinksConverter.chatUsersLinksToDto(entity));
-        }
-        return listDto;
+    public List<ChatUsersLinksDto> findAll(){
+        List<ChatsUsersLinks> chatUsersLinksList =  chatUsersLinksRepository.findAll();
+        return chatUsersLinksList.stream().map(chatUsersLinksConverter::chatUsersLinksEntityToDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<ChatsDto> getChatsByUserId(Long id) {
+    public List<ChatsShortDto> getChatsByUserId(Long id) throws NotFoundException {
         List<ChatsInfo> chats = chatUsersLinksRepository.getChatsByUserId(id);
-        return chats.stream().map(chatsConverter::ChatEntityToDto).collect(Collectors.toList());
+        if (chats.size() == 0) {
+            throw new NotFoundException("[ChatUsersLinks] No chats for User id:" + id + " found");
+        }
+        return chats.stream().map(chatsConverter::chatEntityToShortDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<UsersDto> getUsersByChatId(Long id) {
-        List<UserInfo> users = chatUsersLinksRepository.getUsersByChatId(id);
-        return users.stream().map(usersConverter::userToDto).collect(Collectors.toList());
+    public List<UsersShortDto> getUsersByChatId(Long id) throws NotFoundException {
+        List<UsersInfo> users = chatUsersLinksRepository.getUsersByChatId(id);
+        if (users.size() == 0) {
+            throw new NotFoundException("[ChatUsersLinks] No users for Chat id:" + id + " found");
+        }
+        return users.stream().map(usersConverter::userToShortDto).collect(Collectors.toList());
     }
 
+// TODO - do I need methods deleteAllByChatId(Long chatId) and deleteAllByUserId(Long chatId) ?
     @Transactional
     @Override
     public void deleteAllByChatId(Long chatId) {

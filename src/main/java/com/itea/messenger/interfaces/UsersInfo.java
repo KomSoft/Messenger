@@ -2,7 +2,7 @@ package com.itea.messenger.interfaces;
 
 import com.itea.messenger.entity.Files;
 
-public interface UserInfo {
+public interface UsersInfo {
     Long getId();
     String getName();
     String getPassword();

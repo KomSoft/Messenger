@@ -1,37 +1,42 @@
 package com.itea.messenger.service;
 
 import com.itea.messenger.dto.MessagesDto;
-import com.itea.messenger.entity.ChatUsersLinks;
+import com.itea.messenger.entity.ChatsUsersLinks;
 import com.itea.messenger.entity.Messages;
 import com.itea.messenger.converter.MessagesConverter;
 import com.itea.messenger.entity.StatusLinks;
-import com.itea.messenger.entity.Users;
 import com.itea.messenger.exception.ValidationException;
-import com.itea.messenger.interfaces.UserInfo;
-import com.itea.messenger.repository.ChatUsersLinksRepository;
+import com.itea.messenger.repository.ChatsUsersLinksRepository;
 import com.itea.messenger.repository.MessagesRepository;
+import com.itea.messenger.repository.StatusLinksRepository;
 import com.itea.messenger.type.MessageStatus;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.java.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
 
-@Log
 @Service
 @AllArgsConstructor
 public class DefaultMessagesService implements MessagesService {
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final MessagesRepository messagesRepository;
     private final MessagesConverter messagesConverter;
-    private final ChatUsersLinksRepository chatUsersLinksRepository;
+    private final ChatsUsersLinksRepository chatUsersLinksRepository;
     private final DefaultStatusLinksService defaultStatusLinksService;
     private static final String DELETED_MESSAGE_TEXT = "Message was deleted";
+
+    @Autowired
+    StatusLinksRepository statusLinksRepository;
 
     private void validateMessagesDto(MessagesDto messageDto) throws ValidationException {
         if (isNull(messageDto)) {
@@ -175,12 +180,15 @@ public class DefaultMessagesService implements MessagesService {
         }
         if (isAllDelete) {
 //          TODO -   should we delete Statuses from StatusLinks?
+            statusLinksRepository.deleteAllByMessageId(messageId);
             messagesRepository.deleteById(messageId);
         }
     }
+
     @Transactional
     @Override
     public void deleteAllMessagesByChatId(Long chatId) {
+//        statusLinksRepository.deleteAllByMessageId(messageId);
         messagesRepository.deleteAllByChatId(chatId);
     }
 
@@ -192,7 +200,7 @@ public class DefaultMessagesService implements MessagesService {
     */
     @Override
     public List<MessagesDto> getMessagesForUserByChatId(Long chatId, Long userId) {
-        ChatUsersLinks chatUser = chatUsersLinksRepository.findByChatIdAndUserId(chatId, userId);
+        ChatsUsersLinks chatUser = chatUsersLinksRepository.findByChatIdAndUserId(chatId, userId);
         List<Messages> messagesList = messagesRepository.findMessagesByChatIdAndDateTimeAfter(chatId, chatUser.getJoinDate());
         List<MessagesDto> result = new ArrayList<>();
         //        can use predicate if no exception

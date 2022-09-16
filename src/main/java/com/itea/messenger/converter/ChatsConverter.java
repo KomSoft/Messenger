@@ -1,6 +1,7 @@
 package com.itea.messenger.converter;
 
 import com.itea.messenger.dto.ChatsDto;
+import com.itea.messenger.dto.ChatsShortDto;
 import com.itea.messenger.entity.Chats;
 import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.interfaces.ChatsInfo;
@@ -17,10 +18,10 @@ public class ChatsConverter {
 
     private void validateChat(ChatsDto chatsDto) throws ValidationException {
         if (isNull(chatsDto)) {
-            throw new ValidationException("Chat object is null");
+            throw new ValidationException("Chat DTO is null");
         }
         if (isNull(chatsDto.getName()) || chatsDto.getName().isEmpty()) {
-            throw new ValidationException("[Chat] name is null or empty");
+            throw new ValidationException("Chat name is null or empty");
         }
         if (isNull(chatsDto.getChatType()) || chatsDto.getChatType().describeConstable().isEmpty()) {
             throw new ValidationException("Chat type can't be empty");
@@ -28,11 +29,11 @@ public class ChatsConverter {
     }
 
     public Chats chatEntityFromDto(ChatsDto chatsDto) throws ValidationException {
-        Chats chat = new Chats();
         validateChat(chatsDto);
+        Chats chat = new Chats();
         chat.setId(chatsDto.getId());
         chat.setName(chatsDto.getName());
-        chat.setDescription(chatsDto.getDescription());
+        chat.setDescription(isNull(chatsDto.getDescription()) ? "" : chatsDto.getDescription());
         chat.setChatType(chatsDto.getChatType());
         return chat;
     }
@@ -43,17 +44,43 @@ public class ChatsConverter {
         chatsDto.setName(chat.getName());
         chatsDto.setDescription(chat.getDescription());
         chatsDto.setChatType(chat.getChatType());
-        chatsDto.setUsers(chat.getUsers().stream().map(usersConverter::userShortToDto).collect(Collectors.toList()));
+        if (chat.getUsers() != null && chat.getUsers().size() > 0) {
+            chatsDto.setUsers(chat.getUsers().stream().map(usersConverter::userToShortDto).collect(Collectors.toList()));
+        }
         return chatsDto;
     }
 
-    public ChatsDto ChatEntityToDto(ChatsInfo chat){
+/*
+    public ChatsDto chatEntityToDto(ChatsInfo chat){
         ChatsDto chatsDto = new ChatsDto();
         chatsDto.setId(chat.getId());
         chatsDto.setName(chat.getName());
         chatsDto.setDescription(chat.getDescription());
         chatsDto.setChatType(chat.getChatType());
-//        chatsDto.setUsers(chat.getUsers().stream().map(usersConverter::userShortToDto).collect(Collectors.toList()));
+        if (chat.getUsers() != null && chat.getUsers().size() > 0) {
+            chatsDto.setUsers(chat.getUsers().stream().map(usersConverter::userToShortDto).collect(Collectors.toList()));
+        }
         return chatsDto;
     }
+*/
+/*
+    public ChatsShortDto chatEntityToShortDto(Chats chat){
+        ChatsShortDto chatsDto = new ChatsShortDto();
+        chatsDto.setId(chat.getId());
+        chatsDto.setName(chat.getName());
+        chatsDto.setDescription(chat.getDescription());
+        chatsDto.setChatType(chat.getChatType());
+        return chatsDto;
+    }
+*/
+
+    public ChatsShortDto chatEntityToShortDto(ChatsInfo chat){
+        ChatsShortDto chatsDto = new ChatsShortDto();
+        chatsDto.setId(chat.getId());
+        chatsDto.setName(chat.getName());
+        chatsDto.setDescription(chat.getDescription());
+        chatsDto.setChatType(chat.getChatType());
+        return chatsDto;
+    }
+
 }

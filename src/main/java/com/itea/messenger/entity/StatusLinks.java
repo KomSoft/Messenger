@@ -24,4 +24,5 @@ public class StatusLinks {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Messages message;
+
 }

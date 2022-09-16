@@ -5,7 +5,10 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
-@Data
+//@Data
+//@ToString(exclude = "chats")
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 @NoArgsConstructor

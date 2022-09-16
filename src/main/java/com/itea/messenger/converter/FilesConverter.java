@@ -3,12 +3,26 @@ package com.itea.messenger.converter;
 import com.itea.messenger.dto.FilesDto;
 import com.itea.messenger.entity.Files;
 import com.itea.messenger.exception.ValidationException;
-import com.itea.messenger.type.FileTypes;
 import org.springframework.stereotype.Component;
 import static java.util.Objects.isNull;
 
 @Component
 public class FilesConverter {
+
+    private void validateFileDto(FilesDto filesDto) throws ValidationException {
+        if (isNull(filesDto)) {
+            throw new ValidationException("[FileDto] object is null");
+        }
+        if (isNull(filesDto.getFileName()) || filesDto.getFileName().isEmpty()) {
+            throw new ValidationException("[FileDto] name is null or empty");
+        }
+/*
+        if (isNull(filesDto.getFileType()) || filesDto.getFileType() == FileTypes.UNKNOWN) {
+            filesDto.setFileType();
+        }
+*/
+        filesDto.setFileType();
+    }
 
     public FilesDto fileEntityToDto(Files file) {
         FilesDto fileDto = new FilesDto();
@@ -25,18 +39,6 @@ public class FilesConverter {
         file.setFileName(fileDto.getFileName());
         file.setFileType(fileDto.getFileType());
         return file;
-    }
-
-    private void validateFileDto(FilesDto filesDto) throws ValidationException {
-        if (isNull(filesDto)) {
-            throw new ValidationException("Object file is null");
-        }
-        if (isNull(filesDto.getFileName()) || filesDto.getFileName().isEmpty()) {
-            throw new ValidationException("[File] name is null or empty");
-        }
-        if (isNull(filesDto.getFileType()) || filesDto.getFileType() == FileTypes.UNKNOWN) {
-            filesDto.setFileType();
-        }
     }
 
 }
