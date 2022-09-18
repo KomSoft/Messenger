@@ -25,7 +25,7 @@ public class ChatsController {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
-    DefaultChatService chatService;
+    private DefaultChatService chatService;
 
     @GetMapping("{id}")
     public ResponseEntity<ChatsDto> getChatById(@PathVariable("id") Long chatId) {
@@ -60,7 +60,7 @@ public class ChatsController {
     public ResponseEntity<ChatsDto> createChat(@RequestBody ChatsDto chatsDto) {
         log.info("Handling creating Chat with DTO:{}", chatsDto);
         try {
-            return ResponseEntity.ok(chatService.createChat(chatsDto));
+            return ResponseEntity.status(HttpStatus.CREATED).body(chatService.createChat(chatsDto));
         } catch (ValidationException e) {
             log.error("{} (with {})", e.getMessage(), chatsDto);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(chatsDto);

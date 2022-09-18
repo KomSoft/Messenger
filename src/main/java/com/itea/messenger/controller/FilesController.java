@@ -23,13 +23,13 @@ public class FilesController {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
-    FilesService filesService;
+    private FilesService filesService;
 
     @PostMapping
     public ResponseEntity<FilesDto> saveFile(@RequestBody FilesDto fileDto) {
         log.info("Handling save File: {}", fileDto);
         try {
-            return ResponseEntity.ok().body(filesService.saveFile(fileDto));
+            return ResponseEntity.status(HttpStatus.CREATED).body(filesService.saveFile(fileDto));
         } catch (ValidationException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -40,7 +40,7 @@ public class FilesController {
     public ResponseEntity<List<FilesDto>> findAll(){
         log.info("Handling find all files");
         try {
-            return ResponseEntity.ok().body(filesService.findAll());
+            return ResponseEntity.ok(filesService.findAll());
         } catch (NotFoundException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -51,7 +51,7 @@ public class FilesController {
     public ResponseEntity<FilesDto> findById(@PathVariable("id") Long id) throws ValidationException {
         log.info("Handling find File by id:{}", id);
         try {
-            return ResponseEntity.ok().body(filesService.findById(id));
+            return ResponseEntity.ok(filesService.findById(id));
         } catch (NotFoundException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

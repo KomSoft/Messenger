@@ -24,28 +24,28 @@ import static java.util.Objects.isNull;
 public class MessagesConverter {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Autowired
-    ChatsRepository chatsRepository;
+    private ChatsRepository chatsRepository;
     @Autowired
-    FilesRepository filesRepository;
+    private FilesRepository filesRepository;
     @Autowired
-    UsersRepository usersRepository;
+    private  UsersRepository usersRepository;
     @Autowired
-    StatusLinksRepository statusLinksRepository;
+    private StatusLinksRepository statusLinksRepository;
     @Autowired
-    StatusLinksConverter statusLinksConverter;
+    private StatusLinksConverter statusLinksConverter;
 
     private void validateMessagesDto(MessagesDto messageDto) throws ValidationException {
         if (isNull(messageDto)) {
-            throw new ValidationException("Object MessageDto is null");
+            throw new ValidationException("[MessageDto] object is null");
         }
         if (messageDto.getUserId() == null) {
-            throw new ValidationException("[MessageDto].userId is null");
+            throw new ValidationException("[MessageDto] userId is null");
         }
         if (messageDto.getChatId() == null) {
-            throw new ValidationException("[MessageDto].chatId is null");
+            throw new ValidationException("[MessageDto] chatId is null");
         }
         if ((messageDto.getMessageText() == null || messageDto.getMessageText().isEmpty()) && messageDto.getFileId() == null) {
-            throw new ValidationException("[MessageDto].messageText can be empty only if file is attached");
+            throw new ValidationException("[MessageDto] messageText can be empty only if file is attached");
         }
         if (messageDto.getMessageText().length() > 255) {
             messageDto.setMessageText(messageDto.getMessageText().substring(0, 254));
@@ -75,12 +75,14 @@ public class MessagesConverter {
 
     public Messages messagesFromDto(MessagesDto messageDto) throws ValidationException {
         validateMessagesDto(messageDto);
+        Chats chat = chatsRepository.findById(messageDto.getChatId())
+                .orElseThrow(() -> new ValidationException("[MessageDto] Chat id:" + messageDto.getChatId() + " not found"));
+        Users user = usersRepository.findById(messageDto.getUserId())
+                .orElseThrow(() -> new ValidationException("[MessageDto] User id:" + messageDto.getUserId() + " not found"));
         Messages message = new Messages();
         message.setId(messageDto.getId());
-        Optional<Chats> chat = chatsRepository.findById(messageDto.getChatId());
-        message.setChat(chat.orElseThrow(() -> new ValidationException("[MessageDto] Chat id:" + messageDto.getChatId() + " not found")));
-        Optional<Users> user = usersRepository.findById(messageDto.getUserId());
-        message.setUser(user.orElseThrow(() -> new ValidationException("[MessageDto] User id:" + messageDto.getUserId() + " not found")));
+        message.setChat(chat);
+        message.setUser(user);
         message.setMessageText(messageDto.getMessageText());
         if (messageDto.getFileId() == null) {
             message.setFile(null);

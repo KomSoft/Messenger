@@ -7,6 +7,7 @@ import com.itea.messenger.entity.Users;
 import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.interfaces.UsersInfo;
 import com.itea.messenger.repository.FilesRepository;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +21,21 @@ public class UsersConverter {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
-    FilesRepository filesRepository;
+    private FilesRepository filesRepository;
 
     private void validateUserDto(UsersDto usersDto) throws ValidationException {
-        if (isNull(usersDto)){throw new ValidationException("[UserDto] Object is null");
+
+        if (isNull(usersDto)) {
+            throw new ValidationException("[UserDto] Object is null");
         }
-        if (isNull(usersDto.getLogin()) || usersDto.getLogin().isEmpty()){
+        if (isNull(usersDto.getLogin()) || usersDto.getLogin().isEmpty()) {
             throw new ValidationException("[UserDto] Login is empty");
         }
         if (isNull(usersDto.getName()) || usersDto.getName().isEmpty()) {
             throw new ValidationException("[UserDto] Name is empty");
+        }
+        if (isNull(usersDto.getAge()) || usersDto.getAge() < Users.MIN_AGE) {
+            throw new ValidationException("[UserDto] Age is empty or less than " + Users.MIN_AGE);
         }
     }
 
@@ -63,22 +69,6 @@ public class UsersConverter {
         }
         return userDto;
     }
-
-/*
-    public UsersDto userToDto(UserInfo user) {
-        UsersDto userDto = new UsersDto();
-        userDto.setId(user.getId());
-        userDto.setName(user.getName());
-        userDto.setPassword("********");
-        userDto.setAge(user.getAge());
-        userDto.setLogin(user.getLogin());
-        if (user.getAvatar() != null) {
-            userDto.setAvatarId(user.getAvatar().getId());
-            userDto.setAvatarName(user.getAvatar().getFileName());
-        }
-        return userDto;
-    }
-*/
 
     public UsersShortDto userToShortDto(Users user) {
         UsersShortDto userDto = new UsersShortDto();

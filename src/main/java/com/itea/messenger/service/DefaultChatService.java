@@ -29,18 +29,17 @@ public class DefaultChatService implements ChatsService {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
-    ChatsRepository chatsRepository;
+    private ChatsRepository chatsRepository;
     @Autowired
-    ChatsConverter chatsConverter;
+    private ChatsConverter chatsConverter;
     @Autowired
-    MessagesService messagesService;
+    private MessagesService messagesService;
     @Autowired
-    ChatsUsersLinksService chatUsersLinksService;
+    private ChatsUsersLinksService chatUsersLinksService;
     @Autowired
-    UsersRepository usersRepository;
+    private UsersRepository usersRepository;
     @Autowired
-    ChatsUsersLinksRepository chatUsersLinksRepository;
-
+    private ChatsUsersLinksRepository chatUsersLinksRepository;
 
     @Override
 //    public void createChat(ChatsDto chatDto, Long userId) throws ValidationException {

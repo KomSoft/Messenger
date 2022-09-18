@@ -1,12 +1,13 @@
 package com.itea.messenger.entity;
 
 import lombok.*;
+import org.jetbrains.annotations.NotNull;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Set;
 
-//@Data
-//@ToString(exclude = "chats")
 @Getter
 @Setter
 @Entity
@@ -14,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 
 public class Users {
+    public final static int MIN_AGE = 9;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +33,7 @@ public class Users {
     @Column(unique = true, length = 30)
     private String login;
 
-    @Column
+    @Min(value = 10, message = "Age should not be less than 10")
     private int age;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -60,12 +62,12 @@ public class Users {
         //        messages.remove(message);    message.setUser(null);
     }
 
-    public void setAvatar(Files file) {
+    public void setAvatar(@NotNull Files file) {
         this.avatar = file;
         file.setUser(this);
     }
 
-    public void removeAvatar(Files file) {
+    public void removeAvatar(@NotNull Files file) {
         this.avatar = null;
         file.setUser(null);
     }

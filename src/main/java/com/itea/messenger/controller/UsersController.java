@@ -1,12 +1,16 @@
 package com.itea.messenger.controller;
 
 import com.itea.messenger.dto.UsersDto;
+import com.itea.messenger.exception.NotFoundException;
 import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.service.UsersService;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.invoke.MethodHandles;
@@ -19,42 +23,73 @@ public class UsersController {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
-    UsersService usersService;
+    private UsersService usersService;
 
     @PostMapping
-    public UsersDto saveUsers(@RequestBody UsersDto userDto) throws ValidationException {
-        log.info("Handling save User: " + userDto);
-        return usersService.saveUser(userDto);
+    public ResponseEntity<UsersDto> saveUsers(@RequestBody UsersDto userDto) {
+        log.info("Handling save User: {}", userDto);
+        try {
+            return ResponseEntity.ok(usersService.saveUser(userDto));
+        } catch (ValidationException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @GetMapping("{id}")
-    public UsersDto findById(@PathVariable("id") Long id) throws ValidationException {
-        log.info("Handling find User by id:" + id);
-        return usersService.findById(id);
+    public ResponseEntity<UsersDto> findById(@PathVariable("id") Long id) {
+        log.info("Handling find User by id:{}", id);
+        try {
+            return ResponseEntity.ok(usersService.findById(id));
+        } catch (NotFoundException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
-    @GetMapping("{login}/login")
-    public UsersDto getByLogin(@PathVariable("login") String login) {
-        log.info("Handling find User by login:" + login);
-        return usersService.findByLogin(login);
+    @GetMapping("/login/{login}")
+    public ResponseEntity<UsersDto> getByLogin(@PathVariable("login") String login) {
+        log.info("Handling find User by login '{}'", login);
+        try {
+            return ResponseEntity.ok(usersService.findByLogin(login));
+        } catch (NotFoundException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
-    @GetMapping("{name}/name")
-    public UsersDto getByName(@PathVariable("name") String name) {
-        log.info("Handling find User by name:" + name);
-        return usersService.findByName(name);
+    @GetMapping("/name/{name}")
+    public ResponseEntity<UsersDto> getByName(@PathVariable("name") String name) {
+        log.info("Handling find User by name '{}'", name);
+        try {
+            return ResponseEntity.ok(usersService.findByName(name));
+        } catch (NotFoundException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @GetMapping
-    public List<UsersDto> findAll() {
+    public ResponseEntity<List<UsersDto>> findAll() {
         log.info("Handling find all Users");
-        return usersService.findAll();
+        try {
+            return ResponseEntity.ok(usersService.findAll());
+        } catch (NotFoundException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("{id}")
-    public void deleteMessage(@PathVariable("id") Long userId) {
-        log.info("Handling delete User by id:" + userId);
-        usersService.deleteUser(userId);
+    public ResponseEntity deleteMessage(@PathVariable("id") Long userId) {
+        log.info("Handling delete User by id:{}", userId);
+        try {
+            usersService.deleteUser(userId);
+            return ResponseEntity.ok().build();
+        } catch(EmptyResultDataAccessException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id:" + userId + " doesn't exists");
+        }
     }
 
 }

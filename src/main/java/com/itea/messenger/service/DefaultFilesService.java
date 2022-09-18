@@ -9,6 +9,7 @@ import com.itea.messenger.repository.FilesRepository;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +20,9 @@ import java.util.stream.Collectors;
 public class DefaultFilesService implements FilesService {
 
     @Autowired
-    FilesRepository filesRepository;
+    private FilesRepository filesRepository;
     @Autowired
-    FilesConverter filesConverter;
+    private FilesConverter filesConverter;
 
     @Override
     public FilesDto saveFile(FilesDto filesDto) throws ValidationException {
@@ -45,7 +46,7 @@ public class DefaultFilesService implements FilesService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(Long id) throws EmptyResultDataAccessException {
         filesRepository.deleteById(id);
     }
 

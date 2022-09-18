@@ -1,5 +1,6 @@
 package com.itea.messenger;
 
+import com.itea.messenger.exception.NotFoundException;
 import com.itea.messenger.repository.MessagesRepository;
 import com.itea.messenger.service.DefaultMessagesService;
 import lombok.extern.java.Log;
@@ -64,7 +65,12 @@ public class MessengerApplicationTests {
 	public void testMessagesCountByChatId() {
 		Long chatId = 2L;
 		log.info("messagesCountByChatId called");
-		int count = defaultMessagesService.getAllMessagesByChatId(chatId).size();
+		int count = 0;
+		try {
+			count = defaultMessagesService.getAllMessagesByChatId(chatId).size();
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+		}
 		log.info("Count messages by ChatId=" + chatId + " is: " + count);
 		Assert.assertEquals(4, count);
 	}

@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 @Service
 public class DefaultChatUsersLinksService implements ChatsUsersLinksService {
     @Autowired
-    ChatsUsersLinksRepository chatUsersLinksRepository;
+    private ChatsUsersLinksRepository chatUsersLinksRepository;
     @Autowired
-    ChatsUsersLinksConverter chatUsersLinksConverter;
+    private ChatsUsersLinksConverter chatUsersLinksConverter;
     @Autowired
-    UsersConverter usersConverter;
+    private UsersConverter usersConverter;
     @Autowired
-    ChatsConverter chatsConverter;
+    private ChatsConverter chatsConverter;
 
     @Override
     public ChatUsersLinksDto saveChatUsersLink(ChatsUsersLinks chatUsersLinks) {

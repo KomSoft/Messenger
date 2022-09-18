@@ -5,6 +5,7 @@ import com.itea.messenger.entity.ChatsUsersLinks;
 import com.itea.messenger.entity.Messages;
 import com.itea.messenger.converter.MessagesConverter;
 import com.itea.messenger.entity.StatusLinks;
+import com.itea.messenger.exception.NotFoundException;
 import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.repository.ChatsUsersLinksRepository;
 import com.itea.messenger.repository.MessagesRepository;
@@ -15,6 +16,7 @@ import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,30 +31,17 @@ import static java.util.Objects.isNull;
 @AllArgsConstructor
 public class DefaultMessagesService implements MessagesService {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final MessagesRepository messagesRepository;
-    private final MessagesConverter messagesConverter;
-    private final ChatsUsersLinksRepository chatUsersLinksRepository;
-    private final DefaultStatusLinksService defaultStatusLinksService;
     private static final String DELETED_MESSAGE_TEXT = "Message was deleted";
-
     @Autowired
-    StatusLinksRepository statusLinksRepository;
-
-    private void validateMessagesDto(MessagesDto messageDto) throws ValidationException {
-        if (isNull(messageDto)) {
-            throw new ValidationException("Object MessageDto is null");
-        }
-        if (messageDto.getUserId() == null) {
-            throw new ValidationException("[MessageDto].user is null");
-        }
-        if ((messageDto.getMessageText() == null || messageDto.getMessageText().isEmpty()) && messageDto.getFileId() == null) {
-            throw new ValidationException("[MessageDto].messageText can be empty only if file is attached");
-        }
-        if (messageDto.getMessageText().length() > 255) {
-            messageDto.setMessageText(messageDto.getMessageText().substring(0, 254));
-//        TODO - should we check if messageStatus list != null when read?
-        }
-    }
+    private MessagesRepository messagesRepository;
+    @Autowired
+    private MessagesConverter messagesConverter;
+    @Autowired
+    private ChatsUsersLinksRepository chatUsersLinksRepository;
+    @Autowired
+    private DefaultStatusLinksService defaultStatusLinksService;
+    @Autowired
+    private StatusLinksRepository statusLinksRepository;
 
 /*
         * При створенні повідомлення в чаті з ChatMemberLinks отримується список всіх користувачів чату.
@@ -68,7 +57,6 @@ public class DefaultMessagesService implements MessagesService {
 */
 //    TODO - may be make two method: save and update (for edited message)?
     @Override
-    @SneakyThrows
     public MessagesDto saveMessage(MessagesDto messageDto) throws ValidationException {
 //        validateMessagesDto(messageDto);
         Messages message = messagesConverter.messagesFromDto(messageDto);
@@ -110,8 +98,8 @@ public class DefaultMessagesService implements MessagesService {
     }
 
     @Override
-    public MessagesDto getMessageById(Long messageId) throws ValidationException {
-        Messages message = messagesRepository.findById(messageId).orElseThrow(() -> new ValidationException("No message with id:" + messageId));
+    public MessagesDto getById(Long messageId) throws NotFoundException {
+        Messages message = messagesRepository.findById(messageId).orElseThrow(() -> new NotFoundException("No message with id:" + messageId));
 //        Optional<Messages> message = messagesRepository.findById(messageId);
         return messagesConverter.messagesToDto(message);
 
@@ -123,9 +111,12 @@ public class DefaultMessagesService implements MessagesService {
     }
 
     @Override
-    public List<MessagesDto> getAllMessagesByChatId(Long chatId) {
-        return messagesRepository.findAllMessagesByChatId(chatId).stream().map(messagesConverter::messagesToDto)
-                .collect(Collectors.toList());
+    public List<MessagesDto> getAllMessagesByChatId(Long chatId) throws NotFoundException {
+        List<Messages> messagesList = messagesRepository.findAllMessagesByChatId(chatId);
+        if (messagesList.isEmpty()) {
+            throw new NotFoundException("No messages for chat id:" + chatId + " found");
+        }
+        return messagesList.stream().map(messagesConverter::messagesToDto).collect(Collectors.toList());
     }
 
 /*
@@ -137,7 +128,7 @@ public class DefaultMessagesService implements MessagesService {
     б) Якщо це інший користувач, то статус цього повідомлення для цього користувача (StatusLinks.UserID)
     міняється на DELETED незалежно від тексту. Відповідно, повідомлення зі статусом DELETED не висвітлюються
     в чаті для конкретного користувача.
-    в) якщо статуси для всіх користувачів = DELETED, тоді повністю видяляємо повідомлення з репозіторію
+    в) якщо статуси для всіх користувачів = DELETED, тоді повністю видаляємо повідомлення з репозіторію
  */
     @Override
     public void deleteMessage(Long messageId) throws ValidationException {
@@ -145,7 +136,7 @@ public class DefaultMessagesService implements MessagesService {
     }
 
     @Override
-    public void deleteMessage(Long messageId, Long userId) {
+    public void deleteMessage(Long messageId, Long userId) throws EmptyResultDataAccessException {
         Optional<Messages> optionalMessage = messagesRepository.findById(messageId);
         if (!optionalMessage.isPresent()) {
            return;
@@ -187,7 +178,7 @@ public class DefaultMessagesService implements MessagesService {
 
     @Transactional
     @Override
-    public void deleteAllMessagesByChatId(Long chatId) {
+    public void deleteAllMessagesByChatId(Long chatId) throws EmptyResultDataAccessException {
 //        statusLinksRepository.deleteAllByMessageId(messageId);
         messagesRepository.deleteAllByChatId(chatId);
     }
