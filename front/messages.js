@@ -90,28 +90,6 @@ function messages_create(chat_id, user_id, file_name, m_text) {
    }
 }
 
-function messages_getChatsList() {
-   var xhttp = new XMLHttpRequest();
-   var request = host_chats;
-   var debug = '[debug] Request: ' + request;
-   xhttp.open('GET', request , false);
-   xhttp.send();
-   debug = debug + '<br>[debug] Response status: ' + xhttp.status;
- 	var result = new Array;
-   if (xhttp.status == 200) {
-      debug += '<br>[debug] Response: ' + xhttp.responseText;
-      var chats = JSON.parse(xhttp.responseText); 
-      for (var i = 0; i < chats.length; i++) {
-         var elem = new Array(2);
-         elem[0] = chats[i].id;
-         elem[1] = chats[i].name;
-         result.push(elem);
-      }
-   }
-   console.log(result);
-	return result;
-}
-
 function messages_getUsersList(id) {
    var xhttp = new XMLHttpRequest();
    var request = host_chats_users + '/' + id + '/chat';

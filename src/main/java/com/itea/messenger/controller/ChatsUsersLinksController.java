@@ -15,7 +15,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @RestController
-@RequestMapping("/chatuserslinks")
+@RequestMapping("/chatsuserslinks")
 @NoArgsConstructor
 public class ChatsUsersLinksController {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

@@ -7,7 +7,7 @@ import com.itea.messenger.entity.Users;
 import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.interfaces.UsersInfo;
 import com.itea.messenger.repository.FilesRepository;
-import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class UsersConverter {
         if (isNull(usersDto.getName()) || usersDto.getName().isEmpty()) {
             throw new ValidationException("[UserDto] Name is empty");
         }
-        if (isNull(usersDto.getAge()) || usersDto.getAge() < Users.MIN_AGE) {
+        if (usersDto.getAge() < Users.MIN_AGE) {
             throw new ValidationException("[UserDto] Age is empty or less than " + Users.MIN_AGE);
         }
     }

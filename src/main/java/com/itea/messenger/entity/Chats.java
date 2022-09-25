@@ -4,7 +4,6 @@ import com.itea.messenger.type.ChatTypeEnum;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -28,9 +27,11 @@ public class Chats {
     private ChatTypeEnum chatType;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private Set<Messages> chatMessages;
 
     @ManyToMany(mappedBy = "chats", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Set<Users> users;
 
     public void addMessage(Messages message) {
@@ -51,6 +52,21 @@ public class Chats {
     public void addUser(Users user) {
         users.add(user);
         user.chats.add(this);
+    }
+
+/*
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        final SettingPresets that = (SettingPresets) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+*/
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 
 }

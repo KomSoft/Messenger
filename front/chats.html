@@ -5,16 +5,22 @@
 <TITLE>Chats Tool</TITLE>
 <link rel="stylesheet" href="styles.css">
 <script src="common.js" async=""></script> 
-<script src="chats.js" async=""></script> 
 </head>
 
 <body>
 
-<h3 align=center>Chats Tool</h3>
+<h3>Chats Tool</h3>
 
 <form action="#">
    <fieldset class="fieldset1">
-    <legend>Find chat by Id:</legend>
+    <legend>Show all chats</legend>
+    <button onclick="findAllChats()">Show all chats</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset class="fieldset1">
+    <legend>Find Chat by Id:</legend>
     <input id="chat_id" placeholder="Chat Id">
     <button onclick="findChatById()">Search</button>
    </fieldset>
@@ -22,15 +28,7 @@
 
 <form action="#">
    <fieldset class="fieldset1">
-    <legend>List all chats</legend>
-    <button onclick="findAllChats()">Show all chats</button>
-   </fieldset>
-</form>
-
-<form action="#">
-   <fieldset class="fieldset1">
-    <legend style="color:red;">Delete chat by Id:</legend>
-    <label class="label1" for="chat_del_id" >chat Id:</label>
+    <legend style="color:red;">Delete Chat by Id:</legend>
     <input id="chat_del_id" placeholder="Chat Id">
     <button onclick="deleteChatById()">Delete</button><br>
     <font color=#0000FF>Needs to update by clicking "Show all chats" button after call</font>
@@ -40,23 +38,37 @@
 <form action="#">
    <fieldset class="fieldset1">
     <legend>Add users to chat</legend>
-    <font color=#FF0000>Under construction</font>    
+    <button onclick="getUsersAndChats()">Get Users and Chats then select</button><br>
+    <label class="label2" for="users_list" >Select User:</label>
+    <select name="users_list" id="users_list" onchange="checkCU()">
+	<!-- getUsers() puts '<option value="**">**</option>' with Users here  -->
+    </select>
+    <br>
+    <label class="label2" for="chats_list" >Select Chat:</label>
+    <select name="chats_list" id="chats_list" onchange="checkCU()">
+	<!-- getChats() puts '<option value="**">**</option>' with Chats here  -->
+    </select>
+    <br>
+    <button id="add_user_to_chat_button" onclick="addUserToChat()" disabled="true">Add</button>
+    
+      <font color=#FF0000>Under construction</font>    
    </fieldset>
 </form>
 
 <form action="#">
    <fieldset>
     <legend>Create new chat:</legend>
-    <label class="label1" for="chat_name" >Chat name:</label>
-    <label class="label1" for="chat_description" >Desctiption:</label>
-    <label class="label1" for="chat_type" >Chat type:</label>
-    <br>
-    <input id="chat_name" placeholder="Chat name">&nbsp;
-    <input id="chat_description" placeholder="Description">&nbsp;
+    <label class="label2" for="chat_type" >Chat type:</label>
+    <button onclick="getChatTypes()">Get!</button>
     <select name="chat_type_list" id="chat_type_list">
 	<!-- getChatTypes() puts '<option value="**">**</option>' with chatTypes here  -->
     </select>
-    <button onclick="getChatTypes()">Refresh chat types</button>
+    <br>
+    <label class="label1" for="chat_name" >Chat name:</label>
+    <label class="label1" for="chat_description" >Description:</label>
+    <br>
+    <input id="chat_name" placeholder="Chat name">&nbsp;
+    <input id="chat_description" placeholder="Description">&nbsp;
     <br>
     <button onclick="createChat()">Create chat</button>
     <br>
@@ -65,56 +77,212 @@
 </form>
 
 <br><hr align=left width=1000>
-<div id="chat_list"></div> 
+<div id="result_div"></div> 
 <br><hr align=left width=1000>
-<div id="debug_frame"></div>
+<div id="debug_div"></div>
 
 <script>
-   function findChatById() {
-      document.getElementById("debug_frame").innerHTML = ' ';
-      var id = parseInt(document.getElementById("chat_id").value);
-      document.getElementById("chat_list").innerHTML = chats_findById(id);
-   }
+var chat_table_header = '<table><tr><th width=50>id</th><th width=100>name</th><th width=150>description</th>' + 
+							'<th width=100>chatType</th><th width=100>action</th></tr>';
+var chat_table_footer = '</table>';
+var userList = document.getElementById("users_list");
+var chatList = document.getElementById("chats_list");
 
-   function findAllChats() {
-      document.getElementById("debug_frame").innerHTML = ' ';
-      document.getElementById("chat_list").innerHTML = chats_getAllChats();
-   }
+function writeResult(result, debug) {
+   if (result != '') document.getElementById("result_div").innerHTML = result;
+   if (debug != '') document.getElementById("debug_div").innerHTML = debug;
+}
 
-   function getChatTypes() {
-      document.getElementById("debug_frame").innerHTML = ' ';
-      document.getElementById("chat_type_list").innerHTML = chats_getChatTypes();
+function fillChatRow(chat, lastColText) {
+   if (lastColText == null || lastColText == '') { lastColText = '&nbsp;'; }
+   res = '<tr><td>' + chat.id + '</td><td>' + chat.name + '</td><td>' + chat.description;
+	res += '</td><td>' + chat.chatType + '</td>';
+	res += '<td>' + lastColText + '</td></tr>';
+	res += '</tr>';
+   return res;
+}
+
+function getDeleteButton(chat_id) {
+   if (chat_id == null || chat_id < 0) { return '&nbsp;'; }
+	return '<button onclick="deleteChat(' + chat_id + ')">Delete</button>';
+}
+
+function checkCU() {
+   document.getElementById("add_user_to_chat_button").disabled = (userList.value <= 0) || (chatList.value <= 0);
+}
+
+function fill_select(element, data) {
+   while (element.childNodes.length > 0) {
+      element.removeChild(element.childNodes[element.childNodes.length-1]);
    }
+   var option = document.createElement("option");
+   option.value = -1;
+   option.text = ' ';
+   element.add(option);
+   for (var i = 0; i < data.length; i++) {
+      var option = document.createElement("option");
+      option.value = data[i][0];
+      option.text = data[i][1];
+      element.add(option);
+   }
+}
+
+function getUsersAndChats() {
+   writeResult('', ' ');
+   fill_select(userList, common_getAllUsersList());
+   fill_select(chatList, common_getAllChatsList());
+}
+
+function findChatById() {
+   writeResult('', ' ');
+   var id = parseInt(document.getElementById("chat_id").value);
+   var xhttp = new XMLHttpRequest();
+   var request = host_chats + '/' + id;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open('GET', request, true);
+   xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      var html = '';
+      debug += '<br>[debug] Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+      if (xhttp.status == 200) {
+         var chat = JSON.parse(xhttp.responseText);  
+         html = chat_table_header + fillChatRow(chat, getDeleteButton(id)) + chat_table_footer;
+      }	else {
+         html = 'Error. Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+      }
+      writeResult(html, debug);
+   }
+   xhttp.send();
+}
+
+function findAllChats() {
+   writeResult('', ' ');
+   var xhttp = new XMLHttpRequest();
+   var request = host_chats;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open('GET', request , true);
+   xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      var html = '';
+      debug += '<br>[debug] Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+      if (xhttp.status == 200) {
+         var chats = JSON.parse(xhttp.responseText);
+         html = chat_table_header;
+         for (var i = 0; i < chats.length; i++) {
+            html += fillChatRow(chats[i], getDeleteButton(chats[i].id));
+         }
+         html += chat_table_footer;
+      }  else {
+         html = 'Error. Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+		}
+      writeResult(html, debug);
+   }  
+   xhttp.send();
+}
+
+function getChatTypes() {
+   writeResult('', ' ');
+   var xhttp = new XMLHttpRequest();
+   var request = host_chats + '/types';
+   var debug = '[debug] Request: ' + request;
+   xhttp.open('GET', request, true);
+   xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      var select_body = '';    
+      debug += '<br>Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+      if (xhttp.status == 200) {
+         var types = JSON.parse(xhttp.responseText);
+         for (var i = 0; i < types.length; i++) {
+            select_body += '<option value="' + i + '">' + types[i] + '</option>';
+         }
+      }
+      writeResult('', debug);
+      document.getElementById("chat_type_list").innerHTML = select_body;
+	}
+   xhttp.send();
+}
    
-   function deleteChatById() {
-      document.getElementById("debug_frame").innerHTML = ' ';
-      var chat_id = parseInt(document.getElementById("chat_del_id").value);
-      document.getElementById("chat_list").innerHTML = chats_deleteChat(chat_id);
+function deleteChat(id) {
+   if (!confirm ('Are you sure to delete chat (id:' + id + ')?')) { 
+      document.getElementById("chat_list").innerHTML = ' ';
+      return; 
+   } 
+   var xhttp = new XMLHttpRequest();
+   var request = host_chats + '/' + id;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open("DELETE", request, true);
+   xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      var html;
+      debug += '<br>[debug] Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+      if (xhttp.status == 200) {
+         html = 'Delete status: Ok';
+      } else {
+         html = 'Error deleting Chat id:' + id + '   Response: ' + xhttp.responseText;
+      }   
+      writeResult(html, debug);
    }
+   xhttp.send();
+}   
+   
+function deleteChatById() {
+   writeResult('', ' ');
+   deleteChat(parseInt(document.getElementById("chat_del_id").value));
+}
 
-   function addUserToChat() {
-//      document.getElementById("debug_frame").innerHTML = ' ';
-//      var chat_id = document.getElementById("chat_del_id").value;
-//      if (!confirm ('Are you sure to delete chat (id:' + chat_id + ')?')) { 
-//         document.getElementById("chat_list").innerHTML = ' ';
-         return; 
-//      } 
-//      document.getElementById("chat_list").innerHTML = chats_deleteChat(parseInt(chat_id));
+function addUserToChat() {
+   writeResult('', ' ');
+   var chat_name = chatList.options[chatList.selectedIndex].text;
+   var user_name = userList.options[userList.selectedIndex].text;
+   console.log(chat_name, user_name);
+   if (!confirm ('Are you sure to add user "' + user_name + '" to chat "' + chat_name + '"?')) { 
+      writeResult('Canceled', '');
+      return; 
+   } 
+   var chat_id = chatList.options[chatList.selectedIndex].value;
+   var user_id = userList.options[userList.selectedIndex].value;
+   var xhttp = new XMLHttpRequest(); 
+   var request = host_chats + '/member?chatId=' + chat_id + '&userId=' + user_id;
+   xhttp.open("POST", request, false);
+   var debug = '[debug] POST: ' + request;
+   xhttp.send();
+   debug += '<br>[debug] Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+   var html;
+   if (xhttp.status == 201 ) {
+      html = 'Success. ' + xhttp.responseText;
+   } else { 
+      html = 'Error. ' + xhttp.responseText;
    }
+   writeResult(html, debug);
+}
 
 
-   function createChat() {
-      document.getElementById("debug_frame").innerHTML = ' ';
-      var name = document.getElementById("chat_name").value;
-      var description = document.getElementById("chat_description").value;
-      var type_elem = document.getElementById("chat_type_list");
-      var chatType = type_elem.options[type_elem.selectedIndex].text;
-      if (!confirm ('Are you sure to create new Chat "' + name + '" (' + description + '), ' + chatType + '?')) { 
-         document.getElementById("user_list").innerHTML = ' ';
-	      return; 
-	   } 
-      document.getElementById("chat_list").innerHTML = chats_createChat(name, description, chatType);
-   }
+function createChat() {
+   writeResult('', ' ');
+   var name = document.getElementById("chat_name").value;
+   var description = document.getElementById("chat_description").value;
+   var type_elem = document.getElementById("chat_type_list");
+   var chatType = type_elem.options[type_elem.selectedIndex].text;
+   if (!confirm ('Are you sure to create new Chat "' + name + '" (' + description + '), ' + chatType + '?')) { 
+      document.getElementById("user_list").innerHTML = ' ';
+      return; 
+   } 
+   var xhttp = new XMLHttpRequest(); 
+   var request = JSON.stringify({name: name, description: description, chatType: chatType});
+   xhttp.open("POST", host_chats, false);
+   xhttp.setRequestHeader("Content-Type", "application/json");
+   xhttp.send(request);
+   var debug = '[debug] POST: ' + request;
+   debug += '[debug] Response: ' + xhttp.responseText;
+   var html;
+   if (xhttp.status == 201) {
+      var new_chat = JSON.parse(xhttp.responseText);  
+      html = chat_table_header + fillChatRow(new_chat, getDeleteButton(new_chat.id)) + chat_table_footer;
+   } else { 
+      html = 'POST Status: ' + xhttp.status + '   ' + xhttp.responseText; 
+      }
+   writeResult(html, debug);
+}
 </script>
 
 </body>

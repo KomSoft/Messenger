@@ -16,30 +16,6 @@ function timestamp(date) {
    return date_time;
 }
 
-function __checkType(_ext, types) {
-	res = false;
-	for (i = 0; i < types.length; i++) {
-		if (_ext == types[i]) { return true; }
-	}
-}
-
-function __extractExtension(file_name) {
-	return file_name.match(/\.([^.]+)$|$/)[1];
-}
-
-function __getFileType(file_name) {
-	const sound = ['wav', 'mp3'];
-	const image = ['jpg', 'jpeg', 'bmp', 'gif', 'png'];
-	const office = ['doc', 'docx', 'xls', 'xlsx', 'rtf'];
-	const adobe = ['pdf'];
-	var file_ext = _extractExtension(file_name);
-	fType = 'unknown';
-   if (checkExt(file_ext, sound)) { fType = 'sound'; } 
-   if (checkExt(file_ext, image)) { fType = 'image'; } 
-   if (checkExt(file_ext, office)) { fType = 'msoffice_document'; } 
-   if (checkExt(file_ext, adobe)) { fType = 'pdf_document'; } 
-}
-
 function common_saveFile(file_name) {
    var xhttp = new XMLHttpRequest();
    xhttp.open("POST", host_file, false);
@@ -55,3 +31,44 @@ console.log('[common_saveFile] Response readyState: ' + xhttp.readyState + ', xh
 			return null;  
 		}
 }
+
+function common_getAllChatsList() {
+   var xhttp = new XMLHttpRequest();
+   var request = host_chats;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open('GET', request , false);
+   xhttp.send();
+   debug = debug + '<br>[debug] Response status: ' + xhttp.status + '   ' + xhttp.responseText;
+   if (xhttp.status != 200) { return null; }
+   var result = new Array;
+   var data = JSON.parse(xhttp.responseText); 
+   for (var i = 0; i < data.length; i++) {
+      var elem = new Array(2);
+      elem[0] = data[i].id;
+      elem[1] = data[i].name;
+      result.push(elem);
+   }
+   console.log(result);
+   return result;
+}
+
+function common_getAllUsersList() {
+   var xhttp = new XMLHttpRequest();
+   var request = host_users;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open('GET', request , false);
+   xhttp.send();
+   debug = debug + '<br>[debug] Response status: ' + xhttp.status + '   ' + xhttp.responseText;
+   if (xhttp.status != 200) { return null }
+   var result = new Array;
+   var data = JSON.parse(xhttp.responseText); 
+   for (var i = 0; i < data.length; i++) {
+      var elem = new Array(2);
+      elem[0] = data[i].id;
+      elem[1] = data[i].name;
+      result.push(elem);
+   }
+   console.log(result);
+   return result;
+}
+

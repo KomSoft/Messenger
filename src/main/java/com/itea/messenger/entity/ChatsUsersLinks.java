@@ -2,6 +2,7 @@ package com.itea.messenger.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,23 +23,12 @@ public class ChatsUsersLinks {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "join_date", nullable = false)
+    @Column(name = "join_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime joinDate;
 
     @Column(name = "view_date")
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime viewDate;
 
-    public ChatsUsersLinks(Long chatId, Long userId) {
-        this.chatId = chatId;
-        this.userId = userId;
-        this.joinDate = LocalDateTime.now();
-    }
-
-/*
-    public ChatUsersLinks(Long id, Long chatId, Long userId, LocalDateTime joinDate, LocalDateTime viewDate) {
-        this.chatId = chatId;
-        this.userId = userId;
-        this.joinDate = LocalDateTime.now();
-    }
-*/
 }

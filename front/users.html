@@ -5,16 +5,23 @@
 <TITLE>Users Tool</TITLE>
 <link rel="stylesheet" href="styles.css">
 <script src="common.js" async=""></script> 
-<script src="users.js" async=""></script> 
+<!-- script src="users.js" async=""></script --> 
 </head>
 
 <body>
 
-<h3 align=center>Users Tool</h3>
+<h3>Users Tool</h3>
 
 <form action="#">
    <fieldset class="fieldset1">
-    <legend>Find user by Id:</legend>
+    <legend>Show all users</legend>
+    <button onclick="findAllUsers()">Show all users</button>
+   </fieldset>
+</form>
+
+<form action="#">
+   <fieldset class="fieldset1">
+    <legend>Find User by Id:</legend>
     <input id="user_id" placeholder="User Id">
     <button onclick="findUserById()">Search</button>
    </fieldset>
@@ -22,7 +29,7 @@
 
 <form action="#">
    <fieldset class="fieldset1">
-    <legend>Find user by login:</legend>
+    <legend>Find User by login:</legend>
     <input id="user_login" placeholder="User login">
     <button onclick="findUserByLogin()">Search</button>
    </fieldset>
@@ -30,7 +37,7 @@
 
 <form action="#">
    <fieldset class="fieldset1">
-    <legend>Find user by name:</legend>
+    <legend>Find User by name:</legend>
     <input id="user_name" placeholder="User name">
     <button onclick="findUserByName()">Search</button>
    </fieldset>
@@ -38,15 +45,7 @@
 
 <form action="#">
    <fieldset class="fieldset1">
-    <legend>List all users</legend>
-    <button onclick="findAllUsers()">Show all users</button>
-   </fieldset>
-</form>
-
-<form action="#">
-   <fieldset class="fieldset1">
-    <legend style="color:red;">Delete user by Id:</legend>
-    <label class="label1" for="user_del_id" >user Id:</label>
+    <legend style="color:red;">Delete User by Id:</legend>
     <input id="user_del_id" placeholder="User Id">
     <button onclick="deleteUserById()">Delete</button><br>
     <font color=#0000FF>Needs to update by clicking "Show all users" button after call</font>
@@ -55,18 +54,18 @@
 
 <form action="#">
    <fieldset >
-    <legend>Create new user:</legend>
-    <label class="label1" for="user_newname" >User name:</label>
+    <legend>Create new User:</legend>
+    <label class="label2" for="user_newname" >User name:</label>
     <input id="user_newname" placeholder="User name">&nbsp;
-    <label class="label1" for="user_newlogin" >Login:</label>
+    <label class="label2" for="user_newlogin" >Login:</label>
     <input id="user_newlogin" placeholder="User login">&nbsp;
     <br>
-    <label class="label1" for="user_newpassword" >Password:</label>
+    <label class="label2" for="user_newpassword" >Password:</label>
     <input id="user_newpassword" placeholder="User password">&nbsp;
-    <label class="label1" for="user_newage" >Age:</label>
+    <label class="label2" for="user_newage" >Age:</label>
     <input id="user_newage" placeholder="User age">&nbsp;
     <br><br>
-    <label class="label1" for="attached_photo" >Attach avatar:</label>
+    <label class="label2" for="attached_photo" >Attach avatar:</label>
     <input type="file" id="attached_photo"><br>
     <br>
     <button onclick="createUser()">Create user</button><br>
@@ -80,55 +79,179 @@
 <div id="debug_frame"></div>
 
 <script>
-   function findUserById() {
-      document.getElementById("debug_frame").innerHTML = ' ';
-      var id = parseInt(document.getElementById("user_id").value);
-      document.getElementById("user_list").innerHTML = users_findById(id);
-   }
+var table_header = '<table><tr><th width=50>id</th><th width=100>name</th><th width=50>age</th>' + 
+      '<th width=100>login</th><th width=100>password</th>' + 
+      '<th width=50>avatarId</th><th width=100>avatarFile</th><th width=100>action</th></tr>';
+var table_footer = '</table>';
 
-   function findUserByLogin() {
-      document.getElementById("debug_frame").innerHTML = ' ';
-      var login = document.getElementById("user_login").value;
-      document.getElementById("user_list").innerHTML = users_findByLogin(login);
-   }
+function writeResult(result, debug) {
+   if (result != '') document.getElementById("user_list").innerHTML = result;
+   if (debug != '') document.getElementById("debug_frame").innerHTML = debug;
+}
 
-   function findUserByName() {
-      document.getElementById("debug_frame").innerHTML = ' ';
-      var name = document.getElementById("user_name").value;
-      document.getElementById("user_list").innerHTML = users_findByName(name);
-   }
+function fillUserRow(user, lastColText) {
+   if (lastColText == null && lastColText == '') { lastColText = '&nbsp;'; }
+   res = '<tr><td>' + user.id + '</td><td>' + user.name + '</td><td>' + user.age;
+	res += '</td><td>' + user.login + '</td><td>' + user.password + '</td><td>' + user.avatarId;
+   res += '</td><td>' + user.avatarName + '</td>';
+	res += '<td>' + lastColText + '</td></tr>';
+   return res;
+}
 
-   function findAllUsers() {
-      document.getElementById("debug_frame").innerHTML = ' ';
-      document.getElementById("user_list").innerHTML = users_getAllUsers();
+function getDeleteButton(id) {
+   if (id == null || id < 0) { return '&nbsp;'; }
+	return '<button onclick="deleteUser(' + id + ')">Delete</button>';
+}
+
+function findUserById() {
+   writeResult('', ' ');
+   var id = parseInt(document.getElementById("user_id").value);
+   var xhttp = new XMLHttpRequest();
+   var request = host_users + '/' + id;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open('GET', request, true);
+   xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      var html;
+      if (xhttp.status == 200) {
+         var user = JSON.parse(xhttp.responseText);  
+         debug += '<br>[debug] Response: ' + xhttp.responseText;
+         html = table_header + fillUserRow(user, getDeleteButton(id)) + table_footer;
+      }	else {
+		   html = 'Error. Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+         debug += '<br>[debug] ' + html;
+	   }
+      writeResult(html, debug);
+   }   
+   xhttp.send();
+}
+
+function findUserByLogin() {
+   writeResult('', ' ');
+   var login = document.getElementById("user_login").value;
+   var xhttp = new XMLHttpRequest();
+   var request = host_users + '/login/' + login;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open('GET', request , true);
+   xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      var html;
+      if (xhttp.status == 200) {
+         var user = JSON.parse(xhttp.responseText);
+         html = table_header + fillUserRow(user, getDeleteButton(user.id)) + table_footer;
+      }  else {
+		   html = 'Error. Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+         debug += '<br>[debug] ' + html;
+	   }
+      writeResult(html, debug);
    }
+   xhttp.send();
+}
+
+function findUserByName() {
+   writeResult('', ' ');
+   var name = document.getElementById("user_name").value;
+   var xhttp = new XMLHttpRequest();
+   var request = host_users + '/name/' + name;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open('GET', request , true);
+   xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      var html;
+      if (xhttp.status == 200) {
+         var user = JSON.parse(xhttp.responseText);
+         html = table_header + fillUserRow(user, getDeleteButton(user.id)) + table_footer;
+      }  else {
+		   html = 'Error. Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+         debug += '<br>[debug] ' + html;
+	   }
+      writeResult(html, debug);
+   }
+   xhttp.send();
+}
+
+function findAllUsers() {
+   writeResult('', ' ');
+   var xhttp = new XMLHttpRequest();
+   var request = host_users;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open('GET', request , true);
+   xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      if (xhttp.status == 200) {
+         var users = JSON.parse(xhttp.responseText);
+         var html = table_header;
+         for (var i = 0; i < users.length; i++) {
+            html += fillUserRow(users[i], getDeleteButton(users[i].id));
+         }
+         html += table_footer;
+      }  else {
+		   html = 'Error. Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+         debug += '<br>[debug] ' + html;
+	   }
+      writeResult(html, debug);
+   }
+   xhttp.send();
+}
    
-   function deleteUserById() {
-      document.getElementById("debug_frame").innerHTML = ' ';
-      var user_id = document.getElementById("user_del_id").value;
-      if (!confirm ('Are you sure to delete user (id:' + user_id + ')?')) { 
-         document.getElementById("user_list").innerHTML = ' ';
-         return; 
-      } 
-      document.getElementById("user_list").innerHTML = users_deleteUser(parseInt(user_id));
+function deleteUser(id) {
+   if (!confirm ('Are you sure to delete user (id:' + id + ')?')) { 
+      writeResult('Canceled', ' ');
+      return; 
+   } 
+   var xhttp = new XMLHttpRequest();
+   var request = host_users + '/' + id;
+   var debug = '[debug] Request: ' + request;
+   xhttp.open("DELETE", request, true);
+   xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      var html = 'Delete Status: ' + xhttp.status + '  ' + xhttp.responseText;
+      debug += '<br>[debug] ' + html;
+      writeResult(html, debug);
    }
+   xhttp.send();
+}
 
-   function createUser() {
-      document.getElementById("debug_frame").innerHTML = ' ';
-      var name = document.getElementById("user_newname").value;
-      var login = document.getElementById("user_newlogin").value;
-      var password = document.getElementById("user_newpassword").value;
-      var age = parseInt(document.getElementById("user_newage").value);
-      var photo_file = '';
-      if (document.getElementById("attached_photo").files.length > 0) {
-         photo_file = document.getElementById("attached_photo").files[0].name;
-      }
-      if (!confirm ('Are you sure to save new user "' + name + '"?')) {
-         document.getElementById("user_list").innerHTML = ' ';
-         return; 
-      }
-      document.getElementById("user_list").innerHTML = users_createUser(name, password, photo_file, login, age);
+function deleteUserById() {
+   writeResult('', ' ');
+   deleteUser(parseInt(document.getElementById("user_del_id").value));
+}
+
+function createUser() {
+   writeResult('', ' ');
+   var name = document.getElementById("user_newname").value;
+   var login = document.getElementById("user_newlogin").value;
+   var password = document.getElementById("user_newpassword").value;
+   var age = parseInt(document.getElementById("user_newage").value);
+   var photo_file = '';
+   if (document.getElementById("attached_photo").files.length > 0) {
+      photo_file = document.getElementById("attached_photo").files[0].name;
    }
+   if (!confirm ('Are you sure to save new user "' + name + '"?')) {
+      document.getElementById("user_list").innerHTML = ' ';
+      return; 
+   }
+   photo_id = common_saveFile(photo_file);
+   var xhttp = new XMLHttpRequest(); 
+   var request = JSON.stringify({name: name, password: password, avatarId: photo_id, login: login, age: age});
+   xhttp.open("POST", host_users);
+   xhttp.setRequestHeader("Content-Type", "application/json");
+   var debug = '[debug] POST: ' + request;
+   xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      var html;
+      if (xhttp.status == 201) {
+         var new_user = JSON.parse(xhttp.responseText); 
+         debug += '[debug] Response: ' + xhttp.responseText;
+         html = table_header + fillUserRow(new_user, getDeleteButton(new_user.id)) + table_footer;
+      } else { 
+         html = 'POST Status: ' + xhttp.status + '   ' + xhttp.responseText; 
+         debug += '<br>[debug] ' + html;
+      }
+      writeResult(html, debug);
+   }
+   xhttp.send(request);
+}
 </script>
 
 </body>

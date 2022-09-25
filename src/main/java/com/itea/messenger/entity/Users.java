@@ -1,10 +1,11 @@
 package com.itea.messenger.entity;
 
 import lombok.*;
-import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 

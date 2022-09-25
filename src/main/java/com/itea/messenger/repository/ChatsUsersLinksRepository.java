@@ -9,14 +9,15 @@ import java.util.List;
 
 public interface ChatsUsersLinksRepository extends JpaRepository<ChatsUsersLinks, Long> {
 
-//    TODO - why query stops working when users.avatar_id == null ?
-//    @Query("select u.id as id, u.name as name, u.avatar as avatar " +
-    @Query("select u.id as id, u.name as name " +
-            "from Users u, ChatsUsersLinks link where link.chatId=?1 and u.id=link.userId")
+    @Query("SELECT u.id AS id, u.name AS name, f.id AS avatarId, f.fileName AS avatarName " +
+            "FROM ChatsUsersLinks link " +
+            "JOIN Users u ON u.id=link.userId " +
+            "LEFT OUTER JOIN Files f ON u.avatar=f.id WHERE link.chatId=?1")
     List<UsersInfo> getUsersByChatId(Long chatId);
 
-    @Query("select chat.id as id, chat.name as name, chat.description as description, chat.chatType as chatType " +
-            "from Chats chat, ChatsUsersLinks link where chat.id=link.chatId and link.userId=?1")
+    @Query("SELECT chat.id AS id, chat.name AS name, chat.description AS description, chat.chatType AS chatType " +
+            "FROM Chats chat, ChatsUsersLinks link " +
+            "WHERE chat.id=link.chatId AND link.userId=?1")
     List<ChatsInfo> getChatsByUserId(Long userId);
 
     ChatsUsersLinks findByChatIdAndUserId(Long chatId, Long userId);

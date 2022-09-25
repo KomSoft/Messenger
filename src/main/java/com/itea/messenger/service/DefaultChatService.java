@@ -2,11 +2,11 @@ package com.itea.messenger.service;
 
 import com.itea.messenger.converter.ChatsConverter;
 import com.itea.messenger.dto.ChatsDto;
-import com.itea.messenger.entity.ChatsUsersLinks;
 import com.itea.messenger.entity.Chats;
 import com.itea.messenger.entity.Users;
 import com.itea.messenger.exception.NotFoundException;
 import com.itea.messenger.exception.ValidationException;
+import com.itea.messenger.exception.AlreadyBoundException;
 import com.itea.messenger.repository.ChatsUsersLinksRepository;
 import com.itea.messenger.repository.UsersRepository;
 import com.itea.messenger.type.ChatTypeEnum;
@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import com.itea.messenger.repository.ChatsRepository;
+import org.springframework.transaction.UnexpectedRollbackException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
@@ -42,7 +44,6 @@ public class DefaultChatService implements ChatsService {
     private ChatsUsersLinksRepository chatUsersLinksRepository;
 
     @Override
-//    public void createChat(ChatsDto chatDto, Long userId) throws ValidationException {
     public ChatsDto createChat(ChatsDto chatDto) throws ValidationException {
         Chats chat = chatsConverter.chatEntityFromDto(chatDto);
         if (chatsRepository.findByName(chat.getName()).isPresent()) {
@@ -51,8 +52,9 @@ public class DefaultChatService implements ChatsService {
         return chatsConverter.chatEntityToDto(chatsRepository.save(chat));
     }
 
+    @Transactional
     @Override
-    public void deleteChat(Long chatId) throws EmptyResultDataAccessException {
+    public void deleteChat(Long chatId) throws UnexpectedRollbackException, EmptyResultDataAccessException {
         messagesService.deleteAllMessagesByChatId(chatId);
         chatUsersLinksService.deleteAllByChatId(chatId);
         chatsRepository.deleteById(chatId);
@@ -73,22 +75,23 @@ public class DefaultChatService implements ChatsService {
         return chatsConverter.chatEntityToDto(chatsRepository.findById(chatId).orElseThrow(() -> new NotFoundException("Chat with id:" + chatId + " not found")));
     }
 
-    public List<ChatTypeEnum> getChatTypes() {
-        return Arrays.asList(ChatTypeEnum.values());
+    public List<ChatTypeEnum> getChatTypes() throws NotFoundException {
+        try {
+            return Arrays.asList(ChatTypeEnum.values());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("Chat types not found!");
+        }
     }
 
-    public void addUserToChat(Long chatId, Long userId) throws NotFoundException {
-        Chats chat = chatsRepository.findById(chatId).orElseThrow(() -> new NotFoundException("Chat with id:" + chatId + " not found"));
-        Users user = usersRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id:" + userId + " not found"));
+    @Transactional
+    public void addUserToChat(Long chatId, Long userId) throws NotFoundException, AlreadyBoundException {
+        if (chatUsersLinksRepository.findByChatIdAndUserId(chatId, userId) != null) {
+            throw new AlreadyBoundException("User id:" + userId + " already exists in Chat id:" + chatId);
+        }
+        Chats chat = chatsRepository.findById(chatId).orElseThrow(() -> new NotFoundException("Chat id:" + chatId + " not found"));
+        Users user = usersRepository.findById(userId).orElseThrow(() -> new NotFoundException("User id:" + userId + " not found"));
         chat.addUser(user);
-        ChatsUsersLinks temp = new ChatsUsersLinks(chat.getId(), user.getId());
-//      TODO - why  it doesn't work?
-//  org.postgresql.util.PSQLException: ПОМИЛКА: null значення в стовпці "join_date" відношення "chats_users" порушує not-null обмеження
-//  Detail: Помилковий рядок містить (35, 20, 1, null, null).   ???!!!
-//  joinDate set to LocalDateTime.now() in constructor ChatUsersLinks(Long chatId, Long userId)
-//
-//        chatUsersLinksRepository.save(temp);
-//        chatsRepository.save(chat);
+        chatsRepository.save(chat);
     }
 
 }
