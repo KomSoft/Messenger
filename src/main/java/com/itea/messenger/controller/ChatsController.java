@@ -16,7 +16,6 @@ import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 
 @RestController
 @RequestMapping("/chats")

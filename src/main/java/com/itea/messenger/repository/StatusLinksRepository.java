@@ -8,5 +8,6 @@ public interface StatusLinksRepository extends JpaRepository<StatusLinks, Long> 
 
     List<StatusLinks> findByMessageId(Long messageId);
     void deleteAllByMessageId(Long messageId);
+    void deleteAllByUserId(Long userId);
 
 }

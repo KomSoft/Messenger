@@ -8,7 +8,13 @@ public class UsersDto {
     private String name;
     private String password;
     private String login;
+    private String role;
     private Long avatarId;
     private String avatarName;
     private int age;
+
+    public FilesDto getFileDto() {
+        return new FilesDto(this.avatarId, this.avatarName);
+    }
+
 }

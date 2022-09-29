@@ -15,13 +15,13 @@ VALUES ('karina_photo.jpg', 'IMAGE'),
 	('Chervona_kalyna.mp3', 'SOUND');
 
 --	users / 6 users
-INSERT INTO users(age, login, name, password, avatar_id) 
-VALUES (20, 'karina', 'Karina Pinchuk', 'kp', 1), 
-	(99, 'admin', 'Administrator', 'admin', null), 
-	(22, 'veron', 'Veronika', 'bugatti', 2), 
-	(23, 'KomSoft', 'Volodymyr', '1234', null), 
-	(24, 'dmytro', 'Дмитро', 'qwerty', null), 
-	(25, 'denis', 'Денис', 'den', null);
+INSERT INTO users(age, login, name, password, role, avatar_id) 
+VALUES (20, 'karina', 'Karina Pinchuk', 'kp', 'USER', 1), 
+	(99, 'admin', 'Administrator', 'admin', 'ADMIN', null), 
+	(22, 'veron', 'Veronika', 'bugatti', 'USER', 2), 
+	(23, 'KomSoft', 'Volodymyr', '1234', 'ADMIN', null), 
+	(24, 'dmytro', 'Дмитро', 'qwerty', 'USER', null), 
+	(25, 'denis', 'Денис', 'den', 'USER', null);
 
 --	chat members
 INSERT INTO chats_users(chat_id, user_id, join_date, view_date)

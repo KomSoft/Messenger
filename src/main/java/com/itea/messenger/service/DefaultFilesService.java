@@ -32,7 +32,7 @@ public class DefaultFilesService implements FilesService {
 
     @Override
     public FilesDto findById(Long id) throws NotFoundException {
-        Files file = filesRepository.findById(id).orElseThrow(() -> new NotFoundException("File with id:" + id + " not found"));
+        Files file = filesRepository.findById(id).orElseThrow(() -> new NotFoundException("File id:" + id + " not found"));
         return filesConverter.fileEntityToDto(file);
     }
 
@@ -50,5 +50,4 @@ public class DefaultFilesService implements FilesService {
         filesRepository.deleteById(id);
     }
 
-//    User & Message entities have "orphanRemoval = true" then we don't need deleteById(id) method
 }

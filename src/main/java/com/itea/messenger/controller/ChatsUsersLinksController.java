@@ -30,35 +30,38 @@ public class ChatsUsersLinksController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ChatUsersLinksDto> findById(@PathVariable("id") Long id) {
+    public ResponseEntity findById(@PathVariable("id") Long id) {
+//    public ResponseEntity<ChatUsersLinksDto> findById(@PathVariable("id") Long id) {
         log.info("Handling find Chat-users link with id:{}", id);
         try {
             return ResponseEntity.ok(chatUsersLinksService.findById(id));
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<List<ChatsShortDto>> getChatsByUserId(@PathVariable("id") Long id) {
+    public ResponseEntity getChatsByUserId(@PathVariable("id") Long id) {
+//    public ResponseEntity<List<ChatsShortDto>> getChatsByUserId(@PathVariable("id") Long id) {
         log.info("Handling find Chat-users link with userId:{}", id);
         try {
             return ResponseEntity.ok(chatUsersLinksService.getChatsByUserId(id));
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping("/chat/{id}")
-    public ResponseEntity<List<UsersShortDto>> getUsersByChatId(@PathVariable("id") Long id) {
+    public ResponseEntity getUsersByChatId(@PathVariable("id") Long id) {
+//    public ResponseEntity<List<UsersShortDto>> getUsersByChatId(@PathVariable("id") Long id) {
         log.info("Handling find Chat-users link with chatId:{}", id);
         try {
             return ResponseEntity.ok(chatUsersLinksService.getUsersByChatId(id));
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

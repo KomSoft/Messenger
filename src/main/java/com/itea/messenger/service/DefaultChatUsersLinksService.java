@@ -38,7 +38,8 @@ public class DefaultChatUsersLinksService implements ChatsUsersLinksService {
 
     @Override
     public ChatUsersLinksDto findById(Long id) throws NotFoundException {
-        ChatsUsersLinks chatUsersLinks = chatUsersLinksRepository.findById(id).orElseThrow(() -> new NotFoundException("[ChatUsersLinks] record with id:" + id + " not found"));
+        ChatsUsersLinks chatUsersLinks = chatUsersLinksRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("[ChatUsersLinks] record with id:" + id + " not found"));
         return chatUsersLinksConverter.chatUsersLinksEntityToDto(chatUsersLinks);
     }
 
@@ -66,7 +67,6 @@ public class DefaultChatUsersLinksService implements ChatsUsersLinksService {
         return users.stream().map(usersConverter::userToShortDto).collect(Collectors.toList());
     }
 
-// TODO - do I need methods deleteAllByChatId(Long chatId) and deleteAllByUserId(Long chatId) ?
     @Transactional
     @Override
     public void deleteAllByChatId(Long chatId) {

@@ -7,32 +7,27 @@ import com.itea.messenger.entity.Users;
 import com.itea.messenger.exception.ValidationException;
 import com.itea.messenger.interfaces.UsersInfo;
 import com.itea.messenger.repository.FilesRepository;
-//import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.invoke.MethodHandles;
-import static java.util.Objects.isNull;
-
 @Component
 public class UsersConverter {
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private FilesRepository filesRepository;
 
     private void validateUserDto(UsersDto usersDto) throws ValidationException {
-
-        if (isNull(usersDto)) {
+        if (usersDto == null) {
             throw new ValidationException("[UserDto] Object is null");
         }
-        if (isNull(usersDto.getLogin()) || usersDto.getLogin().isEmpty()) {
+        if (usersDto.getLogin() == null || usersDto.getLogin().isEmpty()) {
             throw new ValidationException("[UserDto] Login is empty");
         }
-        if (isNull(usersDto.getName()) || usersDto.getName().isEmpty()) {
+        if (usersDto.getName() == null || usersDto.getName().isEmpty()) {
             throw new ValidationException("[UserDto] Name is empty");
+        }
+        if (usersDto.getRole() == null || usersDto.getRole().isEmpty()) {
+            throw new ValidationException("[UserDto] Role is empty");
         }
         if (usersDto.getAge() < Users.MIN_AGE) {
             throw new ValidationException("[UserDto] Age is empty or less than " + Users.MIN_AGE);
@@ -47,8 +42,9 @@ public class UsersConverter {
         user.setPassword(userDto.getPassword());
         user.setAge(userDto.getAge());
         user.setLogin(userDto.getLogin());
-//        TODO - extend logic when we send file body with FileDto object
-//        now we should save file before convert User to get avatarId
+        user.setRole(userDto.getRole());
+//        check correct file_id for existing users
+//        for new user we'll check and save file_name in saveUser method before save User
         if (userDto.getAvatarId() != null && userDto.getAvatarId() > 0) {
             Files file = filesRepository.findById(userDto.getAvatarId()).orElseThrow(() -> new ValidationException("[UserDto] File id:" + userDto.getAvatarId() + " is incorrect"));
             user.setAvatar(file);
@@ -63,6 +59,7 @@ public class UsersConverter {
         userDto.setPassword("********");
         userDto.setAge(user.getAge());
         userDto.setLogin(user.getLogin());
+        userDto.setRole(user.getRole());
         if (user.getAvatar() != null) {
             userDto.setAvatarId(user.getAvatar().getId());
             userDto.setAvatarName(user.getAvatar().getFileName());

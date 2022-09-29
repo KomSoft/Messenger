@@ -1,11 +1,9 @@
 package com.itea.messenger.entity;
 
 import lombok.*;
-//import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
@@ -34,8 +32,11 @@ public class Users {
     @Column(unique = true, length = 30)
     private String login;
 
-    @Min(value = 10, message = "Age should not be less than 10")
+    @Min(value = 10, message = "Age should not be less than "+ MIN_AGE)
     private int age;
+
+    @Column(columnDefinition = "VARCHAR(30) DEFAULT 'USER'")
+    private String role;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "chats_users", joinColumns = @JoinColumn(name = "user_id"),
@@ -53,24 +54,17 @@ public class Users {
       message.setUser(this);
     }
 
-    public void deleteMessage(Messages message) {
-//  TODO - write logic
-        //        messages.remove(message);    message.setUser(null);
+    public void setAvatar(Files file) {
+        if (file != null) {
+            this.avatar = file;
+            file.setUser(this);
+        }
     }
 
-    public void editMessage(Messages message) {
-//  TODO - write logic
-        //        messages.remove(message);    message.setUser(null);
-    }
-
-    public void setAvatar(@NotNull Files file) {
-        this.avatar = file;
-        file.setUser(this);
-    }
-
-    public void removeAvatar(@NotNull Files file) {
+    public void removeAvatar(Files file) {
         this.avatar = null;
-        file.setUser(null);
+        if (file != null) {
+            file.setUser(null);
+        }
     }
-//    TODO - add/ remove StatusLinks. Can we use messageId or other?
 }

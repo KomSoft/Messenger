@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 
 @RestController
 @RequestMapping("/files")
@@ -26,35 +25,38 @@ public class FilesController {
     private FilesService filesService;
 
     @PostMapping
-    public ResponseEntity<FilesDto> saveFile(@RequestBody FilesDto fileDto) {
+    public ResponseEntity saveFile(@RequestBody FilesDto fileDto) {
+//    public ResponseEntity<FilesDto> saveFile(@RequestBody FilesDto fileDto) {
         log.info("Handling save File: {}", fileDto);
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(filesService.saveFile(fileDto));
         } catch (ValidationException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<FilesDto>> findAll(){
+    public ResponseEntity findAll(){
+//    public ResponseEntity<List<FilesDto>> findAll(){
         log.info("Handling find all files");
         try {
             return ResponseEntity.ok(filesService.findAll());
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<FilesDto> findById(@PathVariable("id") Long id) throws ValidationException {
+    public ResponseEntity findById(@PathVariable("id") Long id) throws ValidationException {
+//    public ResponseEntity<FilesDto> findById(@PathVariable("id") Long id) throws ValidationException {
         log.info("Handling find File by id:{}", id);
         try {
             return ResponseEntity.ok(filesService.findById(id));
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

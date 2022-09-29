@@ -3,10 +3,17 @@ package com.itea.messenger.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.itea.messenger.type.FileTypes;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class MessagesDto {
     private Long id;
     private Long chatId;
@@ -20,4 +27,16 @@ public class MessagesDto {
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dateTime;
     private List<StatusLinksDto> statuses;
+
+    public MessagesDto(Long chatId, Long userId, String text) {
+        this.chatId = chatId;
+        this.userId = userId;
+        this.messageText = text;
+        this.dateTime = LocalDateTime.now();
+        this.statuses = new ArrayList<>();
+    }
+
+    public FilesDto getFileDto() {
+        return new FilesDto(this.fileId, this.getFileName(), this.getFileType());
+    }
 }

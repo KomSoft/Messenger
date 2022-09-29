@@ -2,41 +2,66 @@ package com.itea.messenger.dto;
 
 import com.itea.messenger.type.FileTypes;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class FilesDto {
     private Long id;
     private String fileName;
     private FileTypes fileType;
 
-    private String getFileExt() {
-        int i = this.fileName.lastIndexOf('.');
-        return i > 0 ? this.fileName.substring(i+1) : "";
+    private static String getFileExt(String name) {
+        if (name == null) {
+            return "";
+        }
+        int i = name.lastIndexOf('.');
+        return i > 0 ? name.substring(i + 1) : "";
+    }
+
+    public static FileTypes determineFileType(String name) {
+        String fileExt = FilesDto.getFileExt(name);
+        if (fileExt.equalsIgnoreCase("wav") || fileExt.equalsIgnoreCase("mp3")) {
+            return FileTypes.SOUND;
+        }
+        if (fileExt.equalsIgnoreCase("jpg") || fileExt.equalsIgnoreCase("jpeg") ||
+                fileExt.equalsIgnoreCase("bmp") || fileExt.equalsIgnoreCase("gif") ||
+                fileExt.equalsIgnoreCase("png")) {
+            return FileTypes.IMAGE;
+        }
+        if (fileExt.equalsIgnoreCase("doc") || fileExt.equalsIgnoreCase("docx") ||
+                fileExt.equalsIgnoreCase("xls") || fileExt.equalsIgnoreCase("xlsx") ||
+                fileExt.equalsIgnoreCase("rtf")) {
+            return FileTypes.MSOFFICE_DOCUMENT;
+        }
+        if (fileExt.equalsIgnoreCase("pdf")) {
+            return FileTypes.ACROBAT_DOCUMENT;
+        }
+        return FileTypes.UNKNOWN;
     }
 
     public void setFileType() {
-        String fileExt = getFileExt();
-        this.fileType =  FileTypes.UNKNOWN;
-        if (fileExt.compareToIgnoreCase("wav") == 0 || fileExt.compareToIgnoreCase("mp3") == 0) {
-            this.fileType = FileTypes.SOUND;
-            return;
-        }
-        if (fileExt.compareToIgnoreCase("jpg") == 0 || fileExt.compareToIgnoreCase("jpeg") == 0 ||
-                fileExt.compareToIgnoreCase("bmp") == 0 || fileExt.compareToIgnoreCase("gif") == 0 ||
-                fileExt.compareToIgnoreCase("png") == 0 ) {
-            this.fileType = FileTypes.IMAGE;
-            return;
-        }
-        if (fileExt.compareToIgnoreCase("doc") == 0 || fileExt.compareToIgnoreCase("docx") == 0 ||
-                fileExt.compareToIgnoreCase("xls") == 0 || fileExt.compareToIgnoreCase("xlsx") == 0 ||
-                fileExt.compareToIgnoreCase("rtf") == 0 ) {
-            this.fileType = FileTypes.MSOFFICE_DOCUMENT;
-            return;
-        }
-        if (fileExt.compareToIgnoreCase("pdf") == 0 ) {
-            this.fileType = FileTypes.ACROBAT_DOCUMENT;
-            return;
-        }
+        this.fileType = FilesDto.determineFileType(FilesDto.getFileExt(this.getFileName()));
+    }
+
+    public void setFileType(FileTypes fileType) {
+        this.setFileType();
+//        or other method
+    }
+
+    public FilesDto (Long id, String fileName, FileTypes fileType) {
+        this.id = id;
+        this.fileName = fileName;
+        this.setFileType(fileType);
+    }
+
+    public FilesDto (Long id, String fileName) {
+        this.id = id;
+        this.fileName = fileName;
+        this.setFileType();
     }
 
 }

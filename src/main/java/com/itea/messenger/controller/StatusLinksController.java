@@ -24,24 +24,26 @@ public class StatusLinksController {
     private StatusLinksService statusLinksService;
 
     @GetMapping("{id}")
-    public ResponseEntity<StatusLinksDto> findById(@PathVariable("id") Long id) {
+    public ResponseEntity findById(@PathVariable("id") Long id) {
+//    public ResponseEntity<StatusLinksDto> findById(@PathVariable("id") Long id) {
         log.info("Handling find Status Link by id:{}", id);
         try {
             return ResponseEntity.ok(statusLinksService.findById(id));
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping("/message/{id}")
-    public ResponseEntity<List<StatusLinksDto>> findByMessageId(@PathVariable("id") Long messageId) {
+    public ResponseEntity findByMessageId(@PathVariable("id") Long messageId) {
+//    public ResponseEntity<List<StatusLinksDto>> findByMessageId(@PathVariable("id") Long messageId) {
         log.info("Handling find Status Links by messageId:{}", messageId);
         try {
             return ResponseEntity.ok(statusLinksService.findByMessageId(messageId));
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

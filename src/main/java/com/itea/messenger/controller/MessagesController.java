@@ -29,58 +29,73 @@ public class MessagesController {
     private MessagesService messagesService;
 
     @PostMapping
-    public ResponseEntity<MessagesDto> saveMessage(@RequestBody MessagesDto messageDto) {
+    public ResponseEntity saveMessage(@RequestBody MessagesDto messageDto) {
+//    public ResponseEntity<MessagesDto> saveMessage(@RequestBody MessagesDto messageDto) {
         log.info("Handling save Message: {}", messageDto);
         try {
             return ResponseEntity.ok(messagesService.saveMessage(messageDto));
         } catch (ValidationException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/user/{userId}")
+    public ResponseEntity editMessage(@RequestBody MessagesDto messageDto, @PathVariable("userId") Long userId) {
+        log.info("Handling edit Message: {} from User id:{}", messageDto, userId);
+        try {
+            return ResponseEntity.ok(messagesService.editMessage(messageDto, userId));
+        } catch (ValidationException | NotFoundException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<MessagesDto> getById(@PathVariable("id") Long messageId) {
+    public ResponseEntity getById(@PathVariable("id") Long messageId) {
+//    public ResponseEntity<MessagesDto> getById(@PathVariable("id") Long messageId) {
         log.info("Handling get Message by id:{}", messageId);
         try {
             return ResponseEntity.ok(messagesService.getById(messageId));
         } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping("/chat/{chatId}")
-    public ResponseEntity<List<MessagesDto>> getAllMessagesByChatId(@PathVariable("chatId") Long chatId) {
+    public ResponseEntity getAllMessagesByChatId(@PathVariable("chatId") Long chatId) {
+//    public ResponseEntity<List<MessagesDto>> getAllMessagesByChatId(@PathVariable("chatId") Long chatId) {
         log.info("Handling get All Messages by chatId:{}", chatId);
         try {
             return ResponseEntity.ok(messagesService.getAllMessagesByChatId(chatId));
-        } catch (Exception e) {
+        } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping("/chat/{chatId}/user/{userId}")
-    public ResponseEntity<List<MessagesDto>> getMessagesForUserByChatId(@PathVariable("chatId") Long chatId, @PathVariable("userId") Long userId) {
+    public ResponseEntity getMessagesForUserByChatId(@PathVariable("chatId") Long chatId, @PathVariable("userId") Long userId) {
+//    public ResponseEntity<List<MessagesDto>> getMessagesForUserByChatId(@PathVariable("chatId") Long chatId, @PathVariable("userId") Long userId) {
         log.info("Handling get messages for User id:{} by chatId:{}", userId, chatId);
         try {
             return ResponseEntity.ok(messagesService.getMessagesForUserByChatId(chatId, userId));
-        } catch (Exception e) {
+        } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity deleteMessage(@PathVariable("id") Long messageId) {
+    @DeleteMapping("{id}/user/{userId}")
+    public ResponseEntity deleteMessage(@PathVariable("id") Long messageId, @PathVariable("userId") Long userId) {
         log.info("Handling delete Message by id:{}", messageId);
         try {
-            messagesService.deleteMessage(messageId);
+            messagesService.deleteMessage(messageId, userId);
             return ResponseEntity.ok().build();
-        } catch (EmptyResultDataAccessException | ValidationException e) {
+        } catch (NotFoundException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Message with id:" + messageId + " doesn't exists");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

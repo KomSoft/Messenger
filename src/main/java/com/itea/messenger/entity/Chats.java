@@ -37,16 +37,6 @@ public class Chats {
     public void addMessage(Messages message) {
         chatMessages.add(message);
         message.setChat(this);
-}
-
-    public void deleteMessage(Messages message) {
-//  TODO - write logic
-        //        messages.remove(message);    message.setUser(null);
-    }
-
-    public void editMessage(Messages message) {
-//  TODO - write logic
-        //        messages.remove(message);    message.setUser(null);
     }
 
     public void addUser(Users user) {

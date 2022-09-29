@@ -15,6 +15,8 @@ public interface ChatsUsersLinksRepository extends JpaRepository<ChatsUsersLinks
             "LEFT OUTER JOIN Files f ON u.avatar=f.id WHERE link.chatId=?1")
     List<UsersInfo> getUsersByChatId(Long chatId);
 
+//    List<Users> getUsersByChatId(Long chatId);
+
     @Query("SELECT chat.id AS id, chat.name AS name, chat.description AS description, chat.chatType AS chatType " +
             "FROM Chats chat, ChatsUsersLinks link " +
             "WHERE chat.id=link.chatId AND link.userId=?1")
@@ -23,4 +25,6 @@ public interface ChatsUsersLinksRepository extends JpaRepository<ChatsUsersLinks
     ChatsUsersLinks findByChatIdAndUserId(Long chatId, Long userId);
 
     void deleteAllByChatId(Long chatId);
+    void deleteAllByUserId(Long userId);
+    void deleteByChatIdAndUserId(Long chatId, Long userId);
 }

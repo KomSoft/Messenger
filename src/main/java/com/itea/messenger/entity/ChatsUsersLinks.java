@@ -24,11 +24,11 @@ public class ChatsUsersLinks {
     private Long userId;
 
     @Column(name = "join_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @DateTimeFormat(pattern = "dd-MM-yyyy'T'HH:mm:ss")
     private LocalDateTime joinDate;
 
     @Column(name = "view_date")
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @DateTimeFormat(pattern = "dd-MM-yyyy'T'HH:mm:ss")
     private LocalDateTime viewDate;
 
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -35,13 +36,14 @@ public class Messages {
     private Files file;
 
     @Column(name = "date_time", nullable = false)
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime dateTime;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<StatusLinks> messageStatuses;
 
 
-    public void setStatus(StatusLinks status) {
+    public void addStatus(StatusLinks status) {
         messageStatuses.add(status);
         status.setMessage(this);
     }
@@ -69,7 +71,7 @@ public class Messages {
             this.file = file;
             file.setMessage(this);
         }
-}
+    }
 
     public void removeAttachment(Files file) {
         this.file = null;

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Project ITEA-2022 Messenger</title>
+<link rel="stylesheet" href="styles.css">
+<script src="common.js" async=""></script> 
+<script src="chat_select.js" async=""></script>
+<script src='messages.js'></script>
+</head>
+
+<body>
+<div id="messenger_menu">
+   <button onclick="getUsersList()">Get user to login</button>&nbsp;&nbsp;&nbsp;(then select user & chat)<br>
+    <label class="label1" for="users_list" >Please select user:</label>
+    <select name="users_list" id="users_list" onchange="getChatsList(this.value)">
+         <!-- getUsersList() puts options with chats here  -->
+    </select><br>
+    <label class="label1" for="chats_list" >Please select chat:</label>
+    <select name="chats_list" id="chats_list" onchange="chatSelected()">
+         <!-- dynamically put chats list here when users_list.onSelect() called  -->
+    </select><br>
+    
+    <button id="show_chat" onclick="getChatMessages()">Go chats!</button>    
+
+</div>
+
+<hr width=600>
+<div id="chat_frame"></div>
+<hr width=600>
+<div id="debug_frame"></div>
+
+<script>
+
+   function getUsersList() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      document.getElementById("show_chat").disabled = true;
+      var list = document.getElementById("users_list");
+      while (list.childNodes.length > 0) {
+         list.removeChild(list.childNodes[list.childNodes.length-1]);
+      }
+      var data = mess_getUsersList();
+      var option = document.createElement("option");
+      option.value = -1;
+      option.text = ' ';
+      list.add(option);
+      for (i = 0; i < data.length; i++) {
+         option = document.createElement("option");
+         option.value = data[i][0];
+         option.text = data[i][1];
+         list.add(option);
+      }
+      console.log(list);
+   }
+   
+   function getChatsList(id) {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      document.getElementById("show_chat").disabled = true;
+      var list = document.getElementById("chats_list");
+      while (list.childNodes.length > 0) {
+         list.removeChild(list.childNodes[list.childNodes.length-1]);
+      }
+      var data = mess_getChatListForUser(parseInt(id));
+      var option = document.createElement("option");
+      option.value = -1;
+      option.text = ' ';
+      list.add(option);
+      for (i = 0; i < data.length; i++) {
+         option = document.createElement("option");
+         option.value = data[i][0];
+         option.text = data[i][1];
+         list.add(option);
+      }
+      console.log(list);
+   }
+   
+   function chatSelected() {
+      document.getElementById("show_chat").disabled = false;
+   
+   }
+
+   function getChatMessages() {
+      document.getElementById("debug_frame").innerHTML = ' ';
+      chat_id = parseInt(document.getElementById("chats_list").value);
+      user_id = parseInt(document.getElementById("users_list").value);
+      mess_getChatMessages(chat_id, user_id);
+   }
+
+</script>
+
+</body>
+</html>
