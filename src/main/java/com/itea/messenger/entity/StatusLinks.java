@@ -1,13 +1,15 @@
 package com.itea.messenger.entity;
 
 import com.itea.messenger.type.MessageStatus;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "status_links")
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 public class StatusLinks {
 
@@ -19,10 +21,14 @@ public class StatusLinks {
     @Column(name = "status_type")
     private MessageStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Users user;
+    @Column(name = "user_id")
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Messages message;
+    @Column(name = "message_id")
+    private Long messageId;
 
+    public StatusLinks(Long userId, MessageStatus status) {
+        this.userId = userId;
+        this.status = status;
+    }
 }

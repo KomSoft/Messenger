@@ -55,10 +55,12 @@ public class MessagesConverter {
     public MessagesDto messagesToDto(Messages message) {
         MessagesDto messageDto = new MessagesDto();
         messageDto.setId(message.getId());
-        messageDto.setChatId(message.getChat().getId());
-        messageDto.setChatName(message.getChat().getName());
-        messageDto.setUserId(message.getUser().getId());
-        messageDto.setUserName(message.getUser().getName());
+        messageDto.setChatId(message.getChatId());
+//        messageDto.setChatId(message.getChat().getId());
+//        messageDto.setChatName(message.getChat().getName());
+        messageDto.setUserId(message.getUserId());
+//        messageDto.setUserId(message.getUser().getId());
+//        messageDto.setUserName(message.getUser().getName());
         messageDto.setMessageText(message.getMessageText());
         if (message.getFile() != null) {
             messageDto.setFileId(message.getFile().getId());
@@ -81,8 +83,10 @@ public class MessagesConverter {
                 .orElseThrow(() -> new ValidationException("[MessageDto] User id:" + messageDto.getUserId() + " not found"));
         Messages message = new Messages();
         message.setId(messageDto.getId());
-        message.setChat(chat);
-        message.setUser(user);
+        message.setUserId(messageDto.getUserId());
+        message.setChatId(messageDto.getChatId());
+//        message.setChat(chat);
+//        message.setUser(user);
         message.setMessageText(messageDto.getMessageText());
         if (messageDto.getFileId() == null) {
             message.setFile(null);

@@ -13,8 +13,4 @@ public class UsersDto {
     private String avatarName;
     private int age;
 
-    public FilesDto getFileDto() {
-        return new FilesDto(this.avatarId, this.avatarName);
-    }
-
 }

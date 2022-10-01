@@ -90,12 +90,9 @@ public class UsersController {
         try {
             usersService.deleteUser(userId);
             return ResponseEntity.ok().build();
-        } catch(NotFoundException e) {
-            log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User id:" + userId + " doesn't exist");
         } catch (EmptyResultDataAccessException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while deleting User id:" + userId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User id:" + userId + " doesn't exist");
         }
     }
 

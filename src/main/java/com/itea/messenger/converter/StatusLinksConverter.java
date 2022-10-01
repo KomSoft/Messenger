@@ -10,9 +10,8 @@ public class StatusLinksConverter {
     public StatusLinksDto statusLinksToDto(StatusLinks statusLinks) {
         StatusLinksDto statusLinksDto = new StatusLinksDto();
         statusLinksDto.setId(statusLinks.getId());
-        statusLinksDto.setMessageId(statusLinks.getMessage().getId());
-        statusLinksDto.setUserId(statusLinks.getUser().getId());
-        statusLinksDto.setUserName(statusLinks.getUser().getName());
+        statusLinksDto.setMessageId(statusLinks.getMessageId());
+        statusLinksDto.setUserId(statusLinks.getUserId());
         statusLinksDto.setStatus(statusLinks.getStatus());
         return statusLinksDto;
     }

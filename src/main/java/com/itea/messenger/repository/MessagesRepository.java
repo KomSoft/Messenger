@@ -17,8 +17,4 @@ public interface MessagesRepository extends JpaRepository<Messages, Long> {
     void deleteAllByUserId(Long userId);
     void deleteAllByChatIdAndUserId(Long chatId, Long userId);
 
-    @Query(nativeQuery = true, value = "UPDATE messages SET message_text = newMessage.messageText, SET file_id = newMessage.Files.getId() " +
-            "WHERE id = newMessage.getId();")
-    void updateEditedMessage(Messages newMessage);
-
 }

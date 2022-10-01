@@ -74,20 +74,15 @@
 </form>
 
 <br><hr align=left width=1000>
-<div id="user_list"></div> 
+<div id="result_div"></div> 
 <br><hr align=left width=1000>
-<div id="debug_frame"></div>
+<div id="debug_div"></div>
 
 <script>
 var table_header = '<table><tr><th width=50>id</th><th width=100>name</th><th width=50>age</th>' + 
       '<th width=100>login</th><th width=100>password</th>' + 
       '<th width=50>avatarId</th><th width=100>avatarFile</th><th width=100>action</th></tr>';
 var table_footer = '</table>';
-
-function writeResult(result, debug) {
-   if (result != '') document.getElementById("user_list").innerHTML = result;
-   if (debug != '') document.getElementById("debug_frame").innerHTML = debug;
-}
 
 function fillUserRow(user, lastColText) {
    if (lastColText == null && lastColText == '') { lastColText = '&nbsp;'; }

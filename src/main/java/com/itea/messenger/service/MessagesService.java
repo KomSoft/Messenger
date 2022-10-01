@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface MessagesService {
 
-    MessagesDto saveMessage(MessagesDto messageDto) throws ValidationException;
+    MessagesDto saveMessage(MessagesDto messageDto) throws ValidationException, NotFoundException;
     MessagesDto getById(Long messageId) throws NotFoundException;
     List<MessagesDto> getAllMessagesByChatId(Long chatId) throws NotFoundException;
     List<MessagesDto> getMessagesForUserByChatId(Long chatId, Long userId) throws NotFoundException;

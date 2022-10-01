@@ -89,11 +89,6 @@ var chat_table_footer = '</table>';
 var userList = document.getElementById("users_list");
 var chatList = document.getElementById("chats_list");
 
-function writeResult(result, debug) {
-   if (result != '') document.getElementById("result_div").innerHTML = result;
-   if (debug != '') document.getElementById("debug_div").innerHTML = debug;
-}
-
 function fillChatRow(chat, lastColText) {
    if (lastColText == null || lastColText == '') { lastColText = '&nbsp;'; }
    res = '<tr><td>' + chat.id + '</td><td>' + chat.name + '</td><td>' + chat.description;

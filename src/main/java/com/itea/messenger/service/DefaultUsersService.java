@@ -2,6 +2,7 @@ package com.itea.messenger.service;
 
 import com.itea.messenger.converter.FilesConverter;
 import com.itea.messenger.converter.UsersConverter;
+import com.itea.messenger.dto.FilesDto;
 import com.itea.messenger.dto.UsersDto;
 import com.itea.messenger.entity.Chats;
 import com.itea.messenger.entity.Files;
@@ -48,8 +49,8 @@ public class DefaultUsersService implements UsersService{
         if (user1 != null) {
             throw new ValidationException(MessageFormat.format("User with login \"{0}\" already exists", user.getLogin()));
         }
-        if (usersDto.getAvatarName() != null) {
-            Files avatar = filesConverter.fileEntityFromDto(usersDto.getFileDto());
+        if (usersDto.getAvatarName() != null && !usersDto.getAvatarName().isEmpty()) {
+            Files avatar = filesConverter.fileEntityFromDto(new FilesDto(usersDto.getAvatarId(), usersDto.getAvatarName()));
             filesRepository.save(avatar);
             user.setAvatar(avatar);
         }
@@ -58,12 +59,11 @@ public class DefaultUsersService implements UsersService{
 
     @Transactional
     @Override
-    public void deleteUser(Long id) throws EmptyResultDataAccessException, NotFoundException {
-        Users user = usersRepository.findById(id).orElseThrow(() -> new NotFoundException("User id:" + id + " not found!"));
-        chatsUsersLinksRepository.deleteAllByUserId(id);
-//      We delete all messages for this user. There will delete statuses for these messages
+    public void deleteUser(Long id) throws EmptyResultDataAccessException {
         messagesRepository.deleteAllByUserId(id);
+//        delete cascade automatic
 //        statusLinksRepository.deleteAllByUserId(id);
+//        chatsUsersLinksRepository.deleteAllByUserId(id);
         usersRepository.deleteById(id);
     }
 

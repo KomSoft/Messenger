@@ -9,6 +9,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
@@ -32,7 +33,7 @@ public class Users {
     @Column(unique = true, length = 30)
     private String login;
 
-    @Min(value = 10, message = "Age should not be less than "+ MIN_AGE)
+    @Min(value = 10, message = "Age should not be less than " + MIN_AGE)
     private int age;
 
     @Column(columnDefinition = "VARCHAR(30) DEFAULT 'USER'")
@@ -43,16 +44,21 @@ public class Users {
             inverseJoinColumns = @JoinColumn(name = "chat_id"))
     public Set<Chats> chats;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Messages> messages;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<StatusLinks> statusLinks;
 
+/*
     public void addMessage(Messages message) {
       messages.add(message);
       message.setUser(this);
     }
+*/
 
     public void setAvatar(Files file) {
         if (file != null) {

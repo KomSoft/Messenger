@@ -33,8 +33,8 @@ public class MessagesController {
 //    public ResponseEntity<MessagesDto> saveMessage(@RequestBody MessagesDto messageDto) {
         log.info("Handling save Message: {}", messageDto);
         try {
-            return ResponseEntity.ok(messagesService.saveMessage(messageDto));
-        } catch (ValidationException e) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(messagesService.saveMessage(messageDto));
+        } catch (ValidationException | NotFoundException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -90,7 +90,7 @@ public class MessagesController {
     @DeleteMapping("{id}/user/{userId}")
     public ResponseEntity deleteMessage(@PathVariable("id") Long messageId, @PathVariable("userId") Long userId) {
         log.info("Handling delete Message by id:{}", messageId);
-        try {
+            try {
             messagesService.deleteMessage(messageId, userId);
             return ResponseEntity.ok().build();
         } catch (NotFoundException e) {

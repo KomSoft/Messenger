@@ -26,7 +26,9 @@ public class Chats {
     @Enumerated(EnumType.STRING)
     private ChatTypeEnum chatType;
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "chat_id")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<Messages> chatMessages;
 
@@ -36,7 +38,7 @@ public class Chats {
 
     public void addMessage(Messages message) {
         chatMessages.add(message);
-        message.setChat(this);
+//        message.setChat(this);
     }
 
     public void addUser(Users user) {

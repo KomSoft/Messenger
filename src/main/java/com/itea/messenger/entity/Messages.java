@@ -1,7 +1,6 @@
 package com.itea.messenger.entity;
 
 import com.itea.messenger.type.MessageStatus;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,11 +21,19 @@ public class Messages {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+/*
     @ManyToOne(fetch = FetchType.LAZY)
     private Chats chat;
+*/
+    @Column(name = "chat_id")
+    private Long chatId;
 
+/*
     @ManyToOne(fetch = FetchType.LAZY)
     private Users user;
+*/
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(name = "message_text", nullable = false, length = 255)
     private String messageText;
@@ -39,23 +46,24 @@ public class Messages {
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime dateTime;
 
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "message_id")
     private List<StatusLinks> messageStatuses;
 
 
     public void addStatus(StatusLinks status) {
         messageStatuses.add(status);
-        status.setMessage(this);
+//        status.setMessage(this);
     }
 
     public void removeStatus(StatusLinks status) {
         messageStatuses.remove(status);
-        status.setMessage(null);
+//        status.setMessage(null);
     }
 
     public MessageStatus getStatusByUserId(Long userId) {
         for (StatusLinks status : messageStatuses) {
-            if (status.getUser().getId().equals(userId)) {
+            if (status.getUserId().equals(userId)) {
                 return status.getStatus();
             }
         }
@@ -63,7 +71,7 @@ public class Messages {
     }
 
     public MessageStatus getStatusForAuthor() {
-        return getStatusByUserId(this.getUser().getId());
+        return getStatusByUserId(this.getUserId());
     }
 
     public void setAttachment(Files file) {
