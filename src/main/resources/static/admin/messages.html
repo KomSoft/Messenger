@@ -83,9 +83,9 @@
 
 <script>
 
-var table_header = '<table><tr><th>messageId</th><th>chatId</th><th>userId</th>' + 
+const table_header = '<table><tr><th>messageId</th><th>chatId</th><th>userId</th>' + 
 		   '<th>fileId</th><th>dateTime</th><th width="400">messageText</th></tr>';
-var table_footer = '</table>';
+const table_footer = '</table>';
 
 function fillMessageRow(message) {
    res = '<tr><td>' + message.id + '</td><td>' + message.chatId + '</td><td>' + message.userId;
@@ -105,25 +105,25 @@ function writeOneMessage(text) {
 
 function findMessageById() {
    writeResult('', ' ');
-   var id = parseInt(document.getElementById("message_id").value);
+   let id = parseInt(document.getElementById("message_id").value);
    message = getMessageById(id);
    writeOneMessage(message);
 }
 
 function getMessageById(message_id) {
-   var xhttp = new XMLHttpRequest();
-   var request = host_messages + '/' + message_id;
-   var debug = '[debug] Request: ' + request;
+   let xhttp = new XMLHttpRequest();
+   let request = host_messages + '/' + message_id;
+   let debug = '[debug] Request: ' + request;
    xhttp.open('GET', request, false);
    xhttp.send();
    debug += '<br>[debug] Response status: ' + xhttp.status + '  ' + xhttp.responseText;
-   var message;
+   let message;
    if (xhttp.status == 200 && xhttp.responseText != '') {
       message = JSON.parse(xhttp.responseText);  
       debug += '<br>[debug] Response: ' + xhttp.responseText;
       console.log(message);
    } else {
-      var err = '{"error":"Error. Status: ' + xhttp.status + '  ' + xhttp.responseText + '"}';
+      let err = '{"error":"Error. Status: ' + xhttp.status + '  ' + xhttp.responseText + '"}';
       message = JSON.parse(err);
    }
    writeResult('', debug);
@@ -132,20 +132,20 @@ function getMessageById(message_id) {
 
 function findAllMessagesByChatId() {
    writeResult('', ' ');
-   var chat_id = parseInt(document.getElementById("bychat_id").value);
-   var xhttp = new XMLHttpRequest();
-   var request = host_messages + '/chat/' + chat_id;
-   var debug = '[debug] Request: ' + request;
+   let chat_id = parseInt(document.getElementById("bychat_id").value);
+   let xhttp = new XMLHttpRequest();
+   let request = host_messages + '/chat/' + chat_id;
+   let debug = '[debug] Request: ' + request;
    xhttp.open('GET', request , true);
    xhttp.onreadystatechange = function () {
       if (xhttp.readyState != 4) return;
-      var html;
+      let html;
       if (xhttp.status == 200) {
          debug += '<br>[debug] Response: ' + xhttp.responseText;
          html = table_header;
-         var messages = JSON.parse(xhttp.responseText);  
-         for (var i = 0; i < messages.length; i++) {
-            var message = messages[i];
+         let messages = JSON.parse(xhttp.responseText);  
+         for (let i = 0; i < messages.length; i++) {
+            let message = messages[i];
             console.log(message);
             html += fillMessageRow(message);
          }
@@ -164,23 +164,23 @@ function findAllMessagesByChatId() {
 
 function deleteMessageById() {
    writeResult('', ' ');
-   var mess_id = parseInt(document.getElementById("message_del_id").value);
-   var user_id = parseInt(document.getElementById("message_del_user_id").value);
+   let mess_id = parseInt(document.getElementById("message_del_id").value);
+   let user_id = parseInt(document.getElementById("message_del_user_id").value);
    writeResult(common_deleteMessageById(mess_id, user_id), '');
 }
 
 function getChatsList() {
    writeResult('', ' ');
-   var list = document.getElementById("chats_list");
+   let list = document.getElementById("chats_list");
    while (list.childNodes.length > 0) {
       list.removeChild(list.childNodes[list.childNodes.length-1]);
    }
-   var data = common_getAllChatsList();
-   var option = document.createElement("option");
+   let data = common_getAllChatsList();
+   let option = document.createElement("option");
    option.value = -1;
    option.text = ' ';
    list.add(option);
-   for (i = 0; i < data.length; i++) {
+   for (let i = 0; i < data.length; i++) {
       option = document.createElement("option");
       option.value = data[i][0];
       option.text = data[i][1];
@@ -190,18 +190,18 @@ function getChatsList() {
 }
 
 function getUsersListByChatId(id) {
-   var xhttp = new XMLHttpRequest();
-   var request = host_chats_users + '/chat/' + id;
-   var debug = '[debug] Request: ' + request;
+   let xhttp = new XMLHttpRequest();
+   let request = host_chats_users + '/chat/' + id;
+   let debug = '[debug] Request: ' + request;
    xhttp.open('GET', request , false);
    xhttp.send();
    debug = debug + '<br>[debug] Response status: ' + xhttp.status;
- 	var result = new Array;
+ 	let result = new Array;
    if (xhttp.status == 200) {
       debug += '<br>[debug] Response: ' + xhttp.responseText;
-      var users = JSON.parse(xhttp.responseText); 
-      for (var i = 0; i < users.length; i++) {
-         var elem = new Array(2);
+      let users = JSON.parse(xhttp.responseText); 
+      for (let i = 0; i < users.length; i++) {
+         let elem = new Array(2);
          elem[0] = users[i].id;
          elem[1] = users[i].name;
          result.push(elem);
@@ -213,13 +213,13 @@ function getUsersListByChatId(id) {
 
 function getUsersList(id) {
    writeResult('', ' ');
-   var list = document.getElementById("users_list");
+   let list = document.getElementById("users_list");
    while (list.childNodes.length > 0) {
       list.removeChild(list.childNodes[list.childNodes.length-1]);
    }
-   var data = getUsersListByChatId(parseInt(id));
+   let data = getUsersListByChatId(parseInt(id));
    for (i = 0; i < data.length; i++) {
-      var option = document.createElement("option");
+      let option = document.createElement("option");
       option.value = data[i][0];
       option.text = data[i][1];
       list.add(option);
@@ -240,8 +240,8 @@ function editMessageReset() {
 // TODO - finish and check
 function findMessageToEditById() {
    editMessageReset();
-      var param = document.getElementById("message_edit_id").value;
-      var message = messages_getMessageDtoById(parseInt(param));
+      let param = document.getElementById("message_edit_id").value;
+      let message = messages_getMessageDtoById(parseInt(param));
       if (message == null) {
          document.getElementById("message_edit_label").innerHTML = 'message id:' + param + ' not found';
          return;
@@ -266,11 +266,11 @@ alert('editMessage is under construction');
 
 function createMessage() {
    editMessageReset();
-   var file_name = '';
+   let file_name = '';
    if (document.getElementById("attached_file").files.length > 0) {
          file_name = document.getElementById("attached_file").files[0].name;
    }
-   var message = common_createMessage(parseInt(document.getElementById("chats_list").value), 
+   let message = common_createMessage(parseInt(document.getElementById("chats_list").value), 
 	         parseInt(document.getElementById("users_list").value), 
             file_name, 
 				document.getElementById("message_text").value); 

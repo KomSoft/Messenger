@@ -1,7 +1,6 @@
 package com.itea.messenger.dto;
 
 import com.itea.messenger.type.FileTypes;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,7 +43,7 @@ public class FilesDto {
     }
 
     public void setFileType() {
-        this.fileType = FilesDto.determineFileType(FilesDto.getFileExt(this.getFileName()));
+        this.fileType = FilesDto.determineFileType(this.getFileName());
     }
 
     public void setFileType(FileTypes fileType) {

@@ -17,7 +17,7 @@ public class MessagesDto {
     private Long chatId;
     private String chatName;
     private Long userId;
-    private String userName;
+//    private String userName;
     private String messageText;
     private Long fileId;
     private String fileName;

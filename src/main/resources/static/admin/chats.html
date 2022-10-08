@@ -51,8 +51,6 @@
     </select>
     <br>
     <button id="add_user_to_chat_button" onclick="addUserToChat()" disabled="true">Add</button>
-    
-      <font color=#FF0000>Under construction</font>    
    </fieldset>
 </form>
 
@@ -83,15 +81,15 @@
 <div id="debug_div"></div>
 
 <script>
-var chat_table_header = '<table><tr><th width=50>id</th><th width=100>name</th><th width=150>description</th>' + 
+const chat_table_header = '<table><tr><th width=50>id</th><th width=100>name</th><th width=150>description</th>' + 
 							'<th width=100>chatType</th><th width=100>action</th></tr>';
-var chat_table_footer = '</table>';
+const chat_table_footer = '</table>';
 var userList = document.getElementById("users_list");
 var chatList = document.getElementById("chats_list");
 
 function fillChatRow(chat, lastColText) {
    if (lastColText == null || lastColText == '') { lastColText = '&nbsp;'; }
-   res = '<tr><td>' + chat.id + '</td><td>' + chat.name + '</td><td>' + chat.description;
+   let res = '<tr><td>' + chat.id + '</td><td>' + chat.name + '</td><td>' + chat.description;
 	res += '</td><td>' + chat.chatType + '</td>';
 	res += '<td>' + lastColText + '</td></tr>';
 	res += '</tr>';
@@ -111,12 +109,12 @@ function fill_select(element, data) {
    while (element.childNodes.length > 0) {
       element.removeChild(element.childNodes[element.childNodes.length-1]);
    }
-   var option = document.createElement("option");
+   let option = document.createElement("option");
    option.value = -1;
    option.text = ' ';
    element.add(option);
-   for (var i = 0; i < data.length; i++) {
-      var option = document.createElement("option");
+   for (let i = 0; i < data.length; i++) {
+      option = document.createElement("option");
       option.value = data[i][0];
       option.text = data[i][1];
       element.add(option);
@@ -131,17 +129,17 @@ function getUsersAndChats() {
 
 function findChatById() {
    writeResult('', ' ');
-   var id = parseInt(document.getElementById("chat_id").value);
+   let id = parseInt(document.getElementById("chat_id").value);
    var xhttp = new XMLHttpRequest();
-   var request = host_chats + '/' + id;
-   var debug = '[debug] Request: ' + request;
+   let request = host_chats + '/' + id;
+   let debug = '[debug] Request: ' + request;
    xhttp.open('GET', request, true);
    xhttp.onreadystatechange = function () {
       if (xhttp.readyState != 4) return;
-      var html = '';
+      let html = '';
       debug += '<br>[debug] Response status: ' + xhttp.status + '  ' + xhttp.responseText;
       if (xhttp.status == 200) {
-         var chat = JSON.parse(xhttp.responseText);  
+         let chat = JSON.parse(xhttp.responseText);  
          html = chat_table_header + fillChatRow(chat, getDeleteButton(id)) + chat_table_footer;
       }	else {
          html = 'Error. ' + xhttp.responseText;
@@ -154,17 +152,17 @@ function findChatById() {
 function findAllChats() {
    writeResult('', ' ');
    var xhttp = new XMLHttpRequest();
-   var request = host_chats;
-   var debug = '[debug] Request: ' + request;
+   let request = host_chats;
+   let debug = '[debug] Request: ' + request;
    xhttp.open('GET', request , true);
    xhttp.onreadystatechange = function () {
       if (xhttp.readyState != 4) return;
-      var html = '';
+      let html = '';
       debug += '<br>[debug] Response status: ' + xhttp.status + '  ' + xhttp.responseText;
       if (xhttp.status == 200) {
-         var chats = JSON.parse(xhttp.responseText);
+         let chats = JSON.parse(xhttp.responseText);
          html = chat_table_header;
-         for (var i = 0; i < chats.length; i++) {
+         for (let i = 0; i < chats.length; i++) {
             html += fillChatRow(chats[i], getDeleteButton(chats[i].id));
          }
          html += chat_table_footer;
@@ -179,16 +177,16 @@ function findAllChats() {
 function getChatTypes() {
    writeResult('', ' ');
    var xhttp = new XMLHttpRequest();
-   var request = host_chats + '/types';
-   var debug = '[debug] Request: ' + request;
+   let request = host_chats + '/types';
+   let debug = '[debug] Request: ' + request;
    xhttp.open('GET', request, true);
    xhttp.onreadystatechange = function () {
       if (xhttp.readyState != 4) return;
-      var select_body = '';    
+      let select_body = '';    
       debug += '<br>Response status: ' + xhttp.status + '  ' + xhttp.responseText;
       if (xhttp.status == 200) {
-         var types = JSON.parse(xhttp.responseText);
-         for (var i = 0; i < types.length; i++) {
+         let types = JSON.parse(xhttp.responseText);
+         for (let i = 0; i < types.length; i++) {
             select_body += '<option value="' + i + '">' + types[i] + '</option>';
          }
       }
@@ -204,12 +202,12 @@ function deleteChat(id) {
       return; 
    } 
    var xhttp = new XMLHttpRequest();
-   var request = host_chats + '/' + id;
-   var debug = '[debug] Request: ' + request;
+   let request = host_chats + '/' + id;
+   let debug = '[debug] Request: ' + request;
    xhttp.open("DELETE", request, true);
    xhttp.onreadystatechange = function () {
       if (xhttp.readyState != 4) return;
-      var html;
+      let html;
       debug += '<br>[debug] Response status: ' + xhttp.status + '  ' + xhttp.responseText;
       if (xhttp.status == 200) {
          html = 'Delete status: Ok';
@@ -228,51 +226,53 @@ function deleteChatById() {
 
 function addUserToChat() {
    writeResult('', ' ');
-   var chat_name = chatList.options[chatList.selectedIndex].text;
-   var user_name = userList.options[userList.selectedIndex].text;
+   let chat_name = chatList.options[chatList.selectedIndex].text;
+   let user_name = userList.options[userList.selectedIndex].text;
    console.log(chat_name, user_name);
    if (!confirm ('Are you sure to add user "' + user_name + '" to chat "' + chat_name + '"?')) { 
       writeResult('Canceled', '');
       return; 
    } 
-   var chat_id = chatList.options[chatList.selectedIndex].value;
-   var user_id = userList.options[userList.selectedIndex].value;
+   let chat_id = chatList.options[chatList.selectedIndex].value;
+   let user_id = userList.options[userList.selectedIndex].value;
    var xhttp = new XMLHttpRequest(); 
-   var request = host_chats + '/member?chatId=' + chat_id + '&userId=' + user_id;
-   xhttp.open("POST", request, false);
-   var debug = '[debug] POST: ' + request;
+   let request = host_chats + '/member?chatId=' + chat_id + '&userId=' + user_id;
+   let debug = '[debug] POST: ' + request;
+   xhttp.open("POST", request, true);
+   xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      debug += '<br>[debug] Response status: ' + xhttp.status + '  ' + xhttp.responseText;
+      let html;
+      if (xhttp.status == 201 ) {
+         html = 'Success. ' + xhttp.responseText;
+      } else { 
+         html = 'Error. ' + xhttp.responseText;
+      }
+      writeResult(html, debug);
+   }  
    xhttp.send();
-   debug += '<br>[debug] Response status: ' + xhttp.status + '  ' + xhttp.responseText;
-   var html;
-   if (xhttp.status == 201 ) {
-      html = 'Success. ' + xhttp.responseText;
-   } else { 
-      html = 'Error. ' + xhttp.responseText;
-   }
-   writeResult(html, debug);
 }
-
 
 function createChat() {
    writeResult('', ' ');
-   var name = document.getElementById("chat_name").value;
-   var description = document.getElementById("chat_description").value;
-   var type_elem = document.getElementById("chat_type_list");
-   var chatType = type_elem.options[type_elem.selectedIndex].text;
+   let name = document.getElementById("chat_name").value;
+   let description = document.getElementById("chat_description").value;
+   let type_elem = document.getElementById("chat_type_list");
+   let chatType = type_elem.options[type_elem.selectedIndex].text;
    if (!confirm ('Are you sure to create new Chat "' + name + '" (' + description + '), ' + chatType + '?')) { 
       document.getElementById("user_list").innerHTML = ' ';
       return; 
    } 
    var xhttp = new XMLHttpRequest(); 
-   var request = JSON.stringify({name: name, description: description, chatType: chatType});
+   let request = JSON.stringify({name: name, description: description, chatType: chatType});
    xhttp.open("POST", host_chats, false);
    xhttp.setRequestHeader("Content-Type", "application/json");
    xhttp.send(request);
-   var debug = '[debug] POST: ' + request;
+   let debug = '[debug] POST: ' + request;
    debug += '[debug] Response: ' + xhttp.responseText;
-   var html;
+   let html;
    if (xhttp.status == 201) {
-      var new_chat = JSON.parse(xhttp.responseText);  
+      let new_chat = JSON.parse(xhttp.responseText);  
       html = chat_table_header + fillChatRow(new_chat, getDeleteButton(new_chat.id)) + chat_table_footer;
    } else { 
       html = 'Error. ' + xhttp.responseText; 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.invoke.MethodHandles;
@@ -25,6 +26,7 @@ public class UsersController {
     private UsersService usersService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
 //    public ResponseEntity<UsersDto> saveUsers(@RequestBody UsersDto userDto) {
     public ResponseEntity saveUsers(@RequestBody UsersDto userDto) {
         log.info("Handling save User: {}", userDto);
@@ -48,6 +50,7 @@ public class UsersController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/login/{login}")
 //    public ResponseEntity<UsersDto> getByLogin(@PathVariable("login") String login) {
     public ResponseEntity getByLogin(@PathVariable("login") String login) {
@@ -61,6 +64,7 @@ public class UsersController {
     }
 
     @GetMapping("/name/{name}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity getByName(@PathVariable("name") String name) {
 //    public ResponseEntity<UsersDto> getByName(@PathVariable("name") String name) {
         log.info("Handling find User by name '{}'", name);
@@ -72,7 +76,19 @@ public class UsersController {
         }
     }
 
+    @GetMapping("/authorized")
+    public ResponseEntity getAuthorized() {
+        log.info("Handling getAuthorized user");
+        try {
+            return ResponseEntity.ok(usersService.getAuthorized());
+        } catch (NotFoundException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity findAll() {
 //    public ResponseEntity<List<UsersDto>> findAll() {
         log.info("Handling find all Users");
@@ -85,6 +101,7 @@ public class UsersController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity deleteUser(@PathVariable("id") Long userId) {
         log.info("Handling delete User by id:{}", userId);
         try {

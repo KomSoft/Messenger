@@ -13,5 +13,6 @@ public interface UsersService {
     UsersDto findById(Long id) throws NotFoundException;
     UsersDto findByLogin(String login) throws NotFoundException;
     UsersDto findByName(String name) throws NotFoundException;
+    UsersDto getAuthorized() throws NotFoundException;
     List<UsersDto> findAll() throws NotFoundException;
 }

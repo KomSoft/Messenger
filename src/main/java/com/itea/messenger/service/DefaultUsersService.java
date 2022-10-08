@@ -14,6 +14,7 @@ import com.itea.messenger.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,6 +88,19 @@ public class DefaultUsersService implements UsersService{
         Users user = usersRepository.findByName(name);
         if (user == null) {
             throw new NotFoundException(MessageFormat.format("User with name \"{0}\" not found", name));
+        }
+        return usersConverter.userToDto(user);
+    }
+
+    @Override
+    public UsersDto getAuthorized() throws NotFoundException {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (userLogin.equalsIgnoreCase("anonymousUser")) {
+            throw new NotFoundException("Not authorized user");
+        }
+        Users user = usersRepository.findByLogin(userLogin);
+        if (user == null) {
+            throw new NotFoundException(MessageFormat.format("Authorized User (login:{0}) not found", userLogin));
         }
         return usersConverter.userToDto(user);
     }

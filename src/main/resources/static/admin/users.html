@@ -236,7 +236,7 @@ function createUser() {
       var html;
       if (xhttp.status == 201) {
          var new_user = JSON.parse(xhttp.responseText); 
-         debug += '[debug] Response: ' + xhttp.responseText;
+         debug += '<br>[debug] Response: ' + xhttp.responseText;
          html = table_header + fillUserRow(new_user, getDeleteButton(new_user.id)) + table_footer;
       } else { 
          html = 'POST Status: ' + xhttp.status + '   ' + xhttp.responseText; 

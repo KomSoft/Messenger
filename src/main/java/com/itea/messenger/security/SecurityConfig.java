@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 //@EnableWebSecurity
 @EnableWebSecurity(debug = true)
-//@SecurityScheme(name="itea.messenger", scheme="basic", type= SecuritySchemeType.HTTP, in= SecuritySchemeIn.HEADER)
+@SecurityScheme(name="itea.messenger", scheme="basic", type= SecuritySchemeType.HTTP, in= SecuritySchemeIn.HEADER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] AUTH_WHITELIST = {

@@ -28,11 +28,13 @@ public class Files {
     @Column(name = "file_type")
     private FileTypes fileType;
 
+/*
     @OneToOne(mappedBy = "file", orphanRemoval = true)
     private Messages message;
 
     @OneToOne(mappedBy = "avatar", orphanRemoval = true)
     private Users user;
+*/
 
     public Files(String fileName) {
         this.fileName = fileName;

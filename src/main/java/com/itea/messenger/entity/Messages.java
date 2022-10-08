@@ -77,14 +77,14 @@ public class Messages {
     public void setAttachment(Files file) {
         if (file != null) {
             this.file = file;
-            file.setMessage(this);
+//            file.setMessage(this);
         }
     }
 
     public void removeAttachment(Files file) {
         this.file = null;
         if (file != null) {
-            file.setMessage(null);
+//            file.setMessage(null);
         }
     }
 

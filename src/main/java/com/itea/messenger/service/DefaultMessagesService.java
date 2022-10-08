@@ -197,7 +197,8 @@ public class DefaultMessagesService implements MessagesService {
         if (chatUser == null) {
            throw new NotFoundException(MessageFormat.format("User id:{0} isn't member of Chat id:{1}", userId, chatId));
         }
-        List<Messages> messagesList = messagesRepository.findMessagesByChatIdAndDateTimeAfter(chatId, chatUser.getJoinDate());
+//        List<Messages> messagesList = messagesRepository.findMessagesByChatIdAndDateTimeAfter(chatId, chatUser.getJoinDate());
+        List<Messages> messagesList = messagesRepository.findMessagesByChatIdAndDateTimeAfterOrderByDateTime(chatId, chatUser.getJoinDate());
         List<MessagesDto> resultList = new ArrayList<>();
         //        can't use predicate because some messages don't have status ( -> Exception)
 //        Predicate<Long> notDeleted = userIdForStatus -> !defaultStatusLinksService.findById(userIdForStatus).getStatus().equals(MessageStatus.DELETED);

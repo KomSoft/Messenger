@@ -63,14 +63,15 @@ public class Users {
     public void setAvatar(Files file) {
         if (file != null) {
             this.avatar = file;
-            file.setUser(this);
+//            file.setUser(this);
         }
     }
 
     public void removeAvatar(Files file) {
         this.avatar = null;
         if (file != null) {
-            file.setUser(null);
+//            file.setUser(null);
         }
     }
+
 }

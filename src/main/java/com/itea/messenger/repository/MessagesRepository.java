@@ -13,6 +13,7 @@ public interface MessagesRepository extends JpaRepository<Messages, Long> {
 
     List<Messages> findAllMessagesByChatId(Long chatId);
     List<Messages> findMessagesByChatIdAndDateTimeAfter(Long chatId, LocalDateTime dateTimeFrom);
+    List<Messages> findMessagesByChatIdAndDateTimeAfterOrderByDateTime(Long chatId, LocalDateTime dateTimeFrom);
     void deleteAllByChatId(Long chatId);
     void deleteAllByUserId(Long userId);
     void deleteAllByChatIdAndUserId(Long chatId, Long userId);

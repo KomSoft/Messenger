@@ -26,11 +26,15 @@ public class UsersConverter {
         if (usersDto.getName() == null || usersDto.getName().isEmpty()) {
             throw new ValidationException("[UserDto] Name is empty");
         }
-        if (usersDto.getRole() == null || usersDto.getRole().isEmpty()) {
-            throw new ValidationException("[UserDto] Role is empty");
-        }
         if (usersDto.getAge() < Users.MIN_AGE) {
             throw new ValidationException("[UserDto] Age is empty or less than " + Users.MIN_AGE);
+        }
+        if (usersDto.getRole() == null) {
+            usersDto.setRole("USER");
+        } else {
+            if (!usersDto.getRole().equalsIgnoreCase("ADMIN")) {
+                usersDto.setRole("USER");
+            }
         }
     }
 
